@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 헤더 */
+.drugstore-header {
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #000;
+  flex-direction: column;
+}
+
+.header-top {
+  width: 100%;
+  max-width: 996px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-bottom: 25px;
+}
+
+/* 로고 */
+.logo a {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 50px;
+  height: 50px;
+}
+
+.logo p {
+  color: #000;
+  margin-left: 8px;
+  margin-top: 1.8rem;
+}
+
+/* 로그인, 마이페이지, 장바구니 */
+.user-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-actions a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 2rem;
+  color: #000;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.user-actions img {
+  width: 30px;
+  height: 30px;
+}
+
+/* 카테고리 */
+.navigation-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 8px;
+  width: 100vw;
+  border-top: 1px solid #eee;
+}
+
+.navigation-search > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 996px;
+}
+
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.navigation ul li {
+  float: left;
+  margin-right: 3.4rem;
+}
+
+.navigation ul li a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* 검색 */
+.search input {
+  padding: 5px 5px 5px 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  float: right;
+  width: 300px;
+  height: 30px;
+  background-image: url("../../assets/png/search.png");
+  background-position: 278px 10.5px;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.search input:focus {
+  outline: none;
+}
