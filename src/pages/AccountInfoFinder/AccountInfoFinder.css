@@ -1,0 +1,99 @@
+#container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#content {
+  padding: 20px;
+}
+
+.find_idpw_area {
+  text-align: center;
+}
+
+.find_title {
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: bold;
+}
+
+.find_tab {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.find_tab a {
+  flex: 1;
+  padding: 10px 0;
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.find_tab a.active,
+.find_tab a:hover {
+  color: #000;
+}
+
+.find_inputs,
+.find_type {
+  margin-bottom: 15px;
+}
+
+.find_input_label,
+.find_type_label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.find_input_text {
+  display: block;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.find_input_default,
+.find_input_small,
+.find_input_medium,
+.find_input_gray {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.find_input_small {
+  width: auto;
+  display: inline-block;
+}
+
+.find_input_btn {
+  display: inline-block;
+  margin-left: 10px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.find_input_warn {
+  display: none;
+  color: red;
+  margin-top: 5px;
+}
+
+.find_type_radio + i {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #ccc;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.find_type_radio:checked + i {
+  background-color: #007bff;
+}
