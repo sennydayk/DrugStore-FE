@@ -20,11 +20,8 @@ const LoginForm: React.FC = () => {
         <div className="login_inputBox">
           <input id="login_member_id" name="member_id" placeholder="아이디" />
           <div className="login_inputBox_orderno"></div>
-          <div className="login_inputBox_passwd" style={{ display: "block" }}>
-            <div
-              className="login_chk_passwd"
-              style={{ display: "block" }}
-            ></div>
+          <div className="login_inputBox_passwd">
+            <div className="login_chk_passwd"></div>
             <input
               id="login_member_passwd"
               name="member_passwd"
@@ -40,7 +37,12 @@ const LoginForm: React.FC = () => {
                   이메일 찾기
                 </button>
                 <span>/</span>
-                <button className="login_linkButton">비밀번호 재설정</button>
+                <button
+                  className="login_linkButton"
+                  onClick={handleFindEmailClick}
+                >
+                  비밀번호 재설정
+                </button>
               </div>
               <button className="login_linkButton right">회원가입</button>
             </div>

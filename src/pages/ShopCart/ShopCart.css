@@ -1,0 +1,199 @@
+.shopcart_title {
+  text-align: center;
+}
+
+/* 테이블을 감싸는 컨테이너에 대한 스타일 */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* .cart-check 스타일 */
+.cart-check {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.checkbox-label-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label-group label {
+  margin-left: 8px;
+}
+
+.cart-check button {
+  padding: 8px 16px;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 테이블 스타일 */
+table {
+  width: 100%;
+  max-width: 1050px;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+caption {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: none;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* 상품 이미지 스타일 */
+.prd_img img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+/* 상품명 스타일 */
+.prd_name {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+#brandName {
+  font-weight: bold;
+  display: block;
+  text-align: left;
+  color: #000;
+}
+
+#goodsName {
+  margin-top: 5px;
+  color: #555;
+}
+
+/* 가격 스타일 */
+.org_price {
+  text-decoration: line-through;
+  color: #999;
+  display: block;
+}
+
+.pur_price {
+  color: #e74c3c;
+  font-weight: bold;
+  display: block;
+}
+
+.tx_num {
+  font-size: 18px;
+}
+
+/* 배송정보 스타일 */
+.prd_delivery {
+  font-size: 14px;
+  color: #555;
+}
+
+#deliStrongText {
+  font-weight: bold;
+}
+
+/* 버튼 스타일 */
+.btn_group {
+  display: flex;
+  gap: 10px;
+}
+
+.btnSmall {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btnSmall.delete {
+  background-color: #d9534f;
+}
+
+.btnSmall.delete:hover {
+  background-color: #d96360;
+}
+
+/*  */
+.sum_price {
+  width: 1050px;
+  text-align: right;
+}
+
+/*  */
+.basket_total_price_info {
+  width: 1050px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tx_text {
+  text-align: left;
+}
+
+.tx_total_price {
+  text-align: right;
+}
+
+.cart_oreder_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectorder_btn {
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #d9534f;
+  padding: 5px 10px;
+  color: #fff;
+}
+.selectorder_btn:hover {
+  background-color: #d96360;
+}
+.allorder_btn {
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #6ad4dd;
+  padding: 5px 10px;
+  color: #fff;
+  margin-left: 10px;
+}
