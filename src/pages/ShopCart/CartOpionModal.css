@@ -1,0 +1,89 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 300px;
+  position: relative;
+}
+
+.cart_option select {
+  appearance: none; /* 기본 화살표 숨기기 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
+  width: 300px;
+  border: 1px solid #ddd;
+  padding-left: 10px;
+  height: 35px;
+}
+
+.quantity-input {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.quantity-input input {
+  width: 50px;
+  height: 26.5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  text-align: center;
+  padding-left: 12px;
+}
+
+.quantity-input button {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ddd;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.quantity-input button:first-child {
+  margin-right: -2px;
+}
+
+.quantity-input button:last-child {
+  margin-left: -2px;
+}
+
+.check_close_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.check_close_btn button {
+  width: 100px;
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  height: 2.5rem;
+}
+.check_close_btn button:last-child {
+  margin-left: 10px;
+}
