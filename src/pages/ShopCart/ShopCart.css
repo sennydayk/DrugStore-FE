@@ -69,6 +69,15 @@ th {
   background-color: #f2f2f2;
 }
 
+.table_title th {
+  text-align: center;
+}
+
+.table_title th:nth-child(2),
+.cart_wrap td:nth-child(2) {
+  width: 500px;
+}
+
 /* 상품 이미지 스타일 */
 .prd_img img {
   width: 50px;
@@ -98,27 +107,48 @@ th {
   color: #555;
 }
 
+.prd_quantity {
+  text-align: center;
+}
+
 /* 가격 스타일 */
 .org_price {
   text-decoration: line-through;
   color: #999;
   display: block;
+  text-align: center;
 }
 
 .pur_price {
   color: #e74c3c;
   font-weight: bold;
   display: block;
+  text-align: center;
 }
 
 .tx_num {
   font-size: 18px;
 }
 
+.tx_num2 {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.tx_num3 {
+  font-size: 25px;
+  margin-left: 10px;
+}
+
 /* 배송정보 스타일 */
 .prd_delivery {
   font-size: 14px;
   color: #555;
+  text-align: center;
+}
+
+.prd_delivery span {
+  display: block;
 }
 
 #deliStrongText {
@@ -128,7 +158,7 @@ th {
 /* 버튼 스타일 */
 .btn_group {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
 }
 
 .btnSmall {
@@ -139,6 +169,7 @@ th {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  height: 2.5rem;
 }
 
 .btnSmall.delete {
@@ -153,6 +184,8 @@ th {
 .sum_price {
   width: 1050px;
   text-align: right;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /*  */
@@ -161,20 +194,39 @@ th {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-top: 1px solid #000;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.basket_total_price_info img {
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+}
+
+.basket_total_price_alert {
+  display: flex;
+  align-items: center;
 }
 
 .tx_text {
   text-align: left;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .tx_total_price {
   text-align: right;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 .cart_oreder_btn {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2rem;
 }
 
 .selectorder_btn {
@@ -184,6 +236,9 @@ th {
   background-color: #d9534f;
   padding: 5px 10px;
   color: #fff;
+  height: 3rem;
+  width: 6rem;
+  font-size: 15px;
 }
 .selectorder_btn:hover {
   background-color: #d96360;
@@ -196,4 +251,7 @@ th {
   padding: 5px 10px;
   color: #fff;
   margin-left: 10px;
+  height: 3rem;
+  width: 6rem;
+  font-size: 15px;
 }

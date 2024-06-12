@@ -37,8 +37,8 @@ const CartOpionModal: React.FC<ModalProps> = ({
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>옵션수정</h2>
-        <div>
-          <select>
+        <div className="cart_option">
+          <select value={option} onChange={(e) => setOption(e.target.value)}>
             <option>옵션</option>
             <option>옵션명1</option>
             <option>옵션명2</option>
@@ -52,12 +52,15 @@ const CartOpionModal: React.FC<ModalProps> = ({
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               readOnly
+              min={1}
             />
             <button onClick={increaseQuantity}>+</button>
           </div>
         </div>
-        <button onClick={onClose}>취소</button>
-        <button onClick={handleSave}>선택완료</button>
+        <div className="check_close_btn">
+          <button onClick={onClose}>취소</button>
+          <button onClick={handleSave}>선택완료</button>
+        </div>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@
 .lefe_area {
   flex-basis: 50%;
   flex: 0.5;
-  max-width: 900px;
+  max-width: 1000px;
 }
 
 .right_area {
@@ -50,7 +50,7 @@ td {
 }
 
 /* 상품 이미지 및 이름 스타일 */
-.prd_img img {
+.pay_prd_img img {
   width: 100px;
   height: auto;
   border-radius: 4px;
@@ -101,6 +101,21 @@ button:hover {
 .coupon_wrap {
   display: flex;
   justify-content: space-between;
+  border: none;
+  padding: 1rem 0;
+}
+
+.delivery_select,
+.coupon_select {
+  appearance: none; /* 기본 화살표 숨기기 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
+  width: 500px;
+  border: 1px solid #ddd;
+  padding-left: 10px;
+  height: 58px;
 }
 
 /* 약관 동의 체크박스 스타일 */

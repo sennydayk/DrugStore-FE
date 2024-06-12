@@ -101,6 +101,7 @@ const OrderForm: React.FC = () => {
                   <th scope="row">배송 메시지</th>
                   <td className="imp_data">
                     <select
+                      className="delivery_select"
                       value={deliveryMessage}
                       onChange={handleDeliveryMessageChange}
                     >
@@ -131,7 +132,7 @@ const OrderForm: React.FC = () => {
             <table>
               <caption>배송상품 주문상품 목록</caption>
               <thead>
-                <tr>
+                <tr className="orderpay_table_title">
                   <th scope="col">상품정보</th>
                   <th scope="col">상품금액</th>
                   <th scope="col">수량</th>
@@ -141,7 +142,7 @@ const OrderForm: React.FC = () => {
                 {items.map((item, index) => (
                   <tr key={item.id}>
                     <td>
-                      <a className="prd_img" href="">
+                      <a className="pay_prd_img" href="">
                         <img src={item.img} alt={item.name} />
                       </a>
                       <a className="prd_name" href="">
@@ -163,7 +164,7 @@ const OrderForm: React.FC = () => {
                         원
                       </span>
                     </td>
-                    <td>
+                    <td className="prd_quantity">
                       <span>1</span>
                     </td>
                   </tr>
@@ -173,19 +174,13 @@ const OrderForm: React.FC = () => {
           </div>
           <div className="coupon_container">
             <h2 className="orderpay_subtitle">쿠폰</h2>
-            <table>
-              <caption>쿠폰할인정보 입력 폼</caption>
-              <tbody>
-                <tr>
-                  <td className="coupon_wrap">
-                    <p>사용 가능한 쿠폰</p>
-                    <button type="button" className="coupon_btn">
-                      조회
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="coupon_wrap">
+              <p>쿠폰 적용</p>
+              <select className="coupon_select">
+                <option value={"사용안함"}>사용안함</option>
+                <option value={"30%할인"}>30% 할인쿠폰</option>
+              </select>
+            </div>
           </div>
           <div className="payment_container">
             <h2 className="orderpay_subtitle">결제</h2>

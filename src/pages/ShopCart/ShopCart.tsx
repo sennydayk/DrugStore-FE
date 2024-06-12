@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import Header from "../../components/Header/Header";
 import Modal from "./CartOpionModal";
+import AlertAlram from "../../assets/png/alert_alram.png";
 
 // item 객체의 타입을 정의합니다.
 interface Item {
@@ -19,9 +20,6 @@ interface Item {
 
 const Cart: React.FC = () => {
   let navigate = useNavigate();
-  const [selectAll, setSelectAll] = useState(false);
-  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<Item[]>([
     {
       id: 1,
@@ -37,23 +35,26 @@ const Cart: React.FC = () => {
       brand: "토리든",
       name: "토리든 다이브인 저분자 히알루론산 세럼 50ml 리필기획(+리필팩 50ml)",
       img: "https://image.oliveyoung.co.kr/uploads/images/goods/10/0000/0018/A00000018926118ko.jpg?l=ko",
-      orgPrice: 9900,
+      orgPrice: 36000,
       purPrice: 21420,
       delivery: "무료배송",
     },
   ]);
-  const [currentItem, setCurrentItem] = useState<any>(null);
   const goToOrderForm = () => {
     navigate("/order");
   };
+  const [currentItem, setCurrentItem] = useState<any>(null);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalDeliveryFee, setTotalDeliveryFee] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [itemOptions, setItemOptions] = useState(
     items.map((item) => ({
       id: item.id,
-      quantity: 1, // 기본 수량을 1로 설정
-      option: "", // 기본 옵션은 빈 문자열로 설정
+      quantity: 1,
+      option: "",
     }))
   );
 
@@ -61,20 +62,24 @@ const Cart: React.FC = () => {
     setCheckedItems(new Array(items.length).fill(selectAll));
   }, [selectAll]);
 
+  const handleItemChange = (index: number) => {
+    setCheckedItems((prev) =>
+      prev.map((item, i) => (i === index ? !item : item))
+    );
+  };
+
   useEffect(() => {
-    // 총 상품 금액 계산
     const total = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
-        return acc + item.purPrice;
+        return acc + item.purPrice * (item.quantity || 1);
       }
       return acc;
     }, 0);
 
-    // 배송비 계산: "무료배송"이면 0원, 그 외에는 가장 높은 배송비 적용
     const deliveryFee = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
         if (item.delivery === "무료배송") {
-          return acc; // 무료배송인 경우 현재까지의 최댓값 유지
+          return acc;
         }
         const itemDeliveryFee = parseInt(item.delivery.replace(/,/g, ""), 10);
         return Math.max(acc, itemDeliveryFee);
@@ -86,12 +91,6 @@ const Cart: React.FC = () => {
     setTotalDeliveryFee(deliveryFee);
     setFinalPrice(total + deliveryFee);
   }, [checkedItems, items]);
-
-  const handleItemChange = (index: number) => {
-    setCheckedItems((prev) =>
-      prev.map((item, i) => (i === index ? !item : item))
-    );
-  };
 
   const handleDeleteItem = (id: number) => {
     // `id`를 기반으로 해당 아이템을 제외한 새 배열 생성
@@ -115,17 +114,23 @@ const Cart: React.FC = () => {
   };
 
   const handleSaveOptions = (id: number, quantity: number, option: string) => {
-    // 옵션과 수량 업데이트
     setItemOptions((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, quantity, option } : item
       )
     );
-
-    // items 상태 업데이트
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, quantity, option } : item
+        item.id === id
+          ? {
+              ...item,
+              quantity,
+              option,
+              name: `${item.name} (${option})`,
+              purPrice: (item.purPrice / (item.quantity || 1)) * quantity,
+              orgPrice: (item.orgPrice / (item.quantity || 1)) * quantity,
+            }
+          : item
       )
     );
   };
@@ -171,7 +176,7 @@ const Cart: React.FC = () => {
             배송상품 장바구니 목록 표
           </caption>
           <thead>
-            <tr>
+            <tr className="table_title">
               <th></th>
               <th scope="col">상품정보</th>
               <th scope="col">수량</th>
@@ -199,8 +204,8 @@ const Cart: React.FC = () => {
                     <p id="goodsName">{item.name}</p>
                   </a>
                 </td>
-                <td>
-                  <span>1</span>
+                <td className="prd_quantity">
+                  <span id="prd_quantity">{item.quantity || 1}</span>
                 </td>
                 <td>
                   <span className="org_price">
@@ -248,20 +253,23 @@ const Cart: React.FC = () => {
         </table>
         <div className="basket_price_info">
           <div className="sum_price">
-            총 상품금액{" "}
-            <span className="tx_num">{totalPrice.toLocaleString()}</span>원
-            <span className="tx_sign plus">+</span> 배송비
-            <span className="tx_num">{totalDeliveryFee.toLocaleString()}</span>
+            총 상품금액
+            <span className="tx_num2">{totalPrice.toLocaleString()}</span>원
+            <span className="tx_sign plus"> +</span> 배송비
+            <span className="tx_num2">{totalDeliveryFee.toLocaleString()}</span>
             원
           </div>
           <div className="basket_total_price_info">
-            <span className="tx_text">
-              결제 시 쿠폰을 적용 받을 경우 금액이 달라질 수 있습니다
-            </span>
+            <div className="basket_total_price_alert">
+              <img src={AlertAlram} />
+              <span className="tx_text">
+                결제 시 쿠폰을 적용 받을 경우 금액이 달라질 수 있습니다.
+              </span>
+            </div>
             <span className="tx_total_price">
               총 결제예상금액
               <span className="tx_price">
-                <span className="tx_num">{finalPrice.toLocaleString()}</span>원
+                <span className="tx_num3">{finalPrice.toLocaleString()}</span>원
               </span>
             </span>
           </div>
@@ -286,7 +294,7 @@ const Cart: React.FC = () => {
       {currentItem && (
         <Modal
           isOpen={isModalOpen}
-          onClose={closeModal}
+          onClose={() => setIsModalOpen(false)}
           onSave={(quantity: number, option: string) =>
             handleSaveOptions(currentItem.id, quantity, option)
           }

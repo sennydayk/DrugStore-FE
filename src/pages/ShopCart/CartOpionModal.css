@@ -18,15 +18,31 @@
   position: relative;
 }
 
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+.cart_option select {
+  appearance: none; /* 기본 화살표 숨기기 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
+  width: 300px;
+  border: 1px solid #ddd;
+  padding-left: 10px;
+  height: 35px;
 }
 
 .quantity-input {
   display: flex;
+  justify-content: end;
   align-items: center;
+}
+
+.quantity-input input {
+  width: 50px;
+  height: 26.5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  text-align: center;
+  padding-left: 12px;
 }
 
 .quantity-input button {
@@ -37,12 +53,25 @@
   align-items: center;
   background-color: #ddd;
   border: none;
+  border-radius: 0;
   cursor: pointer;
 }
 
-.quantity-input input {
-  width: 50px;
-  height: 26px;
-  text-align: center;
-  border: 1px solid #ddd;
+.quantity-input button:first-child {
+  margin-right: -2px;
+}
+
+.quantity-input button:last-child {
+  margin-left: -2px;
+}
+
+.check_close_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.check_close_btn button {
+  width: 100px;
 }
