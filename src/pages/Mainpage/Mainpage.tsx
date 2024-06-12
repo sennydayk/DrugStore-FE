@@ -48,7 +48,6 @@ const Mainpage = () => {
 
     return (
         <div>
-            <Header />
             <div className='mainpage_imageslider'>
                 <ImageSlider adphotos={adphotos}></ImageSlider>
             </div>
