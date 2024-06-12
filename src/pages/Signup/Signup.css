@@ -1,0 +1,164 @@
+.signup-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  padding: 30px 0 30px 0;
+  margin-bottom: 30px;
+  width: 80%;
+  font-size: 35px;
+  border-bottom: 1px solid black;
+}
+
+.signup-profile {
+  position: relative;
+  left: 10px;
+  bottom: 210px;
+}
+
+.signup-profile-btn {
+  position: relative;
+  right: 85px;
+  bottom: 120px;
+  font-size: 12px;
+  font-weight: bold;
+  color: gray;
+  cursor: pointer;
+}
+
+.signup-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  border-collapse: separate;
+  border-spacing: 20px;
+}
+
+.signup-table th {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.signup-table td {
+  margin-left: 50px;
+}
+
+.signup-table input {
+  width: 300px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* 회원가입 input focus 되었을 때 스타일 */
+/* .signup-input-default {
+  width: 300px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.signup-input-focus {
+  width: 300px;
+  height: 30px;
+  border: 1px solid #6ad4dd;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 14px;
+} */
+
+/* @keyframes round {
+  from {
+    border-radius: 0;
+  }
+  to {
+    border-radius: 30px;
+    outline: 1px solid #6ad4dd;
+  }
+} */
+
+.signup-btn {
+  width: 120px;
+  height: 40px;
+  background-color: #6ad4dd;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.signup-btn:hover {
+  background-color: #62c5ce;
+}
+
+.signup-btn-disabled {
+  width: 120px;
+  height: 40px;
+  background-color: #efefef;
+  color: #ccc;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  margin-left: 20px;
+  cursor: not-allowed;
+}
+
+.signup-btn-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-top: 20px;
+  width: 200px;
+  height: 45px;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.signup-btn-main:hover {
+  background-color: #62c5ce;
+}
+
+.signup-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.signup-footer p {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.signup-footer button {
+  width: 100px;
+  height: 35px;
+  background-color: #6ad4dd;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border: none;
+  border-radius: 3px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.signup-footer button:hover {
+  background-color: #62c5ce;
+}
