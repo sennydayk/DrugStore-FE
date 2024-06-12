@@ -1,0 +1,10 @@
+.detailpage_productinfo{
+    padding: 10px 20px;
+}
+
+.detailpage_tabmenu{
+    padding: 10px 20px;
+    /* width: calc(100% /3); */
+    width: 100%;
+    justify-content: space-between;
+}

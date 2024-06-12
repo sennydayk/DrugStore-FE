@@ -1,0 +1,23 @@
+.tabmenu_tab {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 2px solid #dadfe3;
+  }
+  
+  .submenu,
+  .submenu_focused {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .submenu_focused {
+    border-bottom: 2px solid green;
+    font-weight: bold;
+  }
+  
+  .tab_content {
+    margin-top: 20px;
+  }
+  

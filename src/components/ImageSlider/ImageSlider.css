@@ -1,0 +1,36 @@
+.slider-container {
+    /* position: relative; */
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .imageslider_img {
+    /* width: 700px;
+    height: 50px; */
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .slick-slide{
+    width: 700px;
+    height: 50px;
+  }
+
+  .slick-slide img.imageslider_img {
+    object-fit: cover;
+    height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .slider_background{
+    justify-content: center;
+    align-items: center;
+  }
+
+  

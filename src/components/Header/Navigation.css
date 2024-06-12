@@ -1,0 +1,13 @@
+.navigation_button{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.category_button{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 20px;
+    font-weight: bold;
+}
