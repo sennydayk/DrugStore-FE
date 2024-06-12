@@ -14,7 +14,6 @@ const LoginForm: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <h1 className="login-title">로그인</h1>
       <div id="normalLogin_id">
         <div className="login_inputBox">

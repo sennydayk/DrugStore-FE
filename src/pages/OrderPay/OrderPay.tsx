@@ -72,13 +72,12 @@ const OrderForm: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <div className="order_payment_wrap">
         <div className="lefe_area">
           <div className="order_payment_container">
             <h1 className="orderpay_title">주문/결제</h1>
             <h2 className="orderpay_subtitle">배송지 정보</h2>
-            <table>
+            <table className="orderpay_table">
               <caption>주문 정보</caption>
               <tbody>
                 {userInfo.map((userInfo, index) => (
@@ -184,19 +183,24 @@ const OrderForm: React.FC = () => {
           </div>
           <div className="payment_container">
             <h2 className="orderpay_subtitle">결제</h2>
-            <button type="button">신용카드</button>
-            <button type="button">Kakao Pay</button>
+            <div className="button-container">
+              <button type="button">신용카드</button>
+              <button type="button">Kakao Pay</button>
+            </div>
           </div>
+
           <div className="terms_agreement_container">
             <h2 className="orderpay_subtitle">약관동의</h2>
-            <input
-              type="checkbox"
-              checked={allChecked}
-              onChange={handleAllCheckChange}
-            />
-            <label>
-              주문 상품정보 및 결제대행 서비스 이용약관에 모두 동의하십니까?
-            </label>
+            <div className="checkbox-container">
+              <input
+                type="checkbox"
+                checked={allChecked}
+                onChange={handleAllCheckChange}
+              />
+              <label>
+                주문 상품정보 및 결제대행 서비스 이용약관에 모두 동의하십니까?
+              </label>
+            </div>
             <h3>주문 상품정보에 대한 동의</h3>
             <input
               type="checkbox"

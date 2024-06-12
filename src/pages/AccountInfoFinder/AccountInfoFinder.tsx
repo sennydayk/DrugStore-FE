@@ -36,7 +36,6 @@ function AccountInfoFinder() {
 
   return (
     <div id="container">
-      <Header />
       <div id="wrap">
         <ul id="accountinfofind">
           <li>

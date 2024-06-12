@@ -1,0 +1,40 @@
+.mysidebar-wrapper {
+  float: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 17%;
+  margin-top: 30px;
+}
+
+.mysidebar-title {
+  width: 150px;
+  display: flex;
+  margin: auto;
+  margin-top: 30px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.mysidebar-menu {
+  margin-top: 30px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 사이드바 메뉴 비활성화 */
+.menu-normal {
+  font-size: 16px;
+  text-decoration: none;
+  color: gray;
+}
+
+/* 사이드바 메뉴 활성화 */
+.menu-active {
+  font-size: 16px;
+  text-decoration: underline;
+  color: black;
+  font-weight: bold;
+}

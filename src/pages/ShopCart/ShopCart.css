@@ -42,7 +42,7 @@
 }
 
 /* 테이블 스타일 */
-table {
+.cart_table {
   width: 100%;
   max-width: 1050px;
   border-collapse: collapse;
@@ -53,19 +53,18 @@ table {
 }
 
 caption {
-  font-weight: bold;
   margin-bottom: 10px;
   display: none;
 }
 
-th,
-td {
+.cart_table th,
+.cart_table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
 }
 
-th {
+.cart_table th {
   background-color: #f2f2f2;
 }
 
@@ -170,6 +169,10 @@ th {
   border-radius: 3px;
   cursor: pointer;
   height: 2.5rem;
+}
+
+.btnSmall:last-child {
+  margin-top: 10px;
 }
 
 .btnSmall.delete {

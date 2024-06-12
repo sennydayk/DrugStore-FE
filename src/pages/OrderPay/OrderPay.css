@@ -26,9 +26,17 @@
   padding: 15px;
 }
 
+.button-container {
+  display: flex;
+}
+
 .orderpay_title,
 .orderpay_subtitle {
   width: 1050px;
+}
+
+.orderpay_subtitle {
+  text-align: left;
 }
 
 .orderpay_title {
@@ -36,14 +44,14 @@
 }
 
 /* 테이블 스타일 */
-table {
+.orderpay_table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
 }
 
-th,
-td {
+.orderpay_table th,
+.orderpay_table td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -84,7 +92,7 @@ td {
 }
 
 /* 쿠폰 및 결제 버튼 스타일 */
-button {
+.payment_container button {
   background-color: #6ad4dd;
   color: white;
   padding: 10px 24px;
@@ -94,7 +102,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.payment_container button:hover {
   background-color: #97e7e1;
 }
 
@@ -119,12 +127,22 @@ button:hover {
 }
 
 /* 약관 동의 체크박스 스타일 */
-.terms_agreement_container input[type="checkbox"] {
-  margin-right: 10px;
+.terms_agreement_container h3 {
+  text-align: left;
 }
 
-.terms_agreement_container label {
-  margin-right: 20px;
+.terms_agreement_container {
+  text-align: left;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
 }
 
 .agreement-row {

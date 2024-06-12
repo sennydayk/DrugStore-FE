@@ -151,7 +151,6 @@ const Cart: React.FC = () => {
 
   return (
     <div className="container">
-      <Header />
       <div className="cart_wrap">
         <h1 className="shopcart_title">장바구니</h1>
         <h3>배송상품</h3>
@@ -170,7 +169,7 @@ const Cart: React.FC = () => {
             선택상품 삭제
           </button>
         </div>
-        <table>
+        <table className="cart_table">
           <caption>
             상품정보, 판매가, 수량, 구매가, 배송정보, 선택으로 이루어진 올리브영
             배송상품 장바구니 목록 표
