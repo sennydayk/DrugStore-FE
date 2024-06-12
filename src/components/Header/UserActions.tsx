@@ -15,7 +15,7 @@ function UserActions({ cartItemCount }: UserActionsProps) {
       <Link to="/auth/login">
         <img src={HeaderLogin} alt="로그인" />
       </Link>
-      <a href="#">
+      <a href="/mypage/account">
         <img src={HeaderMyPage} alt="마이페이지" />
       </a>
       <a href="/cart">

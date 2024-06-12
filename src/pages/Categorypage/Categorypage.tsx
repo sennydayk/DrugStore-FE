@@ -75,7 +75,6 @@ const Categorypage = () => {
     return (
         <div>
             <div className="categorypage_wrapper">
-                <Header />
                 <div className="filter_wrapper">
                     <div onClick={handleClick} className='filter_selectdropdown'>{selectedFilter} 🔽</div>
                     {isOpen && filterArray.map((filters) => {
