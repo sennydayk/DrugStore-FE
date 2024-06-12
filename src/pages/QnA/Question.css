@@ -1,0 +1,19 @@
+.qnaitem_qna{
+    display: flex;
+    margin: 20px;
+}
+
+.qnaitem_qnastatus{
+    background-color: green;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    width: 50px;
+    font-size: small;
+    color:white
+
+}
+
+.qnaitem_question{
+    cursor: pointer;
+}

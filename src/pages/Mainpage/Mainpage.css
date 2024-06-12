@@ -1,0 +1,18 @@
+.mainpage_imageslider{
+    margin-bottom: 10px;
+    padding-left :130px;
+    padding-right :130px;
+    padding-top :50px;
+    height: 300px;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainpage_productlist {
+    display: flex;
+    /* flex-direction: row; */
+    flex-wrap: wrap;
+    gap: 20px; 
+    justify-content: center; 
+    
+}
