@@ -1,23 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header/Header";
+import axios from "axios";
 import "./Login.css";
 import Kakao from "../../assets/png/kakao-talk.png";
 
 const LoginForm: React.FC = () => {
-  const navigate = useNavigate(); // useHistory Hook을 사용하여 history 객체를 생성합니다.
+  const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginCheck, setLoginCheck] = useState(true);
 
   // 이메일 찾기 버튼 클릭 이벤트 핸들러
   const handleFindEmailClick = () => {
     navigate("/find-email");
   };
 
+  // 회원가입 버튼 클릭 이벤트 핸들러
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+
+  // 로그인 버튼 클릭 이벤트 핸들러
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await new Promise((r) => setTimeout(r, 1000));
+
+    try {
+      const response = await axios.post("http://52.78.248.75:8080/auth/login", {
+        email: userEmail,
+        password,
+      });
+
+      if (response.status === 200) {
+        const token = response.headers["token"];
+        console.log("token", token);
+        setLoginCheck(false);
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("myId", userEmail);
+        console.log("로그인성공, 아이디: " + userEmail);
+        alert("로그인이 완료되었습니다. 홈으로 이동합니다.");
+        navigate("/");
+      } else {
+        alert(
+          "이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
+        );
+        setLoginCheck(true);
+      }
+    } catch (error) {
+      alert(
+        "이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
+      );
+      setLoginCheck(true);
+    }
+  };
+
   return (
     <div>
       <h1 className="login-title">로그인</h1>
-      <div id="normalLogin_id">
+      <div id="normalLogin_email">
         <div className="login_inputBox">
-          <input id="login_member_id" name="member_id" placeholder="아이디" />
+          <input
+            id="login_member_email"
+            name="member_email"
+            placeholder="이메일"
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
+          />
           <div className="login_inputBox_orderno"></div>
           <div className="login_inputBox_passwd">
             <div className="login_chk_passwd"></div>
@@ -26,10 +74,13 @@ const LoginForm: React.FC = () => {
               name="member_passwd"
               type="password"
               placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <div className="login_utilMenu">
               <div>
                 <button
+                  type="button"
                   className="login_linkButton"
                   onClick={handleFindEmailClick}
                 >
@@ -37,20 +88,29 @@ const LoginForm: React.FC = () => {
                 </button>
                 <span>/</span>
                 <button
+                  type="button"
                   className="login_linkButton"
                   onClick={handleFindEmailClick}
                 >
                   비밀번호 재설정
                 </button>
               </div>
-              <button className="login_linkButton right">회원가입</button>
+              <button
+                type="button"
+                className="login_linkButton right"
+                onClick={handleSignUpClick}
+              >
+                회원가입
+              </button>
             </div>
           </div>
         </div>
-        <button className="btn loginBtn">로그인</button>
+        <button type="submit" className="btn loginBtn" onClick={handleLogin}>
+          로그인
+        </button>
         <div className="login_orSeparator">or</div>
         <button className="btn kakaoLoginBtn">
-          <img src={Kakao} />
+          <img src={Kakao} alt="카카오 로그인" />
           카카오 로그인
         </button>
       </div>
