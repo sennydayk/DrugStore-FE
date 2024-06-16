@@ -10,7 +10,7 @@
 }
 
 /* 로그인 폼 전체 레이아웃 스타일링 */
-#normalLogin_id {
+#normalLogin_email {
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;

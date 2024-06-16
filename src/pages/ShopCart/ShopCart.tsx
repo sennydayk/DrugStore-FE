@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
-import Header from "../../components/Header/Header";
+import axios from "axios";
 import Modal from "./CartOpionModal";
 import AlertAlram from "../../assets/png/alert_alram.png";
 
@@ -20,29 +20,10 @@ interface Item {
 
 const Cart: React.FC = () => {
   let navigate = useNavigate();
-  const [items, setItems] = useState<Item[]>([
-    {
-      id: 1,
-      brand: "롬앤",
-      name: "롬앤 쥬시 래스팅 틴트(드래곤핑크, 피치미 외)",
-      img: "https://image.oliveyoung.co.kr/uploads/images/goods/220/10/0000/0012/A00000012595560ko.jpg?l=ko",
-      orgPrice: 9900,
-      purPrice: 8400,
-      delivery: "2,500",
-    },
-    {
-      id: 2,
-      brand: "토리든",
-      name: "토리든 다이브인 저분자 히알루론산 세럼 50ml 리필기획(+리필팩 50ml)",
-      img: "https://image.oliveyoung.co.kr/uploads/images/goods/10/0000/0018/A00000018926118ko.jpg?l=ko",
-      orgPrice: 36000,
-      purPrice: 21420,
-      delivery: "무료배송",
-    },
-  ]);
   const goToOrderForm = () => {
     navigate("/order");
   };
+  const [items, setItems] = useState<Item[]>([]);
   const [currentItem, setCurrentItem] = useState<any>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
@@ -59,8 +40,12 @@ const Cart: React.FC = () => {
   );
 
   useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  useEffect(() => {
     setCheckedItems(new Array(items.length).fill(selectAll));
-  }, [selectAll]);
+  }, [selectAll, items.length]);
 
   const handleItemChange = (index: number) => {
     setCheckedItems((prev) =>
@@ -75,7 +60,6 @@ const Cart: React.FC = () => {
       }
       return acc;
     }, 0);
-
     const deliveryFee = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
         if (item.delivery === "무료배송") {
@@ -86,11 +70,27 @@ const Cart: React.FC = () => {
       }
       return acc;
     }, 0);
-
     setTotalPrice(total);
     setTotalDeliveryFee(deliveryFee);
     setFinalPrice(total + deliveryFee);
   }, [checkedItems, items]);
+
+  const fetchCartItems = async () => {
+    try {
+      const response = await axios.get("http://52.78.248.75:8080/cart/myCart");
+      setItems(response.data);
+    } catch (error) {
+      console.error("Failed to fetch cart items:", error);
+    }
+  };
+
+  const updateCartItem = async (item: Item) => {
+    try {
+      await axios.post("http://52.78.248.75:8080/cart/update", item);
+    } catch (error) {
+      console.error("Failed to update cart item:", error);
+    }
+  };
 
   const handleDeleteItem = (id: number) => {
     // `id`를 기반으로 해당 아이템을 제외한 새 배열 생성
@@ -133,6 +133,10 @@ const Cart: React.FC = () => {
           : item
       )
     );
+    const updatedItem = items.find((item) => item.id === id);
+    if (updatedItem) {
+      updateCartItem(updatedItem);
+    }
   };
 
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
