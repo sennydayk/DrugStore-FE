@@ -16,7 +16,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Categorypage from "./pages/Categorypage/Categorypage";
 import { Detailpage } from "./pages/Detailpage/Detailpage";
 
-const App: React.FC = () => (
+const App = () => (
+
   <div className="App">
     <Header />
     <Routes>
@@ -24,8 +25,8 @@ const App: React.FC = () => (
       <Route path="main/category/:categoryId" element={<Categorypage />} />
       <Route path="/detail/:productid" element={<Detailpage />} />
       <Route path="/auth/login" element={<LoginPage />} />
-      <Route path="/findEmail" element={<AccountInfoFinder />} />
-      <Route path="/cart" element={<CartPage />} />
+      <Route path="/find-email" element={<AccountInfoFinder />} />
+      <Route path="/cart" element={<CartPage />} />ㅁ
       <Route path="/order" element={<OrderPayPage />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/mypage/account" element={<Mypage />} />

@@ -30,10 +30,10 @@ const QnaItem = ({ qna }: { qna: QnaType }) => {
                 <div className='qnaitem_question' onClick={qestionclickhandler}>
                     {qna.question}
                 </div>
-                <div>
+                <div className='qnaitem_usename'>
                     {qna.user_name}
                 </div>
-                <div>
+                <div className='qnaitem_createdat'>
                     {qna.created_at}
                 </div>
             </div>

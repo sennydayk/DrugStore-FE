@@ -1,6 +1,11 @@
 .qnaitem_qna{
     display: flex;
     margin: 20px;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px;
+    margin-bottom: 10px; 
+    border-bottom: 1px solid #ddd; 
 }
 
 .qnaitem_qnastatus{
@@ -14,6 +19,16 @@
 
 }
 
-.qnaitem_question{
-    cursor: pointer;
+.qnaitem_question, .qnaitem_username, .qnaitem_createdat {
+    flex: 1; 
+    text-align: center;
+}
+
+.qnaitem_question {
+    flex: 3; /* 각 요소의 너비를 동일하게 설정합니다. */
+    text-align: center; /* 텍스트를 중앙 정렬합니다. */
+}
+
+.qnaitem_question {
+    cursor: pointer; /* 질문 항목에 마우스 커서가 있을 때 포인터로 변경합니다. */
 }

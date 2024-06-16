@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import Question from './Question';
+import QuestionModal from './QuestionModal';
+import axios from 'axios'
 
 interface QnaType {
     question: string;
@@ -12,36 +15,48 @@ interface QnaType {
     question_status: string;
 }
 
-const QnA = () => {
+type QusetionmodalProps = {
+    questionmodal: boolean
+}
 
-    const qnaArray: QnaType[] = [
-        {
-            "question": "언제 입고되나요",
-            "answer": null,
-            "user_name": "jieun",
-            "created_at": "2024-05-27",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "brand": "어노브",
-            "question_id": 1,
-            "question_status": "답변대기"
-        },
-        {
-            "question": "언제 입고되나요",
-            "answer": null,
-            "user_name": "jieun",
-            "created_at": "2024-05-27",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "brand": "어노브",
-            "question_id": 1,
-            "question_status": "답변대기"
-        }
-    ]
+interface ParamsType {
+    productid: number
+};
+
+const QnA = (productid: ParamsType) => {
+
+    const [qnaArray, setqnaArrayy] = useState<QnaType[]>([]);
+    const encodedproductId = encodeURIComponent(productid.productid);
+
+    useEffect
+        (() => {
+            getQnadata();
+        }, []);
+
+    const getQnadata = async () => {
+        try {
+            console.log('encodedproductId2', encodedproductId)
+            const response = await axios(`http://52.78.248.75:8080/product/question/list?product-id=${encodedproductId}`, { method: "GET" });
+            setqnaArrayy(response.data.data);
+        } catch (error) {
+            console.error("데이터 가져오기 중 오류 발생:", error);
+        };
+    }
+
+    const [showquestion, setshowquestion] = useState(false)
+    const writequestionhandler = () => {
+        setshowquestion(true);
+    }
 
     return (
         <div>
-            <button>상품문의</button>
-            {qnaArray.map((qna) =>
-                <Question qna={qna}></Question>)}
+            <button onClick={writequestionhandler}>상품문의</button>
+            {showquestion && <QuestionModal showquestion={showquestion} setshowquestion={setshowquestion}></QuestionModal>}
+            <div className='qna_qnalist'>
+                {qnaArray != undefined ? qnaArray.map((qna) => {
+                    return <Question qna={qna}></Question>
+                }) : (<div className='qna_noqna'>아직 작성된 문의가 없습니다!</div>)}
+            </div>
         </div>
     );
 };

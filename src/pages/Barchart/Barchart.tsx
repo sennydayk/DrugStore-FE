@@ -8,7 +8,7 @@ const Barchart = ({ reviewScore }: { reviewScore: number[] }) => {
 
     const reviewCountArray = [];
     for (let i = 0; i < 5; i++) {
-        reviewCountArray[i] = Number(((reviewScore.reduce((cnt, element) => cnt + Number(i + 1 === element), 0) / totalreview) * 100).toFixed(0))
+        reviewCountArray[i] = totalreview === 0 ? 0 : Number(((reviewScore.reduce((cnt, element) => cnt + Number(i + 1 === element), 0) / totalreview) * 100).toFixed(0))
     }
 
     return (

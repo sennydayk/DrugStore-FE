@@ -22,7 +22,7 @@ export function Detailpage() {
         <ProductInfo productid={productid} ></ProductInfo>
       </div>
       <div className='detailpage_tabmenu'>
-        <Tabmenu></Tabmenu>
+        <Tabmenu productid={productid}></Tabmenu>
       </div>
     </div>
   );
