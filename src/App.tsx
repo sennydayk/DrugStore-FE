@@ -24,7 +24,7 @@ const App: React.FC = () => (
       <Route path="main/category/:categoryId" element={<Categorypage />} />
       <Route path="/detail/:productid" element={<Detailpage />} />
       <Route path="/auth/login" element={<LoginPage />} />
-      <Route path="/find-email" element={<AccountInfoFinder />} />
+      <Route path="/findEmail" element={<AccountInfoFinder />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/order" element={<OrderPayPage />} />
       <Route path="/signup" element={<Signup />} />
