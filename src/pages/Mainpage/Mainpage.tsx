@@ -3,6 +3,7 @@ import { Product } from './Product'
 import Header from '../../components/Header/Header';
 import './Mainpage.css'
 import ImageSlider from '../../components/ImageSlider/ImageSlider'
+import axios from 'axios'
 
 
 
@@ -30,24 +31,52 @@ const adphotos: photosType[] = [
 
 const Mainpage = () => {
 
-    //mainpage api 가져오기
+    const [Keyword, setKeyword] = useState("");
+    const [Search, setSearch] = useState(false);
     const [productarray, setProductarray] = useState<ProductType[]>([]);
-    useEffect(() => {
-        getMainpagedata();
-    }, []);
 
+    console.log('Keyword', Keyword)
+    useEffect(() => {
+        // if (Search) {
+        //     if (Keyword) {
+        //         getSearchdata(Keyword);
+        //     } else {
+        //         getMainpagedata();
+        //     }
+        // }
+        // else {
+        getMainpagedata();
+        // }
+    }, [Search]);
+
+    //mainpage api 가져오기
     const getMainpagedata = async () => {
+        const token = sessionStorage.getItem('token');
         try {
-            const response = await fetch("http://52.78.248.75:8080/main/", { method: "GET" });
-            const data = await response.json();
-            setProductarray(data.data.product_list);
+            const response = await axios("http://52.78.248.75:8080/main/", { method: "GET", });
+            setProductarray(response.data.data.product_list);
         } catch (error) {
             console.error("데이터 가져오기 중 오류 발생:", error);
         };
     }
 
+    //검색 api 가져오기
+    const getSearchdata = async (Keyword: string) => {
+        try {
+            const response = await fetch(`http://52.78.248.75:8080/main/find?keyword=${Keyword}`, { method: "GET" });
+            const data = await response.json();
+            console.log('data', data)
+            setProductarray(data.data.content);
+        } catch (error) {
+            console.error("데이터 가져오기 중 오류 발생:", error);
+        }
+    };
+
+    // getMainpagedata();
+    console.log('xx', productarray)
     return (
         <div>
+            {/* <Header></Header> */}
             <div className='mainpage_imageslider'>
                 <ImageSlider adphotos={adphotos}></ImageSlider>
             </div>

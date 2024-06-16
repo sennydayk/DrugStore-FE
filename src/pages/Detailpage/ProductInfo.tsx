@@ -7,6 +7,7 @@ import ProductImage from './ProductImage';
 import info from "../../assets/png/info.png";
 import Modal from '../Modal/Modal';
 import useModal from '../../hook/useModal';
+import axios from 'axios'
 
 interface ProductdetailType {
     product_id: number,
@@ -14,13 +15,26 @@ interface ProductdetailType {
     sales: number,
     price: number,
     final_price: number,
-    product_img: string[],
+    product_img: ProductImageType[],
     review_count: number,
     review_avg: number,
     is_like: boolean,
     best: boolean,
     brand_name: string,
-    product_options: string[];
+    product_options: ProductOptionType[];
+}
+
+interface ProductImageType {
+    img_id: number;
+    img_main: boolean;
+    img: string;
+}
+
+interface ProductOptionType {
+    option_id: number;
+    option: string;
+    option_price: number;
+    option_stock: number;
 }
 
 interface ParamsType {
@@ -31,86 +45,35 @@ export function ProductInfo(productid: ParamsType) {
 
     //product/detail api가져오기
     const encodedproductId = encodeURIComponent(productid.productid);
+    console.log('encodedproductId', encodedproductId)
 
-    console.log('productid', productid)
+    // const [productdetail, setProductdetail] = useState<ProductdetailType[]>([]); /* 배열로 선언 */
+    const [productdetail, setProductdetail] = useState<ProductdetailType | null>(null); /* productdetail는 객체이므로 객체로 선언 */
+    const [imgArray, setImgArray] = useState<ProductImageType[]>([]);
+    useEffect
+        (() => {
+            console.log('useeffect')
+            getDetailpageproductInfodata();
+        }, []);
 
-    // const [productdetail, setProductdetail] = useState<ProductdetailType[]>([]);
-    // useEffect
-    //     (() => {
-    //         getDetailpageproductInfodata();
-    //     }, []);
-
-    // const getDetailpageproductInfodata = async () => {
-    //     try {
-    //         console.log('encodedproductId', encodedproductId)
-    //         const response = await fetch(`http://52.78.248.75:8080/product/detail?product-id=${encodedproductId}`, { method: "GET" });
-    //         const data = await response.json();
-    //         setProductdetail(data.data);
-    //     } catch (error) {
-    //         console.error("데이터 가져오기 중 오류 발생:", error);
-    //     };
-    // }
-
-    // console.log('productdetail', productdetail)
-
-    const productdetail = {
-        "product_id": 1,
-        "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-        "sales": 20,
-        "price": 42000,
-        "final_price": 33600,
-        "product_img": [
-            {
-                "img_id": 1,
-                "img_main": true,
-                "img": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0016/A00000016716808ko.jpg?l=ko"
-            },
-            {
-                "img_id": 2,
-                "img_main": false,
-                "img": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0011/A00000011754124ko.jpg?l=ko"
-            },
-            {
-                "img_id": 3,
-                "img_main": false,
-                "img": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0019/A00000019286606ko.jpg?l=ko"
-            },
-            {
-                "img_id": 4,
-                "img_main": false,
-                "img": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0020/A00000020383502ko.jpg?l=ko"
-            },
-        ],
-        "review_count": 33,
-        "review_avg": 4.6,
-        "is_like": false,
-        "best": true,
-        "brand_name": "어노브",
-        "product_options": [
-            {
-                "option_id": 1,
-                "option": "텐더블룸",
-                "option_price": 1000,
-                "option_stock": 10
-            },
-            {
-                "option_id": 2,
-                "option": "웜페탈",
-                "option_price": 2000,
-                "option_stock": 10
-            },
-            {
-                "option_id": 3,
-                "option": "텐더블룸+ 웜페탈",
-                "option_price": 3000,
-                "option_stock": 10
-            }
-        ]
+    const getDetailpageproductInfodata = async () => {
+        try {
+            console.log('encodedproductId2', encodedproductId)
+            const response = await axios(`http://52.78.248.75:8080/product/detail?product-id=${encodedproductId}`, { method: "GET", });
+            setProductdetail(response.data.data);
+            setImgArray(response.data.data.product_img)
+        } catch (error) {
+            console.error("데이터 가져오기 중 오류 발생:", error);
+        };
     }
 
-    const imgArray = productdetail.product_img;
+    console.log('productdetail', productdetail)
+    console.log('imgArray', imgArray)
 
-    const mainimage = productdetail.product_img.filter((image) => image.img_main === true);
+    const mainimage = imgArray.filter((image) => image.img_main === true);
+    console.log('mainimage', mainimage)
+
+    console.log(productdetail)
 
     /*key에 따라여러개의 modal관리 */
     const [modalvisible, setmodalvisible] = useState<{ [key: string]: boolean }>({
@@ -144,16 +107,18 @@ export function ProductInfo(productid: ParamsType) {
 
     }
 
-    console.log(productdetail.product_img)
+    if (!productdetail) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
-            <Header />
             <div className='productinfo_wrapper'>
                 <div className='productinfo_left'>
                     <div className='productinfo_img'>
                         <div className='productinfo_imagelist'>
-                            <ProductImage imgList={productdetail.product_img} best={productdetail.best}></ProductImage>
+                            <ProductImage imgList={imgArray} best={productdetail.best}></ProductImage>
+
                         </div>
                     </div>
                     <div className='productinfo_reviewinfo'>
@@ -173,10 +138,10 @@ export function ProductInfo(productid: ParamsType) {
                         {productdetail.product_name}
                     </div>
                     <a className='productinfo_price'>
-                        {productdetail.price}원
+                        {productdetail.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                     <a className='productinfo_final_price'>
-                        {productdetail.final_price}원
+                        {productdetail.final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                     <div className='productinfo_todayicon'>
                         <a className='productinfo_todaydelivery'>
@@ -225,7 +190,6 @@ export function ProductInfo(productid: ParamsType) {
                     </div>
                     <Dropdown productOptions={productdetail.product_options} originprice={productdetail.price}></Dropdown>
                 </div>
-
             </div>
         </>
     );

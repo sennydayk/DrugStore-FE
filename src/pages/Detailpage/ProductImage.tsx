@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ProductImage.css'
 import Best from '../../components/Best/Best';
 
@@ -13,6 +13,8 @@ type imgListType = imgType[]; //객체 아니고 배열로 정의
 //imglist =[{},{},{}] 형태
 
 const ProductImage = ({ imgList, best }: { imgList: imgListType, best: boolean }) => {
+
+    console.log('productimage.tsx!!!')
 
     const [imageList, setimageList] = useState<imgType[]>(imgList);
 

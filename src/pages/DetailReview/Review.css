@@ -28,3 +28,8 @@
     margin :40px auto;
 
 }
+
+.review_noreview{
+    font-size: larger;
+    font-weight: bold;
+}

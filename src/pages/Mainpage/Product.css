@@ -63,11 +63,13 @@
     text-decoration: line-through;
     color: gray;
     margin-right: 0.6rem;
+    font-size: small;
 }
 
 .mainpage_final_price {
     color: red;
     font-weight: bold;
+    font-size: large;
 }
 
 .mainpage_like{

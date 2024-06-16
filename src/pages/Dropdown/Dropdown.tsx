@@ -74,7 +74,9 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
         setSelectedOptions((prev) => {
             const updatedItems = prev.map((item) => {
                 const selectedproduct = productOptions.find((option) => option.option_id === item.id)
-                if (item.id === prod_id && selectedproduct && selectedproduct.option_stock >= item.count) {
+                console.log('selectedproduct', selectedproduct)
+                console.log('selectedproduct.option_stock', selectedproduct?.option_stock)
+                if (item.id === prod_id && selectedproduct /*&& selectedproduct.option_stock >= item.count*/) {
                     return {
                         ...item, count: item.count + 1
                     }
@@ -139,10 +141,10 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
                                             {options.option}
                                         </div>
                                         <div className='dropdown_itemoptionaddprice'>
-                                            (+{options.option_price})
+                                            (+{options.option_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
                                         </div>
                                         <div className='dropdown_itemoptionprice'>
-                                            {options.option_price + originprice}원
+                                            {(options.option_price + originprice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +171,7 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
                                                         </div>
                                                         <button className="cntPlus" onClick={() => CountPlus(selectedOption.id)}>+</button>
                                                     </div>
-                                                    <div className='dropdown_optionprice'>{(product.option_price + originprice) * selectedOption.count}원</div>
+                                                    <div className='dropdown_optionprice'>{((product.option_price + originprice) * selectedOption.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원</div>
                                                     <button className="cntdelete" onClick={() => CountDelete(selectedOption.id)}>x</button>
                                                 </div>
                                             </div>

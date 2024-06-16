@@ -56,12 +56,14 @@ export function Product({
                 <div className='mainpage_product_name'>
                     {product_name}
                 </div>
-                <a className='mainpage_price'>
-                    {price}원
-                </a>
-                <a className='mainpage_final_price'>
-                    {final_price}원
-                </a>
+                <div>
+                    <a className='mainpage_price'>
+                        {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                    </a>
+                    <a className='mainpage_final_price'>
+                        {final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                    </a>
+                </div>
                 <div className='mainpage_likes'>
                     {likes}
                 </div>
