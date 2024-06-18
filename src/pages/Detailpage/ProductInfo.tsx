@@ -59,7 +59,7 @@ export function ProductInfo(productid: ParamsType) {
     const getDetailpageproductInfodata = async () => {
         try {
             console.log('encodedproductId2', encodedproductId)
-            const response = await axios(`http://52.78.248.75:8080/product/detail?product-id=${encodedproductId}`, { method: "GET", });
+            const response = await axios(`https://drugstoreproject.shop/product/detail?product-id=${encodedproductId}`, { method: "GET", });
             setProductdetail(response.data.data);
             setImgArray(response.data.data.product_img)
         } catch (error) {
@@ -67,13 +67,7 @@ export function ProductInfo(productid: ParamsType) {
         };
     }
 
-    console.log('productdetail', productdetail)
-    console.log('imgArray', imgArray)
-
     const mainimage = imgArray.filter((image) => image.img_main === true);
-    console.log('mainimage', mainimage)
-
-    console.log(productdetail)
 
     /*key에 따라여러개의 modal관리 */
     const [modalvisible, setmodalvisible] = useState<{ [key: string]: boolean }>({
@@ -188,7 +182,7 @@ export function ProductInfo(productid: ParamsType) {
                             </img>
                         </div>
                     </div>
-                    <Dropdown productOptions={productdetail.product_options} originprice={productdetail.price}></Dropdown>
+                    <Dropdown productOptions={productdetail.product_options} originprice={productdetail.final_price}></Dropdown>
                 </div>
             </div>
         </>

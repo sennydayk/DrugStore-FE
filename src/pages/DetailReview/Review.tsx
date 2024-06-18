@@ -33,7 +33,7 @@ const Review = (productid: ParamsType) => {
     const getReviewdata = async () => {
         const token = sessionStorage.getItem('token');
         try {
-            const response = await axios(`http://52.78.248.75:8080/product/review/${encodedproductId}`, { method: "GET", });
+            const response = await axios(`https://drugstoreproject.shop/product/review/${encodedproductId}`, { method: "GET", });
             setReviewArray(response.data.data.content);
         } catch (error) {
             console.error("데이터 가져오기 중 오류 발생:", error);

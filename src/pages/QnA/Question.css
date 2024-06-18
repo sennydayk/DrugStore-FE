@@ -9,7 +9,7 @@
 }
 
 .qnaitem_qnastatus{
-    background-color: green;
+    background-color: #62c5ce;
     padding: 5px 10px;
     border-radius: 20px;
     font-weight: bold;
@@ -25,10 +25,10 @@
 }
 
 .qnaitem_question {
-    flex: 3; /* 각 요소의 너비를 동일하게 설정합니다. */
-    text-align: center; /* 텍스트를 중앙 정렬합니다. */
+    flex: 3; 
+    text-align: center; 
 }
 
 .qnaitem_question {
-    cursor: pointer; /* 질문 항목에 마우스 커서가 있을 때 포인터로 변경합니다. */
+    cursor: pointer;
 }
