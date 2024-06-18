@@ -66,11 +66,11 @@ const Categorypage = () => {
     const getdatabyCategory = async () => {
         try {
 
-            let url = `http://52.78.248.75:8080/main/category/${encodedcategoryId}`;
+            let url = `https://drugstoreproject.shop/main/category/${encodedcategoryId}`;
             const sortByfilter = filterArray.find(item => item.sortBy === selectedFilter)
             console.log('sortByfilter', sortByfilter)
             if (sortByfilter) {
-                url += `?sortby=${sortByfilter.filter}`;
+                url += `?sortBy=${sortByfilter.filter}`;
             }
             const response = await axios.get(url);
             console.log('url', url)

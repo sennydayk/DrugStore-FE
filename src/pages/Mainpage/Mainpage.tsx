@@ -35,35 +35,44 @@ const Mainpage = () => {
     const [Search, setSearch] = useState(false);
     const [productarray, setProductarray] = useState<ProductType[]>([]);
 
-    console.log('Keyword', Keyword)
     useEffect(() => {
-        // if (Search) {
-        //     if (Keyword) {
-        //         getSearchdata(Keyword);
-        //     } else {
-        //         getMainpagedata();
-        //     }
-        // }
-        // else {
-        getMainpagedata();
-        // }
-    }, [Search]);
+        if (Search) {
+            if (Keyword) {
+                getSearchdata(Keyword);
+            } else {
+                getMainpagedata();
+            }
+        }
+        else {
+            getMainpagedata();
+        }
+    }, [Search, Keyword]);
 
     //mainpage api 가져오기
     const getMainpagedata = async () => {
         const token = sessionStorage.getItem('token');
+        console.log('token', token)
         try {
-            const response = await axios("http://52.78.248.75:8080/main/", { method: "GET", });
+            const response = await axios("https://drugstoreproject.shop/main/", {
+                method: "GET",
+                // headers: token ? { Authorization: `Bearer ${token}` } : {}
+                // headers: {
+                //     "Token": token ? sessionStorage.getItem('token') : '',
+                // }
+            });
             setProductarray(response.data.data.product_list);
+            console.log(productarray)
         } catch (error) {
             console.error("데이터 가져오기 중 오류 발생:", error);
         };
     }
 
+    console.log('productarray', productarray)
+
     //검색 api 가져오기
     const getSearchdata = async (Keyword: string) => {
         try {
-            const response = await fetch(`http://52.78.248.75:8080/main/find?keyword=${Keyword}`, { method: "GET" });
+            const response = await fetch(`https://drugstoreproject.shop/find?keyword=${Keyword}`, { method: "GET" });
             const data = await response.json();
             console.log('data', data)
             setProductarray(data.data.content);
@@ -76,7 +85,6 @@ const Mainpage = () => {
     console.log('xx', productarray)
     return (
         <div>
-            {/* <Header></Header> */}
             <div className='mainpage_imageslider'>
                 <ImageSlider adphotos={adphotos}></ImageSlider>
             </div>

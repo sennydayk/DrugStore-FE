@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Question from './Question';
 import QuestionModal from './QuestionModal';
 import axios from 'axios'
+import './QnA.css'
 
 interface QnaType {
     question: string;
@@ -23,10 +24,13 @@ interface ParamsType {
     productid: number
 };
 
-const QnA = (productid: ParamsType) => {
+const QnA = ({ productid }: ParamsType) => {
 
     const [qnaArray, setqnaArrayy] = useState<QnaType[]>([]);
-    const encodedproductId = encodeURIComponent(productid.productid);
+    const [questionmode, setquestionmode] = useState('create')
+    const encodedproductId = encodeURIComponent(productid);
+
+    const [questionid, setQuestionid] = useState(0)
 
     useEffect
         (() => {
@@ -46,15 +50,18 @@ const QnA = (productid: ParamsType) => {
     const [showquestion, setshowquestion] = useState(false)
     const writequestionhandler = () => {
         setshowquestion(true);
+        setquestionmode('create')
+        console.log(questionmode)
     }
 
     return (
         <div>
-            <button onClick={writequestionhandler}>상품문의</button>
-            {showquestion && <QuestionModal showquestion={showquestion} setshowquestion={setshowquestion}></QuestionModal>}
+            <button className="qna_button" onClick={writequestionhandler}>상품문의</button>
+            {showquestion && <QuestionModal questionmode={questionmode} setquestionmode={setquestionmode} getQnadata={getQnadata} productid={productid} showquestion={showquestion} setshowquestion={setshowquestion}></QuestionModal>}
             <div className='qna_qnalist'>
                 {qnaArray != undefined ? qnaArray.map((qna) => {
-                    return <Question qna={qna}></Question>
+                    return <Question
+                        questionmode={questionmode} setquestionmode={setquestionmode} qnaArray={qnaArray} getQnadata={getQnadata} qna={qna} showquestion={showquestion} setshowquestion={setshowquestion}></Question>
                 }) : (<div className='qna_noqna'>아직 작성된 문의가 없습니다!</div>)}
             </div>
         </div>
