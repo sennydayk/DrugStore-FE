@@ -135,3 +135,8 @@
   font-weight: bold;
   text-align: center;
 }
+
+.logout_btn {
+  border: none;
+  background-color: transparent;
+}
