@@ -42,10 +42,20 @@ const Cart: React.FC = () => {
     }))
   );
 
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
   const fetchCartItems = async () => {
     try {
+      const token = sessionStorage.getItem("token");
       const response = await axios.get(
-        "https://drugstoreproject.shop/cart/myCart"
+        "https://drugstoreproject.shop/cart/myCart",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setItems(response.data.data);
     } catch (error) {
@@ -57,7 +67,6 @@ const Cart: React.FC = () => {
       }
     }
   };
-
   const addItemToCart = async (item: Item) => {
     try {
       const response = await axios.post(
@@ -97,10 +106,6 @@ const Cart: React.FC = () => {
       }
     }
   };
-
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
 
   useEffect(() => {
     setCheckedItems(new Array(items.length).fill(selectAll));
