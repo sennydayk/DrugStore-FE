@@ -42,31 +42,38 @@ const Cart: React.FC = () => {
     }))
   );
 
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
-
   const fetchCartItems = async () => {
     try {
       const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
       const response = await axios.get(
         "https://drugstoreproject.shop/cart/myCart",
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
       setItems(response.data.data);
     } catch (error) {
-      const axiosError = error as AxiosError;
-      console.error("장바구니 데이터를 가져오는 중 오류 발생:", axiosError);
-      if (axiosError.response) {
-        console.error("서버 응답 데이터:", axiosError.response.data);
-        console.error("서버 응답 상태 코드:", axiosError.response.status);
+      if (error instanceof AxiosError) {
+        console.error("장바구니 데이터를 가져오는 중 오류 발생:", error);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+          console.error("서버 응답 상태 코드:", error.response.status);
+        }
+      } else if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error("알 수 없는 오류 발생:", error);
       }
     }
   };
+
   const addItemToCart = async (item: Item) => {
     try {
       const response = await axios.post(
@@ -106,6 +113,10 @@ const Cart: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   useEffect(() => {
     setCheckedItems(new Array(items.length).fill(selectAll));
