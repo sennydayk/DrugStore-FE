@@ -4,11 +4,13 @@ import "./SignupModal.css";
 interface NicknameModalProps {
   nicknameModal: boolean;
   setNicknameModal: React.Dispatch<React.SetStateAction<boolean>>;
+  validMessageNickname: string;
 }
 
 const NicknameModal: React.FC<NicknameModalProps> = ({
   nicknameModal,
   setNicknameModal,
+  validMessageNickname,
 }) => {
   if (!nicknameModal) return null;
 
@@ -19,7 +21,7 @@ const NicknameModal: React.FC<NicknameModalProps> = ({
   return (
     <div className="signup-modal-wrapper">
       <dialog className="signup-modal-container">
-        <p>사용 가능한 닉네임입니다.</p>
+        <p>{validMessageNickname}</p>
         <button onClick={closeModal}>확인</button>
       </dialog>
     </div>

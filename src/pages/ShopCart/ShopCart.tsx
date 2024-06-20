@@ -47,7 +47,7 @@ const Cart: React.FC = () => {
       const response = await axios.get(
         "https://drugstoreproject.shop/cart/myCart"
       );
-      setItems(response.data.data); // 데이터 형식에 맞게 조정
+      setItems(response.data.data);
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error("장바구니 데이터를 가져오는 중 오류 발생:", axiosError);
@@ -57,6 +57,50 @@ const Cart: React.FC = () => {
       }
     }
   };
+
+  const addItemToCart = async (item: Item) => {
+    try {
+      const response = await axios.post(
+        "https://drugstoreproject.shop/cart/add",
+        item
+      );
+      // 성공적으로 추가되면 장바구니 항목을 다시 가져옵니다.
+      fetchCartItems();
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("장바구니에 항목을 추가하는 중 오류 발생:", axiosError);
+      if (axiosError.response) {
+        console.error("서버 응답 데이터:", axiosError.response.data);
+        console.error("서버 응답 상태 코드:", axiosError.response.status);
+      }
+    }
+  };
+
+  const updateItemInCart = async (
+    id: number,
+    quantity: number,
+    option: string
+  ) => {
+    try {
+      const response = await axios.put(
+        "https://drugstoreproject.shop/cart/update",
+        { id, quantity, option }
+      );
+      // 성공적으로 업데이트되면 장바구니 항목을 다시 가져옵니다.
+      fetchCartItems();
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("장바구니 항목을 업데이트하는 중 오류 발생:", axiosError);
+      if (axiosError.response) {
+        console.error("서버 응답 데이터:", axiosError.response.data);
+        console.error("서버 응답 상태 코드:", axiosError.response.status);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   useEffect(() => {
     setCheckedItems(new Array(items.length).fill(selectAll));
@@ -151,6 +195,8 @@ const Cart: React.FC = () => {
 
   return (
     <div className="container">
+      <h1 className="shopcart_title">장바구니</h1>
+      <h3 className="shopcart_subtitle">배송상품</h3>
       <div className="cart_wrap">
         <CartControls
           selectAll={selectAll}

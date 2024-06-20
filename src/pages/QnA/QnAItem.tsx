@@ -1,4 +1,6 @@
 import React from 'react';
+import './QnAItem.css'
+import jwtDecode from 'jwt-decode';
 
 interface QnAItemProps {
     question: string;
@@ -6,19 +8,24 @@ interface QnAItemProps {
 }
 
 const QnaItem = ({ question, answer }: QnAItemProps) => {
+
     return (
         <>
-            <div>
-                <a className='qnaitem_question'>
+            <div className='qnaitem_questionitem'>
+                <a className='qnaitem_q'>
                     Q
                 </a>
-                {question}
+                <div className='qnaitem_question'>
+                    {question}
+                </div>
             </div>
-            <div>
-                <a className='qnaitem_answer'>
+            <div className='qnaitem_answeritem'>
+                <a className='qnaitem_a'>
                     A
                 </a>
-                {answer}
+                <div className='qnaitem_answer'>
+                    {answer}
+                </div>
             </div>
         </>
     );

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Header from '../../components/Header/Header';
 import { Product } from '../Mainpage/Product';
 import './Categorypage.css'
+import axios from 'axios'
 
 
 interface DatabyCategoryType {
@@ -36,7 +37,7 @@ export const filterArray: FilterType[] = [
 const Categorypage = () => {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [selectedFilter, setselectedFilters] = useState(filterArray[0].sortBy)
+    const [selectedFilter, setselectedFilters] = useState(filterArray[1].sortBy)
 
     const handleClick = () => {
         setIsOpen((prevState) => !prevState)
@@ -60,13 +61,20 @@ const Categorypage = () => {
     useEffect
         (() => {
             getdatabyCategory();
-        }, [categoryId]);
+        }, [categoryId, selectedFilter]);
 
     const getdatabyCategory = async () => {
         try {
-            const response = await fetch(`http://52.78.248.75:8080/main/category/${encodedcategoryId}`, { method: "GET" });
-            const data = await response.json();
-            setProductarray(data.data.content);
+
+            let url = `https://drugstoreproject.shop/main/category/${encodedcategoryId}`;
+            const sortByfilter = filterArray.find(item => item.sortBy === selectedFilter)
+            console.log('sortByfilter', sortByfilter)
+            if (sortByfilter) {
+                url += `?sortBy=${sortByfilter.filter}`;
+            }
+            const response = await axios.get(url);
+            console.log('url', url)
+            setProductarray(response.data.data.content);
         } catch (error) {
             console.error("데이터 가져오기 중 오류 발생:", error);
         };
@@ -74,6 +82,7 @@ const Categorypage = () => {
 
     return (
         <div>
+            {/* <Header></Header> */}
             <div className="categorypage_wrapper">
                 <div className="filter_wrapper">
                     <div onClick={handleClick} className='filter_selectdropdown'>{selectedFilter} 🔽</div>
