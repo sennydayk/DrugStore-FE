@@ -17,7 +17,7 @@ import Categorypage from "./pages/Categorypage/Categorypage";
 import { Detailpage } from "./pages/Detailpage/Detailpage";
 import { AuthProvider } from "./contexts/AuthContext";
 
-const App: React.FC = () => (
+const App = () => (
   <AuthProvider>
     <div className="App">
       <Header />
@@ -27,7 +27,7 @@ const App: React.FC = () => (
         <Route path="/detail/:productid" element={<Detailpage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/find-email" element={<AccountInfoFinder />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart" element={<CartPage />} />ㅁ
         <Route path="/order" element={<OrderPayPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/mypage/account" element={<Mypage />} />

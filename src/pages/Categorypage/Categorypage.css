@@ -13,12 +13,13 @@
 
 .filter_wrapper{
     position: absolute;
-    top: 12%;
+    top: 0.3%;
     left: 0;
     text-align: left;
     padding-left: 50px;
     width: 100px;
-    z-index:3
+    z-index:3;
+    /* border-bottom: 1px solid black; */
 }
 
 .categorypage_wrapper{

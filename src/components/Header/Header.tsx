@@ -5,6 +5,9 @@ import UserActions from "./UserActions";
 import Navigation from "./Navigation";
 import Search from "./Search";
 import { useAuth } from "../../contexts/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setKeyword } from "../../store/searchSlice";
 
 function Header() {
   const { isLoggedIn } = useAuth();

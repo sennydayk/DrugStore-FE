@@ -8,6 +8,9 @@
     margin :40px auto;
 }
 
+.productinfo_brand_name{
+    margin-bottom: 5px;
+}
 .productinfo_img{
     position: relative;
     z-index: 1;
@@ -73,6 +76,7 @@
 .productinfo_product_name{
  font-size: 26px;
  font-weight: bold;
+ margin-bottom: 10px;
 }
 
 .productinfo_price {
@@ -86,7 +90,7 @@
 .productinfo_final_price {
     color: red;
     font-weight: bold;
-    font-size: large;
+    font-size: x-large;
     margin-bottom: 5px;
 }
 

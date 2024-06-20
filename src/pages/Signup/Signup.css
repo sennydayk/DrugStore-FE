@@ -92,12 +92,13 @@
   font-weight: bold;
   border: none;
   border-radius: 3px;
-  margin-left: 20px;
+  margin-left: 5px;
   cursor: pointer;
 }
 
 .signup-btn:hover {
   background-color: #62c5ce;
+  cursor: pointer;
 }
 
 .signup-btn-disabled {
@@ -109,7 +110,7 @@
   font-weight: bold;
   border: none;
   border-radius: 3px;
-  margin-left: 20px;
+  margin-left: 5px;
   cursor: not-allowed;
 }
 
@@ -132,6 +133,22 @@
 
 .signup-btn-main:hover {
   background-color: #62c5ce;
+  cursor: pointer;
+}
+
+.signup-pwd-btn {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  border: none;
+  background: none;
+  right: 85%;
+  cursor: pointer;
+}
+
+.signup-pwd-icon {
+  width: 15px;
+  height: 15px;
 }
 
 .signup-footer {

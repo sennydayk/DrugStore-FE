@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Review.css'
 import ReviewItem from './ReviewItem';
 import reviewgood from "../../assets/png/reviewgood.png";
 import reviewbad from "../../assets/png/reviewbad.png";
 import Barchart from '../Barchart/Barchart';
+import axios from 'axios'
 
 interface ReviewType {
     nickname: string
@@ -15,60 +16,33 @@ interface ReviewType {
     option_name: string
 }
 
-const Review = () => {
+interface ParamsType {
+    productid: number
+};
 
-    const reviewArray: ReviewType[] = [
-        {
-            "nickname": "hyeona",
-            "review_score": 2,
-            "review_content": "트리트먼트 좋네요",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "create_at": "2024-05-22",
-            "userprofile": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0017/A00000017922709ko.jpg?l=ko",
-            "option_name": "aaaaa",
-        },
-        {
-            "nickname": "honghyeon",
-            "review_score": 4,
-            "review_content": "잘 사용하고 있어요",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "create_at": "2024-05-23",
-            "userprofile": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0017/A00000017922709ko.jpg?l=ko",
-            "option_name": "aaaaa",
-        },
-        {
-            "nickname": "sora",
-            "review_score": 4,
-            "review_content": "잘 사용하고 있어요",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "create_at": "2024-05-23",
-            "userprofile": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0017/A00000017922709ko.jpg?l=ko",
-            "option_name": "aaaaa",
-        },
-        {
-            "nickname": "sora",
-            "review_score": 1,
-            "review_content": "잘 사용하고 있어요",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "create_at": "2024-05-23",
-            "userprofile": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0017/A00000017922709ko.jpg?l=ko",
-            "option_name": "aaaaa",
-        },
-        {
-            "nickname": "sora",
-            "review_score": 1,
-            "review_content": "잘 사용하고 있어요",
-            "product_name": "어노브 대용량 딥 데미지 트리트먼트",
-            "create_at": "2024-05-23",
-            "userprofile": "https://image.oliveyoung.co.kr/uploads/images/goods/550/10/0000/0017/A00000017922709ko.jpg?l=ko",
-            "option_name": "aaaaa",
-        }
-    ]
+const Review = (productid: ParamsType) => {
+
+    const [reviewArray, setReviewArray] = useState<ReviewType[]>([]);
+    const encodedproductId = encodeURIComponent(productid.productid);
+
+    useEffect
+        (() => {
+            getReviewdata();
+        }, []);
+
+    const getReviewdata = async () => {
+        const token = sessionStorage.getItem('token');
+        try {
+            const response = await axios(`https://drugstoreproject.shop/product/review/${encodedproductId}`, { method: "GET", });
+            setReviewArray(response.data.data.content);
+        } catch (error) {
+            console.error("데이터 가져오기 중 오류 발생:", error);
+        };
+    }
 
     const reviewCount = reviewArray.length
-    const reviewAvg = (reviewArray.reduce((acc, curr) => acc + curr.review_score, 0) / reviewCount).toFixed(1)
+    const reviewAvg = reviewCount === 0 ? '0.0' : (reviewArray.reduce((acc, curr) => acc + curr.review_score, 0) / reviewCount).toFixed(1)
     const reviewScore = reviewArray.map((review) => review.review_score)
-    console.log(reviewScore)
 
     return (
         <>
@@ -91,9 +65,9 @@ const Review = () => {
                 </div>
             </div>
             <div className='review_reviwlist'>
-                {reviewArray.map((review) => {
+                {reviewArray.length > 0 ? reviewArray.map((review) => {
                     return <ReviewItem {...review} ></ReviewItem>
-                })}
+                }) : (<div className='review_noreview'>아직 작성된 리뷰가 없습니다. 첫번째 리뷰 작성자가 되어주세요!</div>)}
             </div>
         </>
     );
