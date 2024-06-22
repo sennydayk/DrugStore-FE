@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FC, useEffect } from "react";
 import "./OrderPay.css";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 interface UserInfo {
   name: string;
@@ -11,6 +11,53 @@ interface UserInfo {
 const DeliveryInfo: FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
   const [deliveryMessage, setDeliveryMessage] = useState<string>("");
+
+  const fetchUserInfo = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
+      const config: AxiosRequestConfig = {
+        method: "post",
+        url: "https://drugstoreproject.shop/order/cart-to-order",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+      };
+
+      const response = await axios(config);
+      console.log("서버 응답 데이터:", response.data);
+      setUserInfo(
+        Array.isArray(response.data) ? response.data : [response.data]
+      );
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("사용자 정보를 가져오는 중 오류 발생:", error.message);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+          console.error("서버 응답 상태 코드:", error.response.status);
+          if (error.response.status === 400) {
+            alert("이 제품은 품절입니다.");
+          } else {
+            // 다른 에러 처리
+          }
+        }
+      } else {
+        console.error("알 수 없는 오류 발생:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    console.log("userInfo 상태 변경:", userInfo);
+  }, [userInfo]);
 
   const handleDeliveryMessageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setDeliveryMessage(e.target.value);

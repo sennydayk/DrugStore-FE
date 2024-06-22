@@ -77,9 +77,7 @@ const Cart: React.FC = () => {
 
   const fetchCartItems = async () => {
     try {
-      const response = await axios.get(
-        "https://drugstoreproject.shop/cart/myCart"
-      );
+      const response = await axios.get("http://52.78.248.75:8080/cart/myCart");
       setItems(response.data);
     } catch (error) {
       console.error("Failed to fetch cart items:", error);
@@ -88,7 +86,7 @@ const Cart: React.FC = () => {
 
   const updateCartItem = async (item: Item) => {
     try {
-      await axios.post("https://drugstoreproject.shop/cart/update", item);
+      await axios.post("http://52.78.248.75:8080/cart/update", item);
     } catch (error) {
       console.error("Failed to update cart item:", error);
     }
