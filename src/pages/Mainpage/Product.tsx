@@ -71,7 +71,7 @@ export function Product({
                         {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                     <a className='mainpage_final_price'>
-                        {final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                        {final_price && final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                 </div>
                 <div className='mainpage_likes'>
