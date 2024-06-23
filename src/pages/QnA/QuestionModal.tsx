@@ -9,20 +9,26 @@ interface QuestionModalProps {
     getQnadata: () => void;
     questionmode: string;
     setquestionmode: React.Dispatch<React.SetStateAction<string>>;
-    // questionid: number;
+    questionid: number;
+    currentquestion: string;
 }
 
 
-const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, questionmode, setquestionmode }: QuestionModalProps) => {
+const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, questionmode, setquestionmode, questionid, currentquestion }: QuestionModalProps) => {
 
     const encodedproductId = encodeURIComponent(productid);
     const closequestionmodal = () => {
         setshowquestion(false)
     }
 
-    const [question, setQuestion] = useState("");
-    const handlequestionchange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuestion(e.target.value);
+    console.log('currentquestion', currentquestion)
+    const [question, setQuestion] = useState(currentquestion || "");
+    const handlequestionchange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (e.target.value.length > 50) {
+            alert('50자 이내로 입력하세요.');
+        } else {
+            setQuestion(e.target.value);
+        }
     }
 
     const submitquestionhandler = async () => {
@@ -64,7 +70,7 @@ const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, q
         }
 
         try {
-            const response = await axios.put(`http://52.78.248.75:8080/product/question/update?question-id=${encodedquestionId}`, {
+            const response = await axios.put(`https://drugstoreproject.shop/product/question?question-id=${encodedquestionId}`, {
                 'question': question
             }, {
                 headers: {
@@ -90,20 +96,20 @@ const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, q
             <div className="questionmodal_container">
                 {questionmode === 'create' ? <p className="questionmodal_title">문의 작성하기</p> :
                     <p className="questionmodal_title">문의 수정하기</p>}
-                {questionmode === 'create' ? <input
+                {questionmode === 'create' ? <textarea
                     className="questionmodal_input"
                     placeholder="문의를 작성해주세요"
+                    maxLength={50}
                     onChange={handlequestionchange}
-                /> : <input
+                /> : <textarea
                     className="questionmodal_input"
                     onChange={handlequestionchange}
+                    value={question}
                 />}
                 <div className="questionmodal_footer">
                     <button onClick={closequestionmodal}>닫기</button>
-                    {/* {questionmode === 'create' ? <button onClick={submitquestionhandler}>문의 등록</button> :
-                        <button onClick={() => updatequestionhandler(questionid)}>문의 수정</button>} */}
-
-                    <button onClick={submitquestionhandler}>문의 등록</button>
+                    {questionmode === 'create' ? <button onClick={submitquestionhandler}>문의 등록</button> :
+                        <button onClick={() => updatequestionhandler(questionid)}>문의 수정</button>}
                 </div>
             </div>
         </div>

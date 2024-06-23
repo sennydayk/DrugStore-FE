@@ -3,14 +3,27 @@ import "./Header.css";
 import Logo from "./Logo";
 import UserActions from "./UserActions";
 import Navigation from "./Navigation";
-import Search from "./Search";
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { setKeyword } from '../../store/searchSlice';
+import { useDispatch } from "react-redux";
+import { setSearchKeyword } from "../../store/searchSlice";
+import { useNavigate } from "react-router-dom";
 import './Header.css';
 
 
 function Header() {
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(setSearchKeyword(searchTerm));
+    // navigate("/");
+  };
 
   const [cartItemCount, setCartItemCount] = useState(0);
   useEffect(() => {
@@ -24,9 +37,15 @@ function Header() {
     <header className="drugstore-header">
       <div className="header-top">
         <Logo />
-        <div>
-          <Search />
-        </div>
+        <form onSubmit={handleSearchSubmit} className="search-form">
+          <input
+            className="header_searchinput"
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchInputChange}
+          />
+          <button className="header_searchbutton" type="submit">🔍</button>
+        </form>
         <UserActions cartItemCount={cartItemCount} />
       </div>
       <div className="navigation-search">

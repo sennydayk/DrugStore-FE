@@ -7,3 +7,8 @@
     border-radius: 8px;
     font-size: 14px;  
 }
+
+.qna_qnalist{
+    max-width: 1000px;
+    margin :40px auto;
+}

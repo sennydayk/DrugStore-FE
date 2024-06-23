@@ -80,6 +80,8 @@
     background-color: transparent;
     padding: 5px;
     cursor:pointer;
+    width:80px;
+    height:60px;
 }
 
 .dropdown_itemoption{
