@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Navigation.css'
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { RootState } from "../../store/store";
+import { setSearchKeyword } from "../../store/searchSlice";
 
 
 type CategoryType = {
@@ -24,10 +28,17 @@ export const categoryArray: CategoryType[] = [
 ];
 
 function Navigation() {
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isvisible, setisvisible] = useState(false)
 
+  const searchKeyword = useSelector((state: RootState) => state.search.keyword);
+
   const categoryClickhandler = (categoryId: number) => {
+    console.log('navvvvvvvvvvvvv')
+    dispatch(setSearchKeyword(""));
+    console.log(searchKeyword)
     navigate(`/main/category/${encodeURIComponent(categoryId)}`, { state: categoryId })
   }
 

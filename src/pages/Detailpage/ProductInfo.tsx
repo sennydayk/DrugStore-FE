@@ -8,6 +8,9 @@ import info from "../../assets/png/info.png";
 import Modal from '../Modal/Modal';
 import useModal from '../../hook/useModal';
 import axios from 'axios'
+import Like from '../../components/Like/Like';
+import useLikeHandler from '../../hook/useLikehandler'
+
 
 interface ProductdetailType {
     product_id: number,
@@ -45,24 +48,39 @@ export function ProductInfo(productid: ParamsType) {
 
     //product/detail api가져오기
     const encodedproductId = encodeURIComponent(productid.productid);
-    console.log('encodedproductId', encodedproductId)
 
     // const [productdetail, setProductdetail] = useState<ProductdetailType[]>([]); /* 배열로 선언 */
     const [productdetail, setProductdetail] = useState<ProductdetailType | null>(null); /* productdetail는 객체이므로 객체로 선언 */
     const [imgArray, setImgArray] = useState<ProductImageType[]>([]);
+    const [isLiked, setIsLiked] = useState<boolean>(false);
     useEffect
         (() => {
-            console.log('useeffect')
             getDetailpageproductInfodata();
         }, []);
 
+    const updateDataCallback = () => {
+        getDetailpageproductInfodata();
+    };
+
+
+    const { addLike, deleteLike } = useLikeHandler(updateDataCallback);
+
     const getDetailpageproductInfodata = async () => {
         try {
-            console.log('encodedproductId2', encodedproductId)
-            const response = await axios(`https://drugstoreproject.shop/product/detail?product-id=${encodedproductId}`, { method: "GET", });
+            const token = sessionStorage.getItem('token');
+            const response = await axios(`https://drugstoreproject.shop/product?product-id=${encodedproductId}`, {
+                method: "GET",
+                headers: {
+                    "Token": token ? token : '',
+                }
+            });
             setProductdetail(response.data.data);
             setImgArray(response.data.data.product_img)
-        } catch (error) {
+            setIsLiked(response.data.data.is_like);
+            console.log('productinfo!!!!!!', isLiked)
+        }
+
+        catch (error) {
             console.error("데이터 가져오기 중 오류 발생:", error);
         };
     }
@@ -76,30 +94,82 @@ export function ProductInfo(productid: ParamsType) {
     })
     /* */
 
-    const [deliveryinfovisible, setdeliveryinfoVisible] = useState(false);
-    const [cardinfovisible, setcardinfoVisible] = useState(false);
-    const clickdeliveryinfo = () => {
-        setdeliveryinfoVisible(true)
-    }
+    const modalShippinginfo = useModal();
+    const modaltodaydelivery = useModal();
+    const modalCard = useModal();
+    const modalPoint = useModal();
 
-    const { isOpen, openModal, closeModal } = useModal();
+    const modalShippinginfoContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px', textAlign: 'left' }}>배송비안내</h2>
+            <p>
+                올리브영 배송 : 2500원
+            </p>
+            <div style={{ fontWeight: 'bold' }}>
+                추가배송비
+            </div>
+            <div>
+                도서산간 : 2500원<br />
+                제주지역 : 2500원<br />
+                제주도서산간 : 7000원
+            </div>
+        </div >
+    );
 
-    const clickdeliveryclose = () => {
-        setdeliveryinfoVisible(false)
-    }
+    const modalCardContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px' }}>카드할인혜택</h2>
+            <p>
+                THE CJ카드결제 시 10% 할인 (BC 카드 제외)
+            </p>
+        </div>
+    );
 
-    const clickcardclose = () => {
-        setcardinfoVisible(false)
-    }
+    const modalPointContent = (
+        <div>
+            <h2>등급별 CJ ONE 포인트 적립</h2>
+            <table style={{ border: '1px solid black', borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                    <tr>
+                        <th style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>등급</th>
+                        <th style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>적립률</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>GOLD OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>BLACK OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>GREEN OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>PINK OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>0.5%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>BABY OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>0.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
 
-    const clickcardinfo = () => {
-        setcardinfoVisible(true)
-
-    }
-
-    const clickpointinfo = () => {
-
-    }
+    const modaltodaydeliveryContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px' }}>오늘드림 서비스 안내 </h2>
+            <p>
+                배송 및 픽업 가능 지역<br />
+                전국 (정확한 서비스 가능여부는 배송지 등록을 통해서 확인가능)
+            </p>
+        </div>
+    );
 
     if (!productdetail) {
         return <div>Loading...</div>;
@@ -128,8 +198,17 @@ export function ProductInfo(productid: ParamsType) {
                     <div className='productinfo_brand_name'>
                         {productdetail.brand_name}
                     </div>
-                    <div className='productinfo_product_name'>
-                        {productdetail.product_name}
+                    <div className='productinfo_productlike'>
+                        <div className='productinfo_product_name'>
+                            {productdetail.product_name}
+                        </div>
+                        <div className='productinfo_likeitem'>
+                            <Like productid={productdetail.product_id}
+                                likes={isLiked}
+                                addLike={() => addLike(productdetail.product_id)}
+                                deleteLike={() => deleteLike(productdetail.product_id)}
+                            ></Like>
+                        </div>
                     </div>
                     <a className='productinfo_price'>
                         {productdetail.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
@@ -148,41 +227,51 @@ export function ProductInfo(productid: ParamsType) {
                     <div className='productinfo_deliveryinfo'>
                         배송정보
                         <img className="infobutton_delivery" src={info}
-                            onClick={clickdeliveryinfo}>
+                            onClick={modalShippinginfo.openModal}>
                         </img>
-
                         <div>
-                            일반배송	2,500원 ( 20,000 원 이상 무료배송 )
-                            올리브영 배송
-                            일부 옵션 예약상품 순차배송
+                            일반배송 |	2,500원 ( 20,000 원 이상 무료배송 )<br />
+                            <div style={{ marginLeft: '70px' }}>
+                                올리브영 배송 | 평균 3일 이내 배송
+                            </div>
                         </div>
-                    </div>
-                    {deliveryinfovisible && (
-                        <Modal isOpen={isOpen} openModal={openModal} closeModal={closeModal}
-                        >
+                        <div>
+                            오늘드림 |	2,500원 또는 5,000원
+                            <img className="infobutton_delivery" src={info}
+                                onClick={modaltodaydelivery.openModal}>
+                            </img>
+                        </div>
+                        <Modal isOpen={modaltodaydelivery.isOpen} closeModal={modaltodaydelivery.closeModal}>
+                            {modaltodaydeliveryContent}
                         </Modal>
-                    )}
+                    </div>
+                    <Modal isOpen={modalShippinginfo.isOpen} closeModal={modalShippinginfo.closeModal}>
+                        {modalShippinginfoContent}
+                    </Modal>
                     <div className='productinfo_paymentinfo'>
                         결제혜택
                         <div className=''>
                             THE CJ 카드 추가 10%할인
                             <img className="infobutton_payment" src={info}
-                                onClick={clickcardinfo}>
+                                onClick={modalCard.openModal}>
                             </img>
                         </div>
-                        {cardinfovisible && (
-                            <Modal isOpen={isOpen} openModal={openModal} closeModal={closeModal}
-                            >
-                            </Modal>
-                        )}
+                        <Modal isOpen={modalCard.isOpen} closeModal={modalCard.closeModal}>
+                            {modalCardContent}
+                        </Modal>
                         <div className=''>
                             CJ ONE 포인트 최대 1% 적립 예상
                             <img className="infobutton_payment" src={info}
-                                onClick={clickpointinfo}>
+                                onClick={modalPoint.openModal}>
                             </img>
                         </div>
+                        <Modal isOpen={modalPoint.isOpen} closeModal={modalPoint.closeModal}>
+                            {modalPointContent}
+                        </Modal>
                     </div>
-                    <Dropdown productOptions={productdetail.product_options} originprice={productdetail.final_price}></Dropdown>
+                    <div >
+                        <Dropdown productOptions={productdetail.product_options} originprice={productdetail.final_price}></Dropdown>
+                    </div>
                 </div>
             </div>
         </>
