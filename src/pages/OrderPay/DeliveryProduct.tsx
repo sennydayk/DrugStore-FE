@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import "./OrderPay.css";
 
 interface Item {
@@ -11,30 +11,43 @@ interface Item {
   price: string;
   final_price: string;
   delivery: string;
+  quantity: number;
 }
 
 const DeliveryProduct: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([
-    {
-      cart_id: 0,
-      brand_name: "",
-      product_name: "",
-      product_id: 0,
-      product_img: "",
-      price: "",
-      final_price: "",
-      delivery: "",
-    },
-  ]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const fetchCartToOrder = async () => {
     try {
-      const response: AxiosResponse<Item[]> = await axios.post(
-        "https://drugstoreproject.shop/order/cart-to-order"
-      );
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
+      const config: AxiosRequestConfig = {
+        method: "post",
+        url: "https://drugstoreproject.shop/order/cart-to-order",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+      };
+
+      const response: AxiosResponse<Item[]> = await axios(config);
+      console.log("서버 응답 데이터:", response.data);
       setItems(response.data);
     } catch (error) {
-      console.error("Error fetching cart-to-order data:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error(`오류 발생: ${error.response.data.message}`);
+        } else if (error.request) {
+          console.error("요청을 처리하는 중 오류가 발생했습니다.");
+        } else {
+          console.error("알 수 없는 오류가 발생했습니다.");
+        }
+      } else {
+        console.error("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -55,34 +68,38 @@ const DeliveryProduct: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index) => (
-            <tr key={item.cart_id}>
-              <td>
-                <a className="pay_prd_img" href="">
-                  <img src={item.product_img} alt={item.product_name} />
-                </a>
-                <a className="prd_name" href="">
-                  <span id="brandName">{item.brand_name}</span>
-                  <p id="goodsName">{item.product_name}</p>
-                </a>
-              </td>
-              <td>
-                <span className="org_price">
-                  <span className="tx_num">{item.price.toLocaleString()}</span>
-                  원
-                </span>
-                <span className="pur_price">
-                  <span className="tx_num">
-                    {item.final_price.toLocaleString()}
-                  </span>
-                  원
-                </span>
-              </td>
-              <td className="prd_quantity">
-                <span>1</span>
-              </td>
-            </tr>
-          ))}
+          {items.length > 0
+            ? items.map((item, index) => (
+                <tr key={item.cart_id}>
+                  <td>
+                    <a className="pay_prd_img" href="">
+                      <img src={item.product_img} alt={item.product_name} />
+                    </a>
+                    <a className="prd_name" href="">
+                      <span id="brandName">{item.brand_name}</span>
+                      <p id="goodsName">{item.product_name}</p>
+                    </a>
+                  </td>
+                  <td>
+                    <span className="org_price">
+                      <span className="tx_num">
+                        {item.price.toLocaleString()}
+                      </span>
+                      원
+                    </span>
+                    <span className="pur_price">
+                      <span className="tx_num">
+                        {item.final_price.toLocaleString()}
+                      </span>
+                      원
+                    </span>
+                  </td>
+                  <td className="prd_quantity">
+                    <span>{item.quantity.toLocaleString()}</span>
+                  </td>
+                </tr>
+              ))
+            : null}
         </tbody>
       </table>
     </div>

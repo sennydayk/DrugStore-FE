@@ -1,16 +1,17 @@
 import React, { useState, ChangeEvent, FC, useEffect } from "react";
 import "./OrderPay.css";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 interface UserInfo {
-  name: string;
-  phoneNumber: string;
+  user_name: string;
+  phone_number: string;
   address: string;
 }
 
 const DeliveryInfo: FC = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo[]>([]);
   const [deliveryMessage, setDeliveryMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const fetchUserInfo = async () => {
     try {
@@ -28,25 +29,26 @@ const DeliveryInfo: FC = () => {
         },
       };
 
-      const response = await axios(config);
+      const response: AxiosResponse = await axios(config);
       console.log("서버 응답 데이터:", response.data);
-      setUserInfo(
-        Array.isArray(response.data) ? response.data : [response.data]
-      );
+
+      // 서버 응답 데이터 구조에 맞게 userInfo 상태 업데이트
+      setUserInfo({
+        user_name: response.data.user_name,
+        phone_number: response.data.phone_number,
+        address: response.data.address,
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("사용자 정보를 가져오는 중 오류 발생:", error.message);
         if (error.response) {
-          console.error("서버 응답 데이터:", error.response.data);
-          console.error("서버 응답 상태 코드:", error.response.status);
-          if (error.response.status === 400) {
-            alert("이 제품은 품절입니다.");
-          } else {
-            // 다른 에러 처리
-          }
+          setErrorMessage(`오류 발생: ${error.response.data.message}`);
+        } else if (error.request) {
+          setErrorMessage("요청을 처리하는 중 오류가 발생했습니다.");
+        } else {
+          setErrorMessage("알 수 없는 오류가 발생했습니다.");
         }
       } else {
-        console.error("알 수 없는 오류 발생:", error);
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
       }
     }
   };
@@ -54,10 +56,6 @@ const DeliveryInfo: FC = () => {
   useEffect(() => {
     fetchUserInfo();
   }, []);
-
-  useEffect(() => {
-    console.log("userInfo 상태 변경:", userInfo);
-  }, [userInfo]);
 
   const handleDeliveryMessageChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setDeliveryMessage(e.target.value);
@@ -69,22 +67,22 @@ const DeliveryInfo: FC = () => {
       <table className="orderpay_table">
         <caption>주문 정보</caption>
         <tbody>
-          {userInfo.map((user, index) => (
-            <React.Fragment key={index}>
+          {userInfo ? (
+            <>
               <tr className="new_order_area">
                 <th scope="row">받는분</th>
-                <td className="imp_data">{user.name}</td>
+                <td className="imp_data">{userInfo.user_name}</td>
               </tr>
               <tr className="new_order_area">
                 <th scope="row">연락처</th>
-                <td className="imp_data">{user.phoneNumber}</td>
+                <td className="imp_data">{userInfo.phone_number}</td>
               </tr>
               <tr className="new_order_area">
                 <th scope="row">주소</th>
-                <td className="imp_data">{user.address}</td>
+                <td className="imp_data">{userInfo.address}</td>
               </tr>
-            </React.Fragment>
-          ))}
+            </>
+          ) : null}
           <tr className="new_order_area">
             <th scope="row">배송 메시지</th>
             <td className="imp_data">
