@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import MySideBar from "../../components/MySideBar/MySideBar";
 import UserInfo from "../../components/MyPage/UserInfo";
 import "./Mypage.css";
+import axios from 'axios'
 import { Product } from "../Mainpage/Product";
+import useLikeHandler from '../../hook/useLikehandler'
 
 function MyLikes() {
   interface ProductType {
@@ -17,18 +19,28 @@ function MyLikes() {
     best: boolean;
   }
 
+  const updateDataCallback = () => {
+    getLikesData();
+  };
+
+
   const [productarray, setProductarray] = useState<ProductType[]>([]);
   useEffect(() => {
     getLikesData();
   }, []);
 
+  const { addLike, deleteLike } = useLikeHandler(updateDataCallback);
+
   const getLikesData = async () => {
     try {
-      const response = await fetch("http://52.78.248.75:8080/likes/myList", {
+      const token = sessionStorage.getItem('token');
+      const response = await axios("https://drugstoreproject.shop/likes", {
         method: "GET",
+        headers: {
+          "Token": token ? sessionStorage.getItem('token') : '',
+        }
       });
-      const data = await response.json();
-      setProductarray(data.data.product_list);
+      setProductarray(response.data.data);
     } catch (error) {
       console.error("데이터 가져오기 중 오류 발생:", error);
     }
@@ -41,7 +53,8 @@ function MyLikes() {
         <UserInfo />
         <div className="mypage-likes-list">
           {productarray.map((product, index) => {
-            return <Product {...product} index={index}></Product>;
+            return <Product {...product} index={index} addLike={() => addLike(product.product_id)}
+              deleteLike={() => deleteLike(product.product_id)} currentPage={0}></Product>;
           })}
         </div>
       </div>
