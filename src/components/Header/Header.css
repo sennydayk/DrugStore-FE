@@ -136,7 +136,6 @@
   text-align: center;
 }
 
-
 .header_searchinput {
   padding: 5px 5px 5px 35px;
   border: 1px solid #ccc;
@@ -169,3 +168,9 @@
   align-items: center;
   width: fit-content;
 }
+
+.logout_btn {
+  border: none;
+  background-color: transparent;
+}
+
