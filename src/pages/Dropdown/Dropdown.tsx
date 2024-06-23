@@ -4,8 +4,11 @@ import { isTemplateExpression } from "typescript";
 import "./Dropdown.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios, { AxiosResponse } from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface productOptionType {
+  product_id: number;
   option_id: number;
   option: string;
   option_price: number;
@@ -30,16 +33,61 @@ export default function Dropdown({
   >([]);
   const [isClicked, setisClicked] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     totalPricecalc();
   }, [selectedOptions]);
 
+  const handleAddToCart = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+      console.log("사용할 토큰:", token);
+
+      for (const selectedOption of selectedOptions) {
+        const productOption = productOptions.find(
+          (option) => option.option_id === selectedOption.id
+        );
+
+        if (productOption) {
+          const config = {
+            method: "post",
+            url: "https://drugstoreproject.shop/cart",
+            headers: {
+              "Content-Type": "application/json",
+              Token: token,
+            },
+            data: {
+              productId: productOption.product_id,
+              quantity: selectedOption.count,
+              optionId: productOption.option_id,
+            },
+          };
+          await axios(config);
+        }
+      }
+      // 장바구니 추가 성공 시 추가 로직 실행
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("장바구니에 추가하는 중 오류 발생:", error.message);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+          console.error("서버 응답 상태 코드:", error.response.status);
+        }
+      } else {
+        console.error("알 수 없는 오류 발생:", error);
+      }
+      // 장바구니 추가 실패 시 에러 처리 로직 실행
+    }
+  };
+
   const handleClick = () => {
     setIsOpen((prevState) => !prevState);
     setisClicked(true);
   };
-
   const handleSelect = (selectOptionID: number) => {
     setSelectedOptions((prevSelectedOptions) => {
       const optionIndex = prevSelectedOptions.findIndex(
@@ -246,9 +294,9 @@ export default function Dropdown({
           }
         </div>
       </div>
-      <div>
-        <button className="dropdown_cartbutton">장바구니</button>
-      </div>
+      <button className="dropdown_cartbutton" onClick={handleAddToCart}>
+        장바구니
+      </button>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CartOpionModal.css";
 
 interface ModalProps {
@@ -18,9 +18,8 @@ const CartOpionModal: React.FC<ModalProps> = ({
   onSave,
   item,
 }) => {
-  // item을 매개변수에서 구조 분해 할당
-  const [quantity, setQuantity] = React.useState(item.quantity);
-  const [option, setOption] = React.useState(item.option);
+  const [quantity, setQuantity] = useState(item.quantity);
+  const [option, setOption] = useState(item.option);
 
   const handleSave = () => {
     onSave(quantity, option);

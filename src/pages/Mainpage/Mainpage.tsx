@@ -55,7 +55,7 @@ const Mainpage = () => {
     const token = sessionStorage.getItem("token");
     console.log("token", token);
     try {
-      const response = await axios("https://drugstoreproject.shop/main/", {
+      const response = await axios("https://drugstoreproject.shop/main", {
         method: "GET",
         // headers: token ? { Authorization: `Bearer ${token}` } : {}
         // headers: {
@@ -75,7 +75,7 @@ const Mainpage = () => {
   const getSearchdata = async (Keyword: string) => {
     try {
       const response = await fetch(
-        `https://drugstoreproject.shop/find?keyword=${Keyword}`,
+        `https://drugstoreproject.shop/main/find?keyword=${Keyword}`,
         { method: "GET" }
       );
       const data = await response.json();
