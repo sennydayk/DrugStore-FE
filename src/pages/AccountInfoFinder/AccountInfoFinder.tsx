@@ -1,6 +1,21 @@
 import React, { useState, ChangeEvent } from "react";
-import Header from "../../components/Header/Header";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import "./AccountInfoFinder.css";
+
+interface EmailAuthResponse {
+  message: string;
+  emailSent: boolean;
+}
+
+interface VerifyEmailResponse {
+  message: string;
+  isValid: boolean;
+}
+
+interface PasswordResetResponse {
+  message: string;
+  success: boolean;
+}
 
 function AccountInfoFinder() {
   const [selectedTab, setSelectedTab] = useState("email_find");
@@ -28,9 +43,68 @@ function AccountInfoFinder() {
   };
 
   // 이메일 인증 버튼 클릭 핸들러
-  const handleVerifyEmailClick = () => {
+  const handleVerifyEmailClick = async () => {
     if (isEmailValid) {
-      setShowVerifyInput(true);
+      try {
+        const response: AxiosResponse<EmailAuthResponse> = await axios.post(
+          "https://drugstoreproject.shop/email/send",
+          { email }
+        );
+        console.log(response.data);
+        setShowVerifyInput(true);
+        alert(`인증 이메일이 ${email} 로 전송되었습니다.`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleFindEmailSubmit = async () => {
+    const nickname = (document.getElementById("u_nickname") as HTMLInputElement)
+      ?.value;
+    const phoneNumber = (
+      document.getElementById("u_phonenumber") as HTMLInputElement
+    )?.value;
+
+    try {
+      const response: AxiosResponse<VerifyEmailResponse> = await axios.post(
+        "https://drugstoreproject.shop/auth/find-email",
+        { nickname, phoneNumber }
+      );
+      const { message, isValid } = response.data;
+      if (isValid) {
+        alert(`이메일 찾기 결과: ${message}`);
+      } else {
+        alert(`이메일 찾기 실패: ${message}`);
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error.response && error.response.status === 404) {
+        alert("닉네임과 휴대폰에 해당하는 유저를 찾을 수 없습니다.");
+      } else {
+        alert("이메일 찾기 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    const newPassword = (document.getElementById("u_pwd") as HTMLInputElement)
+      ?.value;
+    const verifyPassword = (
+      document.getElementById("u_pwd_check") as HTMLInputElement
+    )?.value;
+    const verifyNumber = (
+      document.getElementById("verify_number_input") as HTMLInputElement
+    )?.value;
+
+    try {
+      const response: AxiosResponse<PasswordResetResponse> = await axios.put(
+        "https://drugstoreproject.shop/auth/password",
+        { email, newPassword, verifyNumber }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -78,7 +152,12 @@ function AccountInfoFinder() {
                   />
                 </p>
                 <p id="btn_wrap1">
-                  <input type="button" value="이메일 찾기" id="s_btn1" />
+                  <input
+                    type="button"
+                    value="이메일 찾기"
+                    id="s_btn1"
+                    onClick={handleFindEmailSubmit}
+                  />
                 </p>
               </form>
             </div>
