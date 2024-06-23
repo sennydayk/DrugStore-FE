@@ -62,14 +62,14 @@ function AccountInfoFinder() {
   const handleFindEmailSubmit = async () => {
     const nickname = (document.getElementById("u_nickname") as HTMLInputElement)
       ?.value;
-    const phoneNumber = (
+    const phone_num = (
       document.getElementById("u_phonenumber") as HTMLInputElement
     )?.value;
 
     try {
       const response: AxiosResponse<VerifyEmailResponse> = await axios.post(
         "https://drugstoreproject.shop/auth/find-email",
-        { nickname, phoneNumber }
+        { nickname, phone_num }
       );
       const { message, isValid } = response.data;
       if (isValid) {
