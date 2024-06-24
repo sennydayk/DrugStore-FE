@@ -153,16 +153,13 @@ function Signup() {
   // 닉네임 중복확인 로직 처리
   const checkNickname = async (nickname: string) => {
     try {
-      const response = await fetch(
-        "http://52.78.248.75:8080/auth/nickname-check",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(nickname),
-        }
-      );
+      const response = await fetch("http://52.78.248.75:8080/auth/nickname", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nickname),
+      });
       if (signupForm.userNickname === "") {
         alert("사용하실 닉네임을 입력해주세요.");
       } else if (response.ok) {
@@ -193,16 +190,13 @@ function Signup() {
   // 이메일 중복확인 로직 처리
   const checkEmail = async (email: string) => {
     try {
-      const response = await fetch(
-        "http://52.78.248.75:8080/auth/email-check",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(email),
-        }
-      );
+      const response = await fetch("http://52.78.248.75:8080/auth/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(email),
+      });
       if (signupForm.userEmail === "") {
         alert("사용하실 이메일을 입력해주세요.");
       } else if (response.ok) {

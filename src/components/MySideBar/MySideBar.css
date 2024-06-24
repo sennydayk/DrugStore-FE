@@ -10,7 +10,7 @@
 
 .mysidebar-title {
   width: 150px;
-  display: flex;
+  text-align: right;
   margin: auto;
   margin-top: 30px;
   font-size: 30px;
@@ -22,6 +22,7 @@
   width: 150px;
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 /* 사이드바 메뉴 비활성화 */
