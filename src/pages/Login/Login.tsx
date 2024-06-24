@@ -16,6 +16,10 @@ const LoginForm: React.FC = () => {
     navigate("/find-email");
   };
 
+  const handleFindpasswordClick = () => {
+    navigate("/find-email");
+  };
+
   const handleSignUpClick = () => {
     navigate("/signup");
   };
@@ -82,15 +86,7 @@ const LoginForm: React.FC = () => {
                   className="login_linkButton"
                   onClick={handleFindEmailClick}
                 >
-                  이메일 찾기
-                </button>
-                <span>/</span>
-                <button
-                  type="button"
-                  className="login_linkButton"
-                  onClick={handleFindEmailClick}
-                >
-                  비밀번호 재설정
+                  이메일 찾기 / 비밀번호 재설정
                 </button>
               </div>
               <button

@@ -23,6 +23,7 @@ interface PasswordResetRequest {
   email: string;
   newPassword: string;
   verifyNumber: string;
+  newPasswordCheck: string;
 }
 
 function AccountInfoFinder() {
@@ -121,21 +122,18 @@ function AccountInfoFinder() {
   };
 
   const handlePasswordReset = async () => {
-    if (!isPasswordResetEnabled) {
-      alert("이메일 인증이 필요합니다.");
-      return;
-    }
-    const email = "string"; // 실제 이메일 주소로 변경해야 합니다.
     const newPassword = (document.getElementById("u_pwd") as HTMLInputElement)
       ?.value;
-    const verifyPassword = (
+    const newPasswordCheck = (
       document.getElementById("u_pwd_check") as HTMLInputElement
     )?.value;
     const verifyNumber = (
       document.getElementById("verify_number_input") as HTMLInputElement
     )?.value;
+    const email = (document.getElementById("u_email") as HTMLInputElement)
+      ?.value;
 
-    if (newPassword !== verifyPassword) {
+    if (newPassword !== newPasswordCheck) {
       alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
     }
@@ -145,6 +143,7 @@ function AccountInfoFinder() {
         email,
         newPassword,
         verifyNumber,
+        newPasswordCheck,
       };
       const response: AxiosResponse<PasswordResetResponse> = await axios.put(
         "https://drugstoreproject.shop/auth/password",
