@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
 import "./OrderPay.css";
-import Header from "../../components/Header/Header";
 
 const OrderForm: React.FC = () => {
   const [recipient, setRecipient] = useState<string>("");

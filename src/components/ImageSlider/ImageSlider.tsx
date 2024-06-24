@@ -16,6 +16,8 @@ const ImageSlider = ({ adphotos }: { adphotos: photosType[] }) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
     arrows: true,
     prevArrow: <img src={leftarrow} alt="leftarrow" style={{ left: '-25px' }} />,
     nextArrow: <img src={rightarrow} alt="rightarrow" style={{ left: '-25px' }} />,

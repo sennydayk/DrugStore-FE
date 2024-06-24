@@ -12,7 +12,7 @@ interface ReviewType {
     review_content: string
     product_name: string
     create_at: string;
-    userprofile: string;
+    profile_img: string;
     option_name: string
 }
 

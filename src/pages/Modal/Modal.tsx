@@ -1,21 +1,25 @@
 import React from 'react';
+import './Modal.css'
 
-type modalProps = {
+type ModalProps = {
     isOpen: boolean;
-    openModal: () => void;
     closeModal: () => void;
-    children: React.ReactNode; /* Property 'children' does not exist on type '{}'. */
-    // content
+    children: React.ReactNode;
 };
 
+const Modal = ({ isOpen, closeModal, children }: ModalProps) => {
+    if (!isOpen) {
+        return null;
+    }
 
-const Modal = ({ isOpen, openModal, closeModal }: modalProps) => {
     return (
-        <div>
-            <div>
-                //content
+        <div className="modal_wrapper">
+            <div className="modal_container">
+                <div className="modal_content">
+                    {children}
+                </div>
+                <button className="modal_button" onClick={closeModal}>close</button>
             </div>
-            <button className="button-default" onClick={closeModal}>close</button>
         </div>
     );
 };

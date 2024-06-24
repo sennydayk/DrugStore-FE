@@ -32,14 +32,15 @@
     margin-left: 100px;
 }
 
-/* .reviewitem_content{
-
-}
-
-.reviewitem_productname{
-
+.reviewitem_stardate{
+    display: flex;
 }
 
 .reviewitem_date{
+    margin-left: 10px;
+}
 
-} */
+.reviewitem_optionname{
+    color: gray;
+    margin-bottom: 10px;
+}

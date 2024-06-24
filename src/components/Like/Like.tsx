@@ -6,83 +6,24 @@ import axios from 'axios'
 
 type Liketype = {
     productid: number,
-    likes: boolean
+    likes: boolean,
+    addLike: () => void;
+    deleteLike: () => void;
 }
-const Like = ({ productid, likes }: Liketype) => {
+const Like = ({ productid, likes, addLike, deleteLike }: Liketype) => {
 
-    function handleClick(likes: boolean, productid: number) {
-        if (likes === false) {
-            addlikehandler(productid);
+    function handleClick() {
+        if (likes) {
+            deleteLike();
         } else {
-            deletelikehandler(productid);
-        }
-    }
-
-    const addlikehandler = async (productid: number) => {
-        //좋아요추가api
-        console.log('add', productid)
-        const token = sessionStorage.getItem('token');
-        console.log(token)
-        if (!token) {
-            console.log('Token not found');
-            return;
-        }
-
-        try {
-            const response = await axios.post("http://52.78.248.75:8080/likes", {
-                'product_id': productid,
-            }, {
-                headers: {
-                    "Token": token,
-                    "Content-Type": 'application/json',
-                },
-            });
-
-            if (!response.status) {
-                throw new Error('Error');
-            } else {
-                alert("좋아요 등록");
-            }
-
-        } catch (error) {
-            console.log("오류 발생!!:", error);
-        }
-    }
-
-    const deletelikehandler = async (productid: number) => {
-        //좋아요취소api
-        const token = sessionStorage.getItem('token');
-        console.log(token)
-        if (!token) {
-            console.log('Token not found');
-            return;
-        }
-
-        try {
-            const response = await axios.delete("http://52.78.248.75:8080/likes/delete", {
-                data: {
-                    'product_id': productid,
-                },
-                headers: {
-                    "Token": token,
-                    "Content-Type": 'application/json',
-                },
-            });
-            if (!response.status) {
-                throw new Error('Error');
-            } else {
-                alert("좋아요 취소");
-            }
-
-        } catch (error) {
-            console.log("오류 발생!!:", error);
+            addLike();
         }
     }
 
     return (
         <div>
-            <img className="like_heart" src={likes === false ? emptyheart : heart}
-                onClick={() => handleClick(likes, productid)}>
+            <img className="like_heart" src={likes ? heart : emptyheart}
+                onClick={() => handleClick()}>
             </img>
         </div>
     );
