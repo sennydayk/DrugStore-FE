@@ -1,24 +1,12 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { optionCSS } from "react-select/dist/declarations/src/components/Option";
 import { isTemplateExpression } from "typescript";
 import "./Dropdown.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios, { AxiosResponse } from "axios";
-import { useNavigate } from "react-router-dom";
-=======
-import React, { useEffect, useState } from 'react';
-import { optionCSS } from 'react-select/dist/declarations/src/components/Option';
-import { isTemplateExpression } from 'typescript';
-import './Dropdown.css'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import useModal from '../../hook/useModal';
->>>>>>> develop
+import useModal from "../../hook/useModal";
 
 interface productOptionType {
-  product_id: number;
   option_id: number;
   option: string;
   option_price: number;
@@ -43,108 +31,19 @@ export default function Dropdown({
   >([]);
   const [isClicked, setisClicked] = useState(false);
   const [totalPrice, settotalPrice] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     totalPricecalc();
   }, [selectedOptions]);
 
-  const handleAddToCart = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-      }
-      console.log("사용할 토큰:", token);
-
-      for (const selectedOption of selectedOptions) {
-        const productOption = productOptions.find(
-          (option) => option.option_id === selectedOption.id
-        );
-
-<<<<<<< HEAD
-        if (productOption) {
-          const config = {
-            method: "post",
-            url: "https://drugstoreproject.shop/cart",
-            headers: {
-              "Content-Type": "application/json",
-              Token: token,
-            },
-            data: {
-              productId: productOption.product_id,
-              quantity: selectedOption.count,
-              optionId: productOption.option_id,
-            },
-          };
-          await axios(config);
-        }
-      }
-      // 장바구니 추가 성공 시 추가 로직 실행
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("장바구니에 추가하는 중 오류 발생:", error.message);
-        if (error.response) {
-          console.error("서버 응답 데이터:", error.response.data);
-          console.error("서버 응답 상태 코드:", error.response.status);
-        }
-      } else {
-        console.error("알 수 없는 오류 발생:", error);
-      }
-      // 장바구니 추가 실패 시 에러 처리 로직 실행
-=======
-    const handleClick = () => {
-        setIsOpen((prevState) => !prevState);
-        setisClicked(true)
-    };
-
-
-    const modalMinone = useModal();
-    const modalLimit = useModal();
-
-    const handleSelect = (selectOptionID: number) => {
-        setSelectedOptions((prevSelectedOptions) => {
-            const optionIndex = prevSelectedOptions.findIndex(
-                (option) => option.id === selectOptionID
-            );
-
-            if (optionIndex > -1) {
-                // ID가 이미 존재하면 count 증가
-                const updatedOptions = [...prevSelectedOptions];
-                updatedOptions[optionIndex] = {
-                    ...updatedOptions[optionIndex],
-                    count: updatedOptions[optionIndex].count + 1,
-                };
-                return updatedOptions;
-            } else {
-                // ID가 존재하지 않으면 새로운 항목 추가
-                return [...prevSelectedOptions, { id: selectOptionID, count: 1 }];
-            }
-        });
-        setIsOpen(false)
-    };
-
-    const CountMinus = (prod_id: number) => {
-        setSelectedOptions((prev) =>
-            prev.map((option) =>
-                option.id === prod_id && option.count >= 2 ? { ...option, count: option.count - 1 } : option)
-        )
-        selectedOptions.map((item) => {
-            console.log('count', item.count)
-            /*0개 이하일때 메시지 */
-            if (item.count <= 1) {
-                alert("1개 이상부터 선택가능합니다. ");
-            }
-        })
->>>>>>> develop
-    }
-  };
-
-<<<<<<< HEAD
   const handleClick = () => {
     setIsOpen((prevState) => !prevState);
     setisClicked(true);
   };
+
+  const modalMinone = useModal();
+  const modalLimit = useModal();
+
   const handleSelect = (selectOptionID: number) => {
     setSelectedOptions((prevSelectedOptions) => {
       const optionIndex = prevSelectedOptions.findIndex(
@@ -166,34 +65,6 @@ export default function Dropdown({
     });
     setIsOpen(false);
   };
-=======
-    //id로 찾아서 count+1
-    const CountPlus = (prod_id: number) => {
-        setSelectedOptions((prev) => {
-            const updatedItems = prev.map((item) => {
-                const selectedproduct = productOptions.find((option) => option.option_id === item.id)
-                if (item.id === prod_id && selectedproduct && selectedproduct.option_stock >= item.count) {
-                    return {
-                        ...item, count: item.count + 1
-                    }
-                }
-                else {
-                    return item;
-                }
-            })
-            return updatedItems
-        })
-
-        selectedOptions.map((item) => {
-            /*재고 넘으면 메시지 */
-            const selectedproduct = productOptions.find((option) => option.option_id === item.id)
-            if (selectedproduct) {
-                if (item.count > selectedproduct.option_stock) {
-                    alert("해당 상품 재고가 부족합니다. ");
-                }
-            }
-        })
->>>>>>> develop
 
   const CountMinus = (prod_id: number) => {
     setSelectedOptions((prev) =>
@@ -204,9 +75,10 @@ export default function Dropdown({
       )
     );
     selectedOptions.map((item) => {
+      console.log("count", item.count);
       /*0개 이하일때 메시지 */
-      if (item.count < 1) {
-        console.log("0개");
+      if (item.count <= 1) {
+        alert("1개 이상부터 선택가능합니다. ");
       }
     });
   };
@@ -218,14 +90,10 @@ export default function Dropdown({
         const selectedproduct = productOptions.find(
           (option) => option.option_id === item.id
         );
-        console.log("selectedproduct", selectedproduct);
-        console.log(
-          "selectedproduct.option_stock",
-          selectedproduct?.option_stock
-        );
         if (
           item.id === prod_id &&
-          selectedproduct /*&& selectedproduct.option_stock >= item.count*/
+          selectedproduct &&
+          selectedproduct.option_stock >= item.count
         ) {
           return {
             ...item,
@@ -245,7 +113,7 @@ export default function Dropdown({
       );
       if (selectedproduct) {
         if (item.count > selectedproduct.option_stock) {
-          console.log("재고넘어");
+          alert("해당 상품 재고가 부족합니다. ");
         }
       }
     });
@@ -379,9 +247,9 @@ export default function Dropdown({
           }
         </div>
       </div>
-      <button className="dropdown_cartbutton" onClick={handleAddToCart}>
-        장바구니
-      </button>
+      <div>
+        <button className="dropdown_cartbutton">장바구니</button>
+      </div>
     </>
   );
 }
