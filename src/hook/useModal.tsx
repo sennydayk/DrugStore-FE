@@ -4,7 +4,6 @@ type UseModalResult = {
     isOpen: boolean;
     openModal: () => void;
     closeModal: () => void;
-    // content:
 };
 
 const useModal = (initialState = false): UseModalResult => {

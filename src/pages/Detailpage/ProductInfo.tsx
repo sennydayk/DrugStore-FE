@@ -5,9 +5,18 @@ import "./ProductInfo.css";
 import Header from "../../components/Header/Header";
 import ProductImage from "./ProductImage";
 import info from "../../assets/png/info.png";
+<<<<<<< HEAD
 import Modal from "../Modal/Modal";
 import useModal from "../../hook/useModal";
 import axios from "axios";
+=======
+import Modal from '../Modal/Modal';
+import useModal from '../../hook/useModal';
+import axios from 'axios'
+import Like from '../../components/Like/Like';
+import useLikeHandler from '../../hook/useLikehandler'
+
+>>>>>>> develop
 
 interface ProductdetailType {
   product_id: number;
@@ -47,6 +56,7 @@ export function ProductInfo(productid: ParamsType) {
   const encodedproductId = encodeURIComponent(productid.productid);
   console.log("encodedproductId", encodedproductId);
 
+<<<<<<< HEAD
   // const [productdetail, setProductdetail] = useState<ProductdetailType[]>([]); /* 배열로 선언 */
   const [productdetail, setProductdetail] = useState<ProductdetailType | null>(
     null
@@ -68,6 +78,45 @@ export function ProductInfo(productid: ParamsType) {
       setImgArray(response.data.data.product_img);
     } catch (error) {
       console.error("데이터 가져오기 중 오류 발생:", error);
+=======
+    //product/detail api가져오기
+    const encodedproductId = encodeURIComponent(productid.productid);
+
+    // const [productdetail, setProductdetail] = useState<ProductdetailType[]>([]); /* 배열로 선언 */
+    const [productdetail, setProductdetail] = useState<ProductdetailType | null>(null); /* productdetail는 객체이므로 객체로 선언 */
+    const [imgArray, setImgArray] = useState<ProductImageType[]>([]);
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    useEffect
+        (() => {
+            getDetailpageproductInfodata();
+        }, []);
+
+    const updateDataCallback = () => {
+        getDetailpageproductInfodata();
+    };
+
+
+    const { addLike, deleteLike } = useLikeHandler(updateDataCallback);
+
+    const getDetailpageproductInfodata = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await axios(`https://drugstoreproject.shop/product?product-id=${encodedproductId}`, {
+                method: "GET",
+                headers: {
+                    "Token": token ? token : '',
+                }
+            });
+            setProductdetail(response.data.data);
+            setImgArray(response.data.data.product_img)
+            setIsLiked(response.data.data.is_like);
+            console.log('productinfo!!!!!!', isLiked)
+        }
+
+        catch (error) {
+            console.error("데이터 가져오기 중 오류 발생:", error);
+        };
+>>>>>>> develop
     }
   };
 
@@ -80,6 +129,7 @@ export function ProductInfo(productid: ParamsType) {
   });
   /* */
 
+<<<<<<< HEAD
   const [deliveryinfovisible, setdeliveryinfoVisible] = useState(false);
   const [cardinfovisible, setcardinfoVisible] = useState(false);
   const clickdeliveryinfo = () => {
@@ -116,6 +166,187 @@ export function ProductInfo(productid: ParamsType) {
                 imgList={imgArray}
                 best={productdetail.best}
               ></ProductImage>
+=======
+    const modalShippinginfo = useModal();
+    const modaltodaydelivery = useModal();
+    const modalCard = useModal();
+    const modalPoint = useModal();
+
+    const modalShippinginfoContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px', textAlign: 'left' }}>배송비안내</h2>
+            <p>
+                올리브영 배송 : 2500원
+            </p>
+            <div style={{ fontWeight: 'bold' }}>
+                추가배송비
+            </div>
+            <div>
+                도서산간 : 2500원<br />
+                제주지역 : 2500원<br />
+                제주도서산간 : 7000원
+            </div>
+        </div >
+    );
+
+    const modalCardContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px' }}>카드할인혜택</h2>
+            <p>
+                THE CJ카드결제 시 10% 할인 (BC 카드 제외)
+            </p>
+        </div>
+    );
+
+    const modalPointContent = (
+        <div>
+            <h2>등급별 CJ ONE 포인트 적립</h2>
+            <table style={{ border: '1px solid black', borderCollapse: 'collapse', width: '100%' }}>
+                <thead>
+                    <tr>
+                        <th style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>등급</th>
+                        <th style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>적립률</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>GOLD OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>BLACK OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>GREEN OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>1%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>PINK OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>0.5%</td>
+                    </tr>
+                    <tr>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>BABY OLIVE</td>
+                        <td style={{ border: '1px solid black', padding: '2px', textAlign: 'center' }}>0.5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
+
+    const modaltodaydeliveryContent = (
+        <div>
+            <h2 style={{ borderBottom: '1px solid black', paddingBottom: '10px' }}>오늘드림 서비스 안내 </h2>
+            <p>
+                배송 및 픽업 가능 지역<br />
+                전국 (정확한 서비스 가능여부는 배송지 등록을 통해서 확인가능)
+            </p>
+        </div>
+    );
+
+    if (!productdetail) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <>
+            <div className='productinfo_wrapper'>
+                <div className='productinfo_left'>
+                    <div className='productinfo_img'>
+                        <div className='productinfo_imagelist'>
+                            <ProductImage imgList={imgArray} best={productdetail.best}></ProductImage>
+
+                        </div>
+                    </div>
+                    <div className='productinfo_reviewinfo'>
+                        <a className='productinfo_reviewavg'>
+                            고객리뷰 {productdetail.review_avg}점
+                        </a>
+                        <a className='prsoductinfo_reviewcount'>
+                            ({productdetail.review_count}건)
+                        </a>
+                    </div>
+                </div>
+                <div className='productinfo_description'>
+                    <div className='productinfo_brand_name'>
+                        {productdetail.brand_name}
+                    </div>
+                    <div className='productinfo_productlike'>
+                        <div className='productinfo_product_name'>
+                            {productdetail.product_name}
+                        </div>
+                        <div className='productinfo_likeitem'>
+                            <Like productid={productdetail.product_id}
+                                likes={isLiked}
+                                addLike={() => addLike(productdetail.product_id)}
+                                deleteLike={() => deleteLike(productdetail.product_id)}
+                            ></Like>
+                        </div>
+                    </div>
+                    <a className='productinfo_price'>
+                        {productdetail.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                    </a>
+                    <a className='productinfo_final_price'>
+                        {productdetail.final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                    </a>
+                    <div className='productinfo_todayicon'>
+                        <a className='productinfo_todaydelivery'>
+                            오늘드림
+                        </a>
+                        {productdetail.sales > 0 && <a className='productinfo_todaysale'>
+                            세일
+                        </a>}
+                    </div>
+                    <div className='productinfo_deliveryinfo'>
+                        배송정보
+                        <img className="infobutton_delivery" src={info}
+                            onClick={modalShippinginfo.openModal}>
+                        </img>
+                        <div>
+                            일반배송 |	2,500원 ( 20,000 원 이상 무료배송 )<br />
+                            <div style={{ marginLeft: '70px' }}>
+                                올리브영 배송 | 평균 3일 이내 배송
+                            </div>
+                        </div>
+                        <div>
+                            오늘드림 |	2,500원 또는 5,000원
+                            <img className="infobutton_delivery" src={info}
+                                onClick={modaltodaydelivery.openModal}>
+                            </img>
+                        </div>
+                        <Modal isOpen={modaltodaydelivery.isOpen} closeModal={modaltodaydelivery.closeModal}>
+                            {modaltodaydeliveryContent}
+                        </Modal>
+                    </div>
+                    <Modal isOpen={modalShippinginfo.isOpen} closeModal={modalShippinginfo.closeModal}>
+                        {modalShippinginfoContent}
+                    </Modal>
+                    <div className='productinfo_paymentinfo'>
+                        결제혜택
+                        <div className=''>
+                            THE CJ 카드 추가 10%할인
+                            <img className="infobutton_payment" src={info}
+                                onClick={modalCard.openModal}>
+                            </img>
+                        </div>
+                        <Modal isOpen={modalCard.isOpen} closeModal={modalCard.closeModal}>
+                            {modalCardContent}
+                        </Modal>
+                        <div className=''>
+                            CJ ONE 포인트 최대 1% 적립 예상
+                            <img className="infobutton_payment" src={info}
+                                onClick={modalPoint.openModal}>
+                            </img>
+                        </div>
+                        <Modal isOpen={modalPoint.isOpen} closeModal={modalPoint.closeModal}>
+                            {modalPointContent}
+                        </Modal>
+                    </div>
+                    <div >
+                        <Dropdown productOptions={productdetail.product_options} originprice={productdetail.final_price}></Dropdown>
+                    </div>
+                </div>
+>>>>>>> develop
             </div>
           </div>
           <div className="productinfo_reviewinfo">

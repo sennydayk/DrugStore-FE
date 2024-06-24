@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Login.css";
+import { useAuth } from "../../contexts/AuthContext";
 import Kakao from "../../assets/png/kakao-talk.png";
+import "./Login.css";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginCheck, setLoginCheck] = useState(true);
 
-  // 이메일 찾기 버튼 클릭 이벤트 핸들러
   const handleFindEmailClick = () => {
     navigate("/find-email");
   };
 
-  // 회원가입 버튼 클릭 이벤트 핸들러
   const handleSignUpClick = () => {
     navigate("/signup");
   };
 
-  // 로그인 버튼 클릭 이벤트 핸들러
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     await new Promise((r) => setTimeout(r, 1000));
@@ -38,8 +37,7 @@ const LoginForm: React.FC = () => {
         const token = response.headers["token"];
         console.log("token", token);
         setLoginCheck(false);
-        sessionStorage.setItem("token", token);
-        sessionStorage.setItem("myId", userEmail);
+        login(token, userEmail);
         console.log("로그인성공, 아이디: " + userEmail);
         alert("로그인이 완료되었습니다. 홈으로 이동합니다.");
         navigate("/");

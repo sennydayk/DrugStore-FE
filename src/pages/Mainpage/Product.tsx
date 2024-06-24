@@ -2,6 +2,7 @@ import React from 'react';
 import "./Product.css";
 import { useNavigate } from "react-router-dom";
 import Like from '../../components/Like/Like';
+import useLikeHandler from '../../hook/useLikehandler'
 
 type Props = {
     product_id: number;
@@ -14,6 +15,9 @@ type Props = {
     sales: boolean;
     best: boolean;
     index: number
+    currentPage: number;
+    addLike: () => void;
+    deleteLike: () => void;
 };
 
 export function Product({
@@ -26,18 +30,22 @@ export function Product({
     likes,
     sales,
     best,
-    index
+    index,
+    currentPage,
+    addLike,
+    deleteLike
 }: Props) {
     const navigate = useNavigate();
     const onClickProduct = (product_id: number) => {
         navigate(`/detail/${product_id}`);
     }
 
+
     return (
         <div className='mainpage_product'>
             <div className='index_wrapper'>
                 <div className='mainpage_product_index'>
-                    {index + 1}
+                    {(24 * currentPage) + index + 1}
                 </div>
             </div>
             <div className='mainpage_mainimage'>
@@ -46,6 +54,8 @@ export function Product({
                 <div className='mainpage_like'>
                     <Like productid={product_id}
                         likes={likes}
+                        addLike={addLike}
+                        deleteLike={deleteLike}
                     ></Like>
                 </div>
             </div>
@@ -61,7 +71,7 @@ export function Product({
                         {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                     <a className='mainpage_final_price'>
-                        {final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                        {final_price && final_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
                     </a>
                 </div>
                 <div className='mainpage_likes'>

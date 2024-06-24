@@ -1,0 +1,29 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .pagination li {
+    display: inline;
+    margin: 0 5px;
+  }
+  
+  .pagination li a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+  }
+  
+  .pagination li.active a {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .pagination li.disabled a {
+    color: #ccc;
+    cursor: default;
+  }
+  
