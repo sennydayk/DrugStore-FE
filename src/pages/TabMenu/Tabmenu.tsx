@@ -13,9 +13,9 @@ const Tabmenu = ({ productid }: ParamsType) => {
     const [currentTab, setCurrentTab] = useState(0);
 
     const menuArr = [
+        { name: '상품설명', content: <ProductDescription productid={productid} /> },
         { name: '리뷰 조회', content: <Review productid={productid}></Review> },
         { name: 'QnA', content: <QnA productid={productid} /> },
-        { name: '상품설명', content: <ProductDescription /> },
     ];
 
     const selectMenuHandler = (index: number) => {

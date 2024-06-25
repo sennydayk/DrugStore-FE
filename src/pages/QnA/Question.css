@@ -19,16 +19,37 @@
 
 }
 
-.qnaitem_question, .qnaitem_username, .qnaitem_createdat {
+.qnaitem_username, .qnaitem_createdat {
     flex: 1; 
     text-align: center;
 }
 
 .qnaitem_question {
-    flex: 3; 
+    flex: 5; 
     text-align: center; 
 }
 
 .qnaitem_question {
     cursor: pointer;
 }
+
+.qnaitem_updatebutton{
+width: 60px;
+height: 30px;
+background-color: #6ad4dd;
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 14px; 
+margin-right: 5px;
+}
+
+.qnaitem_deletebutton{
+    width: 60px;
+    height: 30px;
+    background-color: #6ad4dd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px; 
+    }

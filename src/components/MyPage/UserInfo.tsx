@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import testimg from "../../assets/jpeg/test.jpeg";
+import axios from "axios";
 
-function UserInfo() {
+interface UserInfoHeader {
+  profile: string;
+  nickName: string;
+  money: number;
+  couponResponseList: any[];
+}
+
+const UserInfo: React.FC = () => {
+  // styled-components
   const Wrapper = styled.div`
     display: flex;
     justify-content: center;
@@ -27,8 +36,8 @@ function UserInfo() {
   `;
 
   const Profile = styled.img`
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
   `;
 
@@ -41,23 +50,88 @@ function UserInfo() {
   const RightText = styled.span`
     font-size: 14px;
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 60px;
   `;
+
+  const [userInfoHeader, setUserInfoHeader] = useState<UserInfoHeader | null>(
+    null
+  );
+  const [profile, setProfile] = useState<any>(
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  );
+
+  const [nickName, setNickName] = useState<string>("");
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // userinfo API 가져오기
+  const getData = async () => {
+    const token = sessionStorage.getItem("token");
+    console.log("token", token);
+
+    if (!token) {
+      console.error("No token found in sessionStorage.");
+      return;
+    }
+
+    const config1 = {
+      method: "get",
+      url: "https://drugstoreproject.shop/mypage/coupon",
+      data: {},
+      headers: {
+        "Content-Type": "application/json",
+        Token: token,
+      },
+    };
+
+    const config2 = {
+      method: "get", // HTTP 메서드
+      url: "https://drugstoreproject.shop/mypage/userInfo",
+      data: {},
+      headers: {
+        "Content-Type": "application/json",
+        Token: token,
+      },
+    };
+
+    try {
+      const response1 = await axios(config1);
+      const response2 = await axios(config2);
+      setUserInfoHeader(response1.data.data);
+      setProfile(response2.data.data.profilePic);
+      setNickName(response2.data.data.nickName);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error fetching data: ", error.message);
+        console.error("Response: ", error.response);
+      } else {
+        console.error("Unexpected error: ", error);
+      }
+    }
+  };
 
   return (
     <Wrapper>
-      <Container>
-        <Left>
-          <Profile src={testimg} />
-          <LeftText>userid님 반갑습니다</LeftText>
-        </Left>
-        <div>
-          <RightText>내 포인트 : userpoint</RightText>
-          <RightText>내 쿠폰 : usercoupon</RightText>
-        </div>
-      </Container>
+      {userInfoHeader ? (
+        <Container>
+          <Left>
+            <Profile src={profile} />
+            <LeftText>{nickName}님 반갑습니다</LeftText>
+          </Left>
+          <div>
+            <RightText>내 포인트 : {userInfoHeader.money}</RightText>
+            <RightText>
+              내 쿠폰 : {userInfoHeader.couponResponseList.length}
+            </RightText>
+          </div>
+        </Container>
+      ) : (
+        <p>Loading...</p>
+      )}
     </Wrapper>
   );
-}
+};
 
 export default UserInfo;
