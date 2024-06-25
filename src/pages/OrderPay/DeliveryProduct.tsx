@@ -3,17 +3,17 @@ import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import "./OrderPay.css";
 
 interface Item {
-  productId: number;
-  optionId: number;
+  // productId: number;
+  // optionId: number;
   cartId: number;
   brand: string;
   product_name: string;
   product_photo: string;
   price: number;
-  finalPrice: number;
-  delivery: string;
+  final_price: number;
+  // delivery: string;
   quantity: number;
-  option: string;
+  option_name: string;
 }
 
 const DeliveryProduct: React.FC = () => {
@@ -22,22 +22,22 @@ const DeliveryProduct: React.FC = () => {
   const fetchCartToOrder = async () => {
     try {
       const token = sessionStorage.getItem("token");
+      console.log("token", token);
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
+      const response = await axios.post(
+        "https://drugstoreproject.shop/order/cart-to-order",
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Token: token,
+          },
+        }
+      );
 
-      const config: AxiosRequestConfig = {
-        method: "post",
-        url: "https://drugstoreproject.shop/order/cart-to-order",
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-      };
-
-      const response: AxiosResponse<Item[]> = await axios(config);
-      console.log("서버 응답 데이터:", response.data);
-      setItems(response.data);
+      setItems(response.data.data.order_product_list);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response) {
@@ -84,20 +84,14 @@ const DeliveryProduct: React.FC = () => {
                   </td>
                   <td>
                     <span className="org_price">
-                      <span className="tx_num">
-                        {item.price.toLocaleString()}
-                      </span>
-                      원
+                      <span className="tx_num">{item.price}</span>원
                     </span>
                     <span className="pur_price">
-                      <span className="tx_num">
-                        {item.finalPrice.toLocaleString()}
-                      </span>
-                      원
+                      <span className="tx_num">{item.final_price}</span>원
                     </span>
                   </td>
                   <td className="prd_quantity">
-                    <span>{item.quantity.toLocaleString()}</span>
+                    <span>{item.quantity}</span>
                   </td>
                 </tr>
               ))

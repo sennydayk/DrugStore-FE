@@ -65,3 +65,49 @@
 .mypage-modal-footer button:hover {
   background-color: #62c5ce;
 }
+
+.mypage-modal-info {
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mypage-modal-info-brand {
+  font-size: 12px;
+  color: rgb(187, 187, 187);
+  font-weight: bold;
+}
+
+.mypage-modal-info-product {
+  margin-left: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  color: rgb(88, 87, 87);
+}
+
+.mypage-modal-info-date {
+  font-size: 12px;
+}
+
+.mypage-modal-question {
+  width: 350px;
+  height: 30px;
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 15px;
+  text-align: left;
+  /* border: 1px solid #dddddd;
+  border-radius: 8px; */
+}
+
+.mypage-modal-answer {
+  width: 350px;
+  height: 120px;
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 15px;
+  text-align: left;
+  /* border: 1px solid #dddddd;
+  border-radius: 8px; */
+}

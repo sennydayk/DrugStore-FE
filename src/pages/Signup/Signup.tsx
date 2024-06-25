@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import "./Signup.css";
 import Avatar from "antd/es/avatar/avatar";
 import NicknameModal from "../../components/SignupModal/NicknameModal";
@@ -8,6 +8,7 @@ import View from "../../assets/png/view.png";
 import Hide from "../../assets/png/hide.png";
 import { type } from "os";
 import { isDisabled } from "@testing-library/user-event/dist/utils";
+import axios, { AxiosResponse } from "axios";
 
 // 회원가입 페이지
 
@@ -63,9 +64,6 @@ function Signup() {
   // 닉네임 중복 여부 상태 선언
   const [validNickname, setValidNickname] = useState<boolean>(false);
 
-  // 이메일 인증하기 상태 선언
-  const [emailAuth, setEmailAuth] = useState<boolean>(false);
-
   // 비밀번호 입력값 보이기 구현
   const [showPwd, setShowPwd] = useState<boolean>(false);
   const handleShowPwd = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -103,11 +101,14 @@ function Signup() {
 
     try {
       console.log("Submitting form data...");
-      const response = await fetch("http://52.78.248.75:8080/auth/sign-up", {
-        method: "POST",
-        // 헤더에 Content-Type': 'multipart/form-data'를 설정할 필요 없음(브라우저가 자동으로 설정)
-        body: formData,
-      });
+      const response = await fetch(
+        "https://drugstoreproject.shop/auth/sign-up",
+        {
+          method: "POST",
+          // 헤더에 Content-Type': 'multipart/form-data'를 설정할 필요 없음(브라우저가 자동으로 설정)
+          body: formData,
+        }
+      );
       if (
         signupForm.userName != "" &&
         signupForm.userNickname != "" &&
@@ -154,7 +155,7 @@ function Signup() {
   const checkNickname = async (nickname: string) => {
     try {
       const response = await fetch(
-        "http://52.78.248.75:8080/auth/nickname-check",
+        "https://drugstoreproject.shop/auth/nickname",
         {
           method: "POST",
           headers: {
@@ -193,16 +194,13 @@ function Signup() {
   // 이메일 중복확인 로직 처리
   const checkEmail = async (email: string) => {
     try {
-      const response = await fetch(
-        "http://52.78.248.75:8080/auth/email-check",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(email),
-        }
-      );
+      const response = await fetch("https://drugstoreproject.shop/auth/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(email),
+      });
       if (signupForm.userEmail === "") {
         alert("사용하실 이메일을 입력해주세요.");
       } else if (response.ok) {
@@ -212,6 +210,7 @@ function Signup() {
           if (data.data.check === false) {
             setValidMessageEmail(data.data.message);
             setEmailModal(!emailModal);
+            setEmailAuth(true);
           } else {
             setValidMessageEmail("이미 사용중인 이메일입니다.");
             setEmailModal(!emailModal);
@@ -228,7 +227,57 @@ function Signup() {
   };
 
   // 이메일 인증하기 로직 처리
-  const handleEmailAuth = async () => {};
+
+  // 이메일 형식을 검사하는 함수
+  const validateEmail = (email: string): boolean => {
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const [email, setEmail] = useState("");
+  const [emailAuth, setEmailAuth] = useState<boolean>(false);
+  const [showVerifyInput, setShowVerifyInput] = useState(false);
+  const [verifyNumber, setVerifyNumber] = useState("");
+  const [isVerifyNumberValid, setIsVerifyNumberValid] = useState(false);
+  const [isPasswordResetEnabled, setIsPasswordResetEnabled] = useState(false);
+
+  const handleVerifyEmailClick = async () => {
+    if (emailAuth) {
+      try {
+        const response: AxiosResponse = await axios.post(
+          "https://drugstoreproject.shop/email/send",
+          { email }
+        );
+        const { message, emailSent } = response.data;
+        if (emailSent) {
+          alert(`이메일 전송에 실패했습니다: ${message}`);
+        } else {
+          setShowVerifyInput(true);
+          console.log(verifyNumber);
+          alert(`인증 번호가 ${email}로 전송되었습니다.`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("이메일 전송 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleVerifyNumberConfirm = () => {
+    if (isVerifyNumberValid) {
+      alert("인증되었습니다.");
+      setIsPasswordResetEnabled(true);
+    } else {
+      alert("인증번호가 일치하지 않습니다.");
+    }
+  };
+
+  const handleVerifyNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const verifyNumberInput = e.target.value;
+    setVerifyNumber(verifyNumberInput);
+    setIsVerifyNumberValid(verifyNumberInput.length === 6);
+  };
 
   return (
     <div className="signup-wrapper">
@@ -317,6 +366,7 @@ function Signup() {
                       ...signupForm,
                       userEmail: e.target.value,
                     });
+                    setEmail(e.target.value);
                   }}
                   required
                 />
@@ -341,17 +391,41 @@ function Signup() {
                 )}
               </td>
               <td>
-                {emailAuth && (
+                {emailAuth ? (
                   <button
                     className="signup-btn"
                     type="button"
-                    onClick={handleEmailAuth}
+                    onClick={handleVerifyEmailClick}
                   >
                     이메일 인증하기
                   </button>
-                )}
+                ) : null}
               </td>
             </tr>
+
+            {showVerifyInput && (
+              <tr>
+                <th>인증번호 입력</th>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="인증번호 입력"
+                    value={verifyNumber}
+                    onChange={handleVerifyNumberChange}
+                  />
+                </td>
+                <td>
+                  <button
+                    className="signup-btn"
+                    type="button"
+                    onClick={() => handleVerifyNumberConfirm}
+                  >
+                    확인
+                  </button>
+                </td>
+              </tr>
+            )}
+
             <tr>
               <th>비밀번호</th>
               <td>

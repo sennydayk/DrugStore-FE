@@ -3,11 +3,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import "./OrderPay.css";
 
 interface OrderData {
-  order_coupon_list: {
-    id: number;
-    coupon_name: string;
-    discount_rate: number;
-  }[];
+  id: number;
+  coupon_name: string;
+  discount_rate: number;
 }
 
 interface OrderFormProps {}
@@ -20,9 +18,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
     discount_rate: number;
   } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [orderData, setOrderData] = useState<OrderData>({
-    order_coupon_list: [],
-  });
+  const [orderData, setOrderData] = useState<OrderData[]>([]);
 
   useEffect(() => {
     const fetchCouponData = async () => {
@@ -45,7 +41,8 @@ const Coupon: React.FC<OrderFormProps> = () => {
         };
 
         const response: AxiosResponse = await axios(config);
-        setOrderData(response.data);
+        setOrderData(response.data.data.order_coupon_list);
+        console.log("orderData", orderData);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (error.response) {
@@ -66,7 +63,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
 
   const handleCouponChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedCouponId = parseInt(event.target.value);
-    const selectedCoupon = orderData.order_coupon_list.find(
+    const selectedCoupon = orderData.find(
       (coupon) => coupon.id === selectedCouponId
     );
     setSelectedCoupon(selectedCoupon || null);
@@ -120,7 +117,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
           onChange={handleCouponChange}
         >
           <option value="사용안함">사용안함</option>
-          {orderData.order_coupon_list?.map((coupon) => (
+          {orderData?.map((coupon) => (
             <option key={coupon.id} value={coupon.id}>
               {coupon.coupon_name}
             </option>

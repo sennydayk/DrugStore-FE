@@ -3,28 +3,49 @@ import "./Header.css";
 import Logo from "./Logo";
 import UserActions from "./UserActions";
 import Navigation from "./Navigation";
-import Search from "./Search";
-import { useAuth } from "../../contexts/AuthContext";
+
+// import Search from "./Search";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { setKeyword } from "../../store/searchSlice";
+// import { setKeyword } from "../../store/searchSlice";
+
+import "./Header.css";
+import { useAuth } from "../../contexts/AuthContext";
+import { setSearchKeyword } from "../../store/searchSlice";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const { isLoggedIn } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    // 여기서 장바구니 상품의 개수를 계산하거나 API에서 가져오는 로직을 작성할 수 있습니다.
-    setCartItemCount(2);
-  }, []);
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(setSearchKeyword(searchTerm));
+    // navigate("/");
+  };
 
   return (
     <header className="drugstore-header">
       <div className="header-top">
         <Logo />
-        <div>
-          <Search />
-        </div>
+        <form onSubmit={handleSearchSubmit} className="search-form">
+          <input
+            className="header_searchinput"
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchInputChange}
+          />
+          <button className="header_searchbutton" type="submit">
+            🔍
+          </button>
+        </form>
         <UserActions cartItemCount={cartItemCount} isLoggedIn={isLoggedIn} />
       </div>
       <div className="navigation-search">

@@ -30,13 +30,12 @@ const DeliveryInfo: FC = () => {
       };
 
       const response: AxiosResponse = await axios(config);
-      console.log("서버 응답 데이터:", response.data);
 
       // 서버 응답 데이터 구조에 맞게 userInfo 상태 업데이트
       setUserInfo({
-        user_name: response.data.user_name,
-        phone_number: response.data.phone_number,
-        address: response.data.address,
+        user_name: response.data.data.user_name,
+        phone_number: response.data.data.phone_number,
+        address: response.data.data.address,
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {

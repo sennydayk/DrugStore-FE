@@ -67,12 +67,27 @@
 
 .purchase-history-eachitem {
   border-bottom: 1px solid #dddddd;
+}
+
+.mypage-productimg {
+  width: 80px;
+  height: 80px;
+}
+
+.mypage-brand {
+  font-size: 12px;
+  color: rgb(187, 187, 187);
+  font-weight: bold;
+}
+
+.mypage-product {
   font-size: 14px;
 }
 
-.purchase-history-table img {
-  width: 60px;
-  height: 60px;
+.mypage-option {
+  font-size: 11px;
+  color: rgb(88, 87, 87);
+  font-weight: bold;
 }
 
 .purchase-history-table button {
@@ -106,12 +121,15 @@
 
 .myreviews-eachitem {
   border-bottom: 1px solid #dddddd;
-  font-size: 14px;
 }
 
-.myreviews-table img {
-  width: 60px;
-  height: 60px;
+.mypage-date {
+  font-size: 12px;
+  color: rgb(88, 87, 87);
+}
+
+.mypage-content {
+  font-size: 14px;
 }
 
 .myreviews-table button {
@@ -184,4 +202,55 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+}
+
+/* 마이페이지 페이지네이션 스타일 */
+.my-pagination {
+  display: flex;
+  justify-content: center;
+  margin-left: 220px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.my-pagination li {
+  display: inline;
+  margin: 0 5px;
+}
+
+.my-pagination li a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.my-pagination li.active a {
+  font-weight: bold;
+  color: black;
+}
+
+.my-pagination li.disabled a {
+  color: #ccc;
+  cursor: default;
+}
+
+/* 마이페이지 에러 스타일 */
+.mypage-error {
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.mypage-errorimg {
+  width: 50px;
+  height: 50px;
+}
+
+.mypage-errormsg {
+  font-size: 16px;
+}
+
+.mypage-question-error {
+  margin-top: 50px;
 }
