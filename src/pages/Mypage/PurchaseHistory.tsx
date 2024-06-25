@@ -118,13 +118,13 @@ const PurchaseHistory: React.FC = () => {
               <thead>
                 <tr>
                   <th
-                    style={{ width: "20%", borderRight: "1px solid #dddddd" }}
+                    style={{ width: "15%", borderRight: "1px solid #dddddd" }}
                   >
                     주문번호
                   </th>
                   <th
                     colSpan={2}
-                    style={{ width: "50%", borderRight: "1px solid #dddddd" }}
+                    style={{ width: "55%", borderRight: "1px solid #dddddd" }}
                   >
                     상품
                   </th>
@@ -147,18 +147,34 @@ const PurchaseHistory: React.FC = () => {
                       className="purchase-history-eachitem"
                       key={order.ordersId}
                     >
-                      <td style={{ borderRight: "1px solid #dddddd" }}>
+                      <td
+                        style={{
+                          borderRight: "1px solid #dddddd",
+                          fontSize: "13px",
+                        }}
+                      >
                         {order.ordersId}
                       </td>
                       <td>
-                        <img src={order.productImg} alt="Product" />
+                        <img
+                          src={order.productImg}
+                          alt="Product"
+                          className="mypage-productimg"
+                        />
                       </td>
                       <td style={{ borderRight: "1px solid #dddddd" }}>
-                        <p>{order.brand}</p>
-                        <p>{order.productName}</p>
-                        <p>{order.optionName}</p>
+                        <p className="mypage-brand">{order.brand}</p>
+                        <p className="mypage-product">{order.productName}</p>
+                        <p className="mypage-option">
+                          옵션 : {order.optionName}
+                        </p>
                       </td>
-                      <td style={{ borderRight: "1px solid #dddddd" }}>
+                      <td
+                        style={{
+                          borderRight: "1px solid #dddddd",
+                          fontSize: "13px",
+                        }}
+                      >
                         ~ {order.reviewDeadline}
                       </td>
                       <td>
@@ -198,9 +214,9 @@ const PurchaseHistory: React.FC = () => {
           breakClassName={"break-me"}
           pageCount={Math.ceil(totalElements / 10)}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={3}
           onPageChange={handlePageClick}
-          containerClassName={"pagination"}
+          containerClassName={"my-pagination"}
           activeClassName={"active"}
         />
       )}

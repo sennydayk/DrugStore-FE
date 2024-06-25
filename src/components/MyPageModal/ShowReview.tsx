@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./MyPageModal.css";
 import StarRatings from "react-star-ratings";
 import axios from "axios";
@@ -7,15 +7,24 @@ interface ShowReviewProps {
   showReview: boolean;
   setShowReview: React.Dispatch<React.SetStateAction<boolean>>;
   ordersId: number;
+  reviewContent: string;
+  reviewScore: number;
 }
 
 const ShowReview: React.FC<ShowReviewProps> = ({
   showReview,
   setShowReview,
   ordersId,
+  reviewContent,
+  reviewScore,
 }) => {
-  const [rating, setRating] = useState<number>(0);
-  const [reviewText, setReviewText] = useState<string>("");
+  const [rating, setRating] = useState<number>(reviewScore);
+  const [content, setContent] = useState<string>(reviewContent);
+
+  useEffect(() => {
+    setContent(reviewContent);
+    setRating(reviewScore);
+  }, [reviewContent, reviewScore]);
 
   if (!showReview) return null;
 
@@ -23,8 +32,10 @@ const ShowReview: React.FC<ShowReviewProps> = ({
     setShowReview(false);
   };
 
-  const handleReviewChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setReviewText(event.target.value);
+  const handleReviewChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setContent(event.target.value);
   };
 
   const handleRatingChange = (newRating: number) => {
@@ -34,11 +45,25 @@ const ShowReview: React.FC<ShowReviewProps> = ({
   // 리뷰 수정(PUT) 로직 처리
   const updateReview = async () => {
     try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
+      console.log(`Updating review for orderId: ${ordersId}`);
+      console.log(`Rating: ${rating}, Review: ${content}`);
+
       const response = await axios.put(
         `https://drugstoreproject.shop/mypage/review/${ordersId}`,
         {
-          rating,
-          review: reviewText,
+          reviewScore: rating,
+          reviewContent: content,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Token: token,
+          },
         }
       );
 
@@ -47,6 +72,7 @@ const ShowReview: React.FC<ShowReviewProps> = ({
         alert("리뷰가 수정되었습니다.");
         closeModal();
       } else {
+        console.error("Failed to update review:", response);
         alert("리뷰 수정에 실패했습니다.");
       }
     } catch (error) {
@@ -71,15 +97,19 @@ const ShowReview: React.FC<ShowReviewProps> = ({
 
   return (
     <div className="mypage-modal-wrapper">
-      <dialog className="mypage-modal-container">
+      <dialog className="mypage-modal-container" open>
         <p className="mypage-modal-title">내가 작성한 리뷰</p>
         <StarRating />
-        <input
-          className="mypage-modal-input"
-          placeholder="reviewcontent"
-          value={reviewText}
-          onChange={handleReviewChange}
-        />
+        <form>
+          <div>
+            <textarea
+              value={content}
+              onChange={handleReviewChange}
+              className="mypage-modal-input"
+            />
+          </div>
+        </form>
+
         <div className="mypage-modal-footer">
           <button onClick={closeModal}>닫기</button>
           <button onClick={updateReview} style={{ marginLeft: "100px" }}>

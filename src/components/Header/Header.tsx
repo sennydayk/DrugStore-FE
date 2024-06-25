@@ -3,8 +3,12 @@ import "./Header.css";
 import Logo from "./Logo";
 import UserActions from "./UserActions";
 import Navigation from "./Navigation";
+
+// import Search from "./Search";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+// import { setKeyword } from "../../store/searchSlice";
+
 import "./Header.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { setSearchKeyword } from "../../store/searchSlice";
