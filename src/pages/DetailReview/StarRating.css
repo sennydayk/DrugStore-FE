@@ -1,0 +1,21 @@
+.star-rating {
+    display: flex;
+    align-items: center;
+}
+
+.star {
+    margin-right: 5px;
+}
+
+.star.on {
+    color: #fa722d;
+}
+
+.star.off {
+    color: lightgray;
+}
+
+.star.half {
+    color: #fa722d;
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+}

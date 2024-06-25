@@ -1,15 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CartOpionModal.css";
+import axios, { AxiosResponse } from "axios";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (quantity: number, option: string) => void;
-  item: {
-    id: number;
-    quantity: number;
-    option: string;
-  };
+  item: CartItem;
+}
+
+interface CartItem {
+  cartId: number;
+  name: string;
+  quantity: number;
+  option_id: number;
+  option: string;
+  option_price: number;
+}
+
+interface UpdateCartItemRequest {
+  cartId: number;
+  quantity: number;
+  option_id: number;
+  option: string;
+  option_price: number;
+}
+
+interface Option {
+  value: string;
+  option: string;
 }
 
 const CartOpionModal: React.FC<ModalProps> = ({
@@ -18,12 +37,33 @@ const CartOpionModal: React.FC<ModalProps> = ({
   onSave,
   item,
 }) => {
-  // item을 매개변수에서 구조 분해 할당
-  const [quantity, setQuantity] = React.useState(item.quantity);
-  const [option, setOption] = React.useState(item.option);
+  const [quantity, setQuantity] = useState(item.quantity);
+  const [option, setOption] = useState<Option>({
+    value: item.option,
+    option: item.option,
+  });
 
-  const handleSave = () => {
-    onSave(quantity, option);
+  const updateCartItem = async (
+    item: CartItem
+  ): Promise<AxiosResponse<CartItem>> => {
+    const requestBody: UpdateCartItemRequest = {
+      cartId: item.cartId,
+      option: option.value,
+      option_id: item.option_id,
+      option_price: item.option_price,
+      quantity: quantity,
+    };
+
+    const response = await axios.put<CartItem>(
+      "https://drugstoreproject.shop/cart",
+      requestBody
+    );
+    return response;
+  };
+
+  const handleSave = async () => {
+    await updateCartItem({ ...item, quantity, option: option.value });
+    onSave(quantity, option.value);
     onClose();
   };
 
@@ -36,12 +76,13 @@ const CartOpionModal: React.FC<ModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>옵션수정</h2>
+        <h2>옵션 변경</h2>
         <div className="cart_option">
-          <select value={option} onChange={(e) => setOption(e.target.value)}>
-            <option>옵션</option>
-            <option>옵션명1</option>
-            <option>옵션명2</option>
+          <select
+            value={option.value}
+            onChange={(e) => setOption({ ...option, value: e.target.value })}
+          >
+            <option>{option.value}</option>
           </select>
         </div>
         <div>

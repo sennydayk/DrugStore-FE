@@ -31,6 +31,7 @@ const QnA = ({ productid }: ParamsType) => {
     const encodedproductId = encodeURIComponent(productid);
 
     const [questionid, setQuestionid] = useState(0)
+    const [currentquestion, setCurrentquestion] = useState('');
 
     useEffect
         (() => {
@@ -48,47 +49,60 @@ const QnA = ({ productid }: ParamsType) => {
     }
 
     const [showquestion, setshowquestion] = useState(false)
-    const writequestionhandler = () => {
+    const writequestionhandler = (question: string = '', question_id: number = 0) => {
         setshowquestion(true);
         setquestionmode('create')
-        console.log(questionmode)
+        setCurrentquestion(question);
+        setQuestionid(question_id);
     }
 
     return (
         <div>
-            <button className="qna_button" onClick={writequestionhandler}>상품문의</button>
+            <button className="qna_button" onClick={() => writequestionhandler()}>상품문의</button>
             <div className='qna_qnalist'>
-                {qnaArray !== undefined && qnaArray.map((qna) => (
-                    <React.Fragment key={qna.question_id}>
-                        <Question
-                            questionmode={questionmode}
-                            setquestionmode={setquestionmode}
-                            qnaArray={qnaArray}
-                            getQnadata={getQnadata}
-                            qna={qna}
-                            showquestion={showquestion}
-                            setshowquestion={setshowquestion}
-                        />
-                        {showquestion && (
-                            <QuestionModal
-                                currentquestion={qna.question}
-                                questionid={qna.question_id}
+                {qnaArray ? (
+                    qnaArray.map((qna) => (
+                        <>
+                            <Question
                                 questionmode={questionmode}
                                 setquestionmode={setquestionmode}
+                                qnaArray={qnaArray}
                                 getQnadata={getQnadata}
-                                productid={productid}
+                                qna={qna}
                                 showquestion={showquestion}
                                 setshowquestion={setshowquestion}
                             />
-                        )}
-                    </React.Fragment>
-                ))}
-                {/* qnaArray가 없는 경우 */}
-                {qnaArray === undefined && (
+                            {showquestion && (
+                                <QuestionModal
+                                    currentquestion={qna.question}
+                                    questionid={qna.question_id}
+                                    questionmode={questionmode}
+                                    setquestionmode={setquestionmode}
+                                    getQnadata={getQnadata}
+                                    productid={productid}
+                                    showquestion={showquestion}
+                                    setshowquestion={setshowquestion}
+                                />
+                            )}
+                        </>
+                    ))
+                ) : (
                     <div className='qna_noqna'>아직 작성된 문의가 없습니다!</div>
                 )}
+                {showquestion && !qnaArray && (
+                    <QuestionModal
+                        currentquestion={currentquestion}
+                        questionid={questionid}
+                        questionmode={questionmode}
+                        setquestionmode={setquestionmode}
+                        getQnadata={getQnadata}
+                        productid={productid}
+                        showquestion={showquestion}
+                        setshowquestion={setshowquestion}
+                    />
+                )}
             </div>
-        </div>
+        </div >
     );
 }
 

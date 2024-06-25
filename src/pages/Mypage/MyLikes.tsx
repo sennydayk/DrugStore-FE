@@ -47,8 +47,11 @@ function MyLikes() {
         },
       });
 
-      // Log the entire response to inspect its structure
-      console.log("API Response:", response);
+
+
+      setProductarray(response.data.data.product_list);
+      console.log(productarray);
+
 
       const products = response.data.data || [];
       if (products.length === 0) {
@@ -75,6 +78,7 @@ function MyLikes() {
           </div>
         ) : (
           <div className="mypage-likes-list">
+
             {productarray.map((product, index) => (
               <Product
                 key={product.product_id}
@@ -85,6 +89,12 @@ function MyLikes() {
                 currentPage={0}
               />
             ))}
+
+            {productarray.map((product, index) => {
+              return <Product {...product} index={index} addLike={() => addLike(product.product_id)}
+                deleteLike={() => deleteLike(product.product_id)} currentPage={0}></Product>;
+            })}
+
           </div>
         )}
       </div>
