@@ -3,15 +3,17 @@ import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import "./OrderPay.css";
 
 interface Item {
-  cart_id: number;
-  brand_name: string;
+  productId: number;
+  optionId: number;
+  cartId: number;
+  brand: string;
   product_name: string;
-  product_id: number;
-  product_img: string;
-  price: string;
-  final_price: string;
+  product_photo: string;
+  price: number;
+  finalPrice: number;
   delivery: string;
   quantity: number;
+  option: string;
 }
 
 const DeliveryProduct: React.FC = () => {
@@ -70,13 +72,13 @@ const DeliveryProduct: React.FC = () => {
         <tbody>
           {items.length > 0
             ? items.map((item, index) => (
-                <tr key={item.cart_id}>
+                <tr key={item.cartId}>
                   <td>
                     <a className="pay_prd_img" href="">
-                      <img src={item.product_img} alt={item.product_name} />
+                      <img src={item.product_photo} alt={item.product_name} />
                     </a>
                     <a className="prd_name" href="">
-                      <span id="brandName">{item.brand_name}</span>
+                      <span id="brandName">{item.brand}</span>
                       <p id="goodsName">{item.product_name}</p>
                     </a>
                   </td>
@@ -89,7 +91,7 @@ const DeliveryProduct: React.FC = () => {
                     </span>
                     <span className="pur_price">
                       <span className="tx_num">
-                        {item.final_price.toLocaleString()}
+                        {item.finalPrice.toLocaleString()}
                       </span>
                       원
                     </span>
