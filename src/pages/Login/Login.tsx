@@ -25,10 +25,13 @@ const LoginForm: React.FC = () => {
     await new Promise((r) => setTimeout(r, 1000));
 
     try {
-      const response = await axios.post("http://52.78.248.75:8080/auth/login", {
-        email: userEmail,
-        password,
-      });
+      const response = await axios.post(
+        "https://drugstoreproject.shop/auth/login",
+        {
+          email: userEmail,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         const token = response.headers["token"];
