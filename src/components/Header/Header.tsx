@@ -3,19 +3,16 @@ import "./Header.css";
 import Logo from "./Logo";
 import UserActions from "./UserActions";
 import Navigation from "./Navigation";
-import Search from "./Search";
+// import Search from "./Search";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { setKeyword } from "../../store/searchSlice";
+// import { setKeyword } from "../../store/searchSlice";
 import "./Header.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { setSearchKeyword } from "../../store/searchSlice";
 import { useNavigate } from "react-router-dom";
 
-
-
 function Header() {
-
   const { isLoggedIn } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,7 +45,9 @@ function Header() {
             value={searchTerm}
             onChange={handleSearchInputChange}
           />
-          <button className="header_searchbutton" type="submit">🔍</button>
+          <button className="header_searchbutton" type="submit">
+            🔍
+          </button>
         </form>
         <UserActions cartItemCount={cartItemCount} isLoggedIn={isLoggedIn} />
       </div>

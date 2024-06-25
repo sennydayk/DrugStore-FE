@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import MySideBar from "../../components/MySideBar/MySideBar";
 import UserInfo from "../../components/MyPage/UserInfo";
 import "./Mypage.css";
-import axios from 'axios'
+import axios from "axios";
 import { Product } from "../Mainpage/Product";
 import heart from "../../assets/png/emptyheart.png";
-import useLikeHandler from '../../hook/useLikehandler'
+import useLikeHandler from "../../hook/useLikehandler";
 
 function MyLikes() {
   interface ProductType {
@@ -24,8 +24,8 @@ function MyLikes() {
     getLikesData();
   };
 
-
   const [productarray, setProductarray] = useState<ProductType[]>([]);
+
   useEffect(() => {
     getLikesData();
   }, []);
@@ -34,22 +34,31 @@ function MyLikes() {
 
   const getLikesData = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        console.error("Token not found in sessionStorage");
+        return;
+      }
+
       const response = await axios("https://drugstoreproject.shop/likes", {
         method: "GET",
         headers: {
-          "Token": token ? sessionStorage.getItem('token') : '',
-        }
+          Token: token,
+        },
       });
 
-      const data = await response.json();
-      setProductarray(data.data.product_list);
-      console.log(productarray);
+      // Log the entire response to inspect its structure
+      console.log("API Response:", response);
 
-      setProductarray(response.data.data);
+      const products = response.data.data || [];
+      if (products.length === 0) {
+        console.warn("No products found in the response");
+      }
 
+      setProductarray(products);
+      console.log("Products:", products);
     } catch (error) {
-      console.error("데이터 가져오기 중 오류 발생:", error);
+      console.error("Error fetching likes data:", error);
     }
   };
 
@@ -66,19 +75,18 @@ function MyLikes() {
           </div>
         ) : (
           <div className="mypage-likes-list">
-            {productarray.map((product, index) => {
-              return <Product {...product} index={index}></Product>;
-            })}
+            {productarray.map((product, index) => (
+              <Product
+                key={product.product_id}
+                {...product}
+                index={index}
+                addLike={() => addLike(product.product_id)}
+                deleteLike={() => deleteLike(product.product_id)}
+                currentPage={0}
+              />
+            ))}
           </div>
         )}
-
-        <div className="mypage-likes-list">
-          {productarray.map((product, index) => {
-            return <Product {...product} index={index} addLike={() => addLike(product.product_id)}
-              deleteLike={() => deleteLike(product.product_id)} currentPage={0}></Product>;
-          })}
-        </div>
-
       </div>
     </>
   );

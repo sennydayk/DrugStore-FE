@@ -201,9 +201,9 @@ const Questions: React.FC = () => {
           breakClassName={"break-me"}
           pageCount={Math.ceil(totalElements / 10)}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={3}
           onPageChange={handlePageClick}
-          containerClassName={"pagination"}
+          containerClassName={"my-pagination"}
           activeClassName={"active"}
         />
       ) : null}

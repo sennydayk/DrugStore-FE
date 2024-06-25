@@ -10,7 +10,7 @@ import result from "../../assets/png/result.png";
 
 interface Review {
   reviewId: number;
-  // ordersId: number;
+  ordersId: number;
   productImg: string;
   productName: string;
   price: number;
@@ -32,10 +32,9 @@ interface ReviewData {
 const getData = async (
   page: number,
   size: number = 1,
-  sort: string = "reviewId"
+  sort: string = "ordersId"
 ): Promise<ReviewData | null> => {
   const baseUrl = "https://drugstoreproject.shop/mypage/reviews";
-  const url = `${baseUrl}?page=${page}&size=${size}&sort=${sort}`;
 
   try {
     const token = sessionStorage.getItem("token");
@@ -45,7 +44,7 @@ const getData = async (
     console.log("사용할 토큰:", token);
 
     // axios를 사용하여 요청을 보냄
-    const response = await axios.get(url, {
+    const response = await axios.get(baseUrl, {
       headers: {
         "Content-Type": "application/json",
         Token: token,
@@ -151,6 +150,10 @@ const MyReviews: React.FC = () => {
     getPageData();
   }, [page]);
 
+  const selectedReview = reviewList.find(
+    (review) => review.ordersId === selectedOrderId
+  );
+
   return (
     <>
       <MySideBar />
@@ -176,17 +179,23 @@ const MyReviews: React.FC = () => {
                 {reviewList.map((review) => (
                   <tr className="myreviews-eachitem" key={review.reviewId}>
                     <td style={{ width: "25%" }}>
-                      <img src={review.productImg} />
+                      <img
+                        src={review.productImg}
+                        alt="Product"
+                        className="mypage-productimg"
+                      />
                     </td>
                     <td
                       style={{ width: "25%", borderRight: "1px solid #dddddd" }}
                     >
-                      <p>{review.brand}</p>
-                      <p>{review.productName}</p>
-                      <p>{review.optionName}</p>
+                      <p className="mypage-brand">{review.brand}</p>
+                      <p className="mypage-product">{review.productName}</p>
+                      <p className="mypage-option">
+                        옵션 : {review.optionName}
+                      </p>
                     </td>
                     <td style={{ width: "25%", textAlign: "center" }}>
-                      <p>{review.createAt}</p>
+                      <p className="mypage-date">작성일 : {review.createAt}</p>
                       <p>
                         <StarRatings
                           rating={review.reviewScore}
@@ -197,16 +206,15 @@ const MyReviews: React.FC = () => {
                           starSpacing="1px"
                         />
                       </p>
-                      <p>{review.reviewContent}</p>
+                      <p className="mypage-content">{review.reviewContent}</p>
                     </td>
                     <td style={{ width: "25%", textAlign: "center" }}>
-                      {/* // ordersId로 바꿔야 함 */}
-                      <button onClick={() => handleShowReview(review.reviewId)}>
+                      <button onClick={() => handleShowReview(review.ordersId)}>
                         리뷰 수정
                       </button>
                       <button
                         style={{ marginLeft: "30px" }}
-                        onClick={() => handleDeleteReview(review.reviewId)}
+                        onClick={() => handleDeleteReview(review.ordersId)}
                       >
                         리뷰 삭제
                       </button>
@@ -217,28 +225,30 @@ const MyReviews: React.FC = () => {
             </table>
           )}
         </div>
-        {showReview && selectedOrderId !== null && (
+        {showReview && selectedOrderId !== null && selectedReview && (
           <ShowReview
             showReview={showReview}
             setShowReview={setShowReview}
             ordersId={selectedOrderId}
+            reviewContent={selectedReview.reviewContent}
+            reviewScore={selectedReview.reviewScore}
+          />
+        )}
+        {reviewList.length === 0 ? null : (
+          <ReactPaginate
+            previousLabel={"이전"}
+            nextLabel={"다음"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={Math.ceil(totalElements / 10)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={3}
+            onPageChange={handlePageClick}
+            containerClassName={"my-pagination"}
+            activeClassName={"active"}
           />
         )}
       </div>
-      {reviewList.length === 0 ? null : (
-        <ReactPaginate
-          previousLabel={"이전"}
-          nextLabel={"다음"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={Math.ceil(totalElements / 10)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-        />
-      )}
     </>
   );
 };
