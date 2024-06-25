@@ -128,7 +128,8 @@ const CartItem: React.FC = () => {
 
   const handleSelectAll = () => {
     setSelectAll((prevSelectAll) => {
-      setCheckedItems(new Array(items.length).fill(!prevSelectAll));
+      const newCheckedItems = items.map((_, index) => !prevSelectAll);
+      setCheckedItems(newCheckedItems);
       return !prevSelectAll;
     });
   };
@@ -164,7 +165,7 @@ const CartItem: React.FC = () => {
 
       const config = {
         method: "delete",
-        url: `https://drugstoreproject.shop/cart/${item.cartId}`,
+        url: `https://drugstoreproject.shop/cart`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
