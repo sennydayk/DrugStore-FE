@@ -12,10 +12,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { setSearchKeyword } from "../../store/searchSlice";
 import { useNavigate } from "react-router-dom";
 
-
-
 function Header() {
-
   const { isLoggedIn } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,11 +29,6 @@ function Header() {
     // navigate("/");
   };
 
-  useEffect(() => {
-    // 여기서 장바구니 상품의 개수를 계산하거나 API에서 가져오는 로직을 작성할 수 있습니다.
-    setCartItemCount(2);
-  }, []);
-
   return (
     <header className="drugstore-header">
       <div className="header-top">
@@ -48,7 +40,9 @@ function Header() {
             value={searchTerm}
             onChange={handleSearchInputChange}
           />
-          <button className="header_searchbutton" type="submit">🔍</button>
+          <button className="header_searchbutton" type="submit">
+            🔍
+          </button>
         </form>
         <UserActions cartItemCount={cartItemCount} isLoggedIn={isLoggedIn} />
       </div>
