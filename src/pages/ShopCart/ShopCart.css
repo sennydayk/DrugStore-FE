@@ -10,6 +10,11 @@
   flex-direction: column;
 }
 
+.shopcart_subtitle {
+  text-align: left;
+  width: 1050px;
+}
+
 /* .cart-check 스타일 */
 .cart-check {
   display: flex;

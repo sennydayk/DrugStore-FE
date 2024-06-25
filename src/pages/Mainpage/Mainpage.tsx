@@ -124,12 +124,21 @@ const Mainpage = () => {
     const getSearchData = async (Keyword: string, page: number) => {
         const token = sessionStorage.getItem('token');
         try {
-            console.log('searchKeyword', encodedKeyword)
-            const response = await axios(`https://drugstoreproject.shop/main/find?keyword=${encodedKeyword}&page=${page}&size=${pageSize}`, {
-                method: "GET",
-                // headers: token ? { Authorization: `Bearer ${token}` } : {}
+            // const response = await axios(`https://drugstoreproject.shop/main/find?keyword=${encodedKeyword}&page=${page}&size=${pageSize}`, {
+            //     method: "GET",
+            //     headers: {
+            //         "Token": token ? sessionStorage.getItem('token') : '',
+            //     }
+            // });
+            let url = `https://drugstoreproject.shop/main/find?keyword=${encodedKeyword}&page=${page}&size=${pageSize}`;
+            const token = sessionStorage.getItem('token');
+            const sortByfilter = filterArray.find(item => item.sortBy === selectedFilter)
+            if (sortByfilter) {
+                url += `&sortby=${sortByfilter.filter}`;
+            }
+            const response = await axios.get(url, {
                 headers: {
-                    "Token": token ? sessionStorage.getItem('token') : '',
+                    "Token": token ? token : '',
                 }
             });
             setProductarray(response.data.data.content);

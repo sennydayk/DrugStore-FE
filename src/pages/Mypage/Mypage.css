@@ -185,3 +185,37 @@
   gap: 20px;
   justify-content: center;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 가운데정렬 */
+  margin-left: 250px;
+  margin-top: 50px;
+  list-style: none;
+  padding: 10px;
+}
+
+.pagination li {
+  margin: 6px;
+  cursor: pointer;
+}
+
+.mypage-error {
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.mypage-errorimg {
+  width: 50px;
+  height: 50px;
+}
+
+.mypage-errormsg {
+  font-size: 16px;
+}
+
+.mypage-question-error {
+  margin-top: 50px;
+}

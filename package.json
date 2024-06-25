@@ -11,6 +11,7 @@
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-paginate": "^7.1.4",
     "@types/react-star-ratings": "^2.3.3",
     "antd": "^5.18.0",
     "axios": "^1.7.2",
