@@ -223,3 +223,19 @@
 .btnPayment:hover {
   background-color: #97e7e1;
 }
+
+.orderpay_couponbtn {
+  width: 97px;
+  height: 58px;
+  padding: 10px 0;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.orderpay_couponbtn:hover {
+  background-color: #97e7e1;
+}

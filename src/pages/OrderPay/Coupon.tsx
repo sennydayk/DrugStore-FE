@@ -113,7 +113,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
     <div className="coupon_container">
       <h2 className="orderpay_subtitle">쿠폰</h2>
       <div className="coupon_wrap">
-        <p>쿠폰 적용</p>
+        <p>사용 가능한 쿠폰</p>
         <select
           className="coupon_select"
           value={selectedCoupon?.id || "사용안함"}
@@ -127,7 +127,9 @@ const Coupon: React.FC<OrderFormProps> = () => {
           ))}
         </select>
 
-        <button onClick={applyCoupon}>쿠폰 적용</button>
+        <button onClick={applyCoupon} className="orderpay_couponbtn">
+          쿠폰 적용
+        </button>
       </div>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>
