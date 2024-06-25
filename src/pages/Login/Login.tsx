@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import Kakao from "../../assets/png/kakao-talk.png";
 import "./Login.css";
+
+interface KakaoResponse {
+  access_token: string;
+  token_type: string;
+  refresh_token: string;
+  expires_in: number;
+  scope: string;
+  refresh_token_expires_in: number;
+}
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -52,6 +61,19 @@ const LoginForm: React.FC = () => {
         "이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
       );
       setLoginCheck(true);
+    }
+  };
+
+  const handleKakaoLogin = async () => {
+    try {
+      const response: AxiosResponse<KakaoResponse> = await axios.get(
+        "https://drugstoreproject.shop/oauth2/kakao"
+      );
+      const { access_token } = response.data;
+      // 여기서 access_token을 사용하여 로그인 처리 등의 작업을 수행할 수 있습니다.
+      console.log("Kakao Login Success", access_token);
+    } catch (error) {
+      console.error("Kakao Login Error", error);
     }
   };
 
@@ -110,7 +132,7 @@ const LoginForm: React.FC = () => {
           로그인
         </button>
         <div className="login_orSeparator">or</div>
-        <button className="btn kakaoLoginBtn">
+        <button className="btn kakaoLoginBtn" onClick={handleKakaoLogin}>
           <img src={Kakao} alt="카카오 로그인" />
           카카오 로그인
         </button>

@@ -10,22 +10,20 @@ import CartItem from "./CartItem";
 
 // item 객체의 타입을 정의합니다.
 interface Item {
-  id: number;
+  productId: number;
+  optionId: number;
+  cartId: number;
   brand: string;
-  name: string;
-  img: string;
-  orgPrice: number;
-  purPrice: number;
+  productName: string;
+  productPhotoUrl: string;
+  price: number;
+  finalPrice: number;
   delivery: string;
   quantity?: number;
   option?: string;
 }
 
 const Cart: React.FC = () => {
-  let navigate = useNavigate();
-  const goToOrderForm = () => {
-    navigate("/order");
-  };
   const [items, setItems] = useState<Item[]>([]);
   const [currentItem, setCurrentItem] = useState<any>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
@@ -33,7 +31,7 @@ const Cart: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [itemOptions, setItemOptions] = useState(
     items.map((item) => ({
-      id: item.id,
+      id: item.productId,
       quantity: 1,
       option: "",
     }))
@@ -98,12 +96,12 @@ const Cart: React.FC = () => {
 
   const handleDeleteItem = (id: number) => {
     // `id`를 기반으로 해당 아이템을 제외한 새 배열 생성
-    const filteredItems = items.filter((item) => item.id !== id);
+    const filteredItems = items.filter((item) => item.productId !== id);
     setItems(filteredItems); // 상태 업데이트
 
     // 체크된 아이템 상태도 업데이트
     const updatedCheckedItems = checkedItems.filter(
-      (_, index) => index !== items.findIndex((item) => item.id === id)
+      (_, index) => index !== items.findIndex((item) => item.productId === id)
     );
     setCheckedItems(updatedCheckedItems);
   };
@@ -116,19 +114,19 @@ const Cart: React.FC = () => {
     );
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id
+        item.productId === id
           ? {
               ...item,
               quantity,
               option,
-              name: `${item.name} (${option})`,
-              purPrice: (item.purPrice / (item.quantity || 1)) * quantity,
-              orgPrice: (item.orgPrice / (item.quantity || 1)) * quantity,
+              name: `${item.productName} (${option})`,
+              purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
+              orgPrice: (item.price / (item.quantity || 1)) * quantity,
             }
           : item
       )
     );
-    const updatedItem = items.find((item) => item.id === id);
+    const updatedItem = items.find((item) => item.productId === id);
     if (updatedItem) {
       updateCartItem(updatedItem);
     }
@@ -137,7 +135,7 @@ const Cart: React.FC = () => {
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
   const openModal = (item: Item) => {
     const currentItemOptions = itemOptions.find(
-      (option) => option.id === item.id
+      (option) => option.id === item.productId
     ) || { quantity: 1, option: "" };
     setCurrentItem({ ...item, ...currentItemOptions });
     setIsModalOpen(true);

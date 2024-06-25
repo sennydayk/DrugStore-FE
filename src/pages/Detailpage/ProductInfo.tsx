@@ -405,8 +405,9 @@ export function ProductInfo(productid: ParamsType) {
           </div>
           <div>
             <Dropdown
-              productOptions={productdetail.product_options}
+              productId={productdetail?.product_id || 0}
               originprice={productdetail.final_price}
+              productOptions={productdetail.product_options}
             ></Dropdown>
           </div>
         </div>

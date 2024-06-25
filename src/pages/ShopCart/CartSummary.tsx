@@ -5,12 +5,14 @@ import AlertAlram from "../../assets/png/alert_alram.png";
 
 // item 객체의 타입을 정의합니다.
 interface Item {
-  id: number;
+  productId: number;
+  optionId: number;
+  cartId: number;
   brand: string;
-  name: string;
-  img: string;
-  orgPrice: number;
-  purPrice: number;
+  productName: string;
+  productPhotoUrl: string;
+  price: number;
+  finalPrice: number;
   delivery: string;
   quantity?: number;
   option?: string;
@@ -23,13 +25,6 @@ const CartSummary: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalDeliveryFee, setTotalDeliveryFee] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
-  const [itemOptions, setItemOptions] = useState(
-    items.map((item) => ({
-      id: item.id,
-      quantity: 1,
-      option: "",
-    }))
-  );
 
   useEffect(() => {
     setCheckedItems(new Array(items.length).fill(selectAll));
@@ -38,7 +33,7 @@ const CartSummary: React.FC = () => {
   useEffect(() => {
     const total = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
-        return acc + item.purPrice * (item.quantity || 1);
+        return acc + item.finalPrice * (item.quantity || 1);
       }
       return acc;
     }, 0);

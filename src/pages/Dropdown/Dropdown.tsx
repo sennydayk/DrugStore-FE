@@ -5,6 +5,7 @@ import "./Dropdown.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useModal from "../../hook/useModal";
+import axios, { AxiosResponse } from "axios";
 
 interface productOptionType {
   option_id: number;
@@ -19,11 +20,13 @@ interface SelectedProductCounter {
 }
 
 export default function Dropdown({
-  productOptions,
+  productId,
   originprice,
+  productOptions,
 }: {
-  productOptions: productOptionType[];
+  productId: number;
   originprice: number;
+  productOptions: productOptionType[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<
@@ -139,6 +142,51 @@ export default function Dropdown({
     settotalPrice(totalPrice);
   };
 
+  const handleCartButtonClick = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
+      const cartItems: {
+        productId: number;
+        quantity: number;
+        optionsId: number;
+      }[] = selectedOptions.map((option) => ({
+        productId: productId,
+        quantity: option.count,
+        optionsId: option.id,
+      }));
+
+      const config = {
+        method: "post",
+        url: "https://drugstoreproject.shop/cart",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+        data: {
+          items: cartItems,
+        },
+      };
+
+      const response: AxiosResponse = await axios(config);
+      console.log("장바구니 추가 응답 데이터:", response.data.data);
+      console.log(JSON.stringify(cartItems));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("장바구니 추가 중 오류 발생:", error.message);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+          console.error("서버 응답 상태 코드:", error.response.status);
+        }
+      } else {
+        console.error("알 수 없는 오류 발생:", error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="dropdown_wrapper">
@@ -248,7 +296,9 @@ export default function Dropdown({
         </div>
       </div>
       <div>
-        <button className="dropdown_cartbutton">장바구니</button>
+        <button className="dropdown_cartbutton" onClick={handleCartButtonClick}>
+          장바구니
+        </button>
       </div>
     </>
   );
