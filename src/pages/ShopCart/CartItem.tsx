@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import axios from "axios";
 import Modal from "./CartOpionModal";
+import AlertAlram from "../../assets/png/alert_alram.png";
 
-// item 객체의 타입을 정의합니다.
 interface Item {
   productId: number;
   optionId: number;
@@ -29,6 +29,7 @@ const CartItem: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalDeliveryFee, setTotalDeliveryFee] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>(0);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const goToOrderForm = () => {
     navigate("/order");
   };
@@ -59,6 +60,7 @@ const CartItem: React.FC = () => {
       console.log("서버 응답 데이터:", response.data);
       setItems(response.data.data);
       setCheckedItems(new Array(response.data.data.length).fill(false));
+      setCartItemCount(response.data.data.length);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(
@@ -72,52 +74,6 @@ const CartItem: React.FC = () => {
       } else {
         console.error("알 수 없는 오류 발생:", error);
       }
-    }
-  };
-
-  const addItemToCart = async (item: Item) => {
-    try {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-      }
-      const config = {
-        method: "post",
-        url: "http://drugstoreproject.shop/cart",
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-        data: item,
-      };
-      const response = await axios(config);
-      console.log("항목 추가 응답 데이터:", response.data);
-      fetchCartItems(); // 장바구니 항목 다시 불러오기
-    } catch (error) {
-      console.error("항목 추가 중 오류 발생:", error);
-    }
-  };
-
-  const updateCartItem = async (cartId: number, updatedItem: Partial<Item>) => {
-    try {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-      }
-      const config = {
-        method: "put",
-        url: `http://drugstoreproject.shop/cart/${cartId}`,
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-        data: updatedItem,
-      };
-      const response = await axios(config);
-      console.log("항목 수정 응답 데이터:", response.data);
-      fetchCartItems(); // 장바구니 항목 다시 불러오기
-    } catch (error) {
-      console.error("항목 수정 중 오류 발생:", error);
     }
   };
 
@@ -148,13 +104,28 @@ const CartItem: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setCheckedItems(new Array(items.length).fill(selectAll));
+    if (items.length > 0) {
+      setCheckedItems(new Array(items.length).fill(false));
+    }
   }, [selectAll]);
 
   const handleItemChange = (index: number) => {
-    const newCheckedItems = [...checkedItems];
-    newCheckedItems[index] = !newCheckedItems[index];
-    setCheckedItems(newCheckedItems);
+    if (!items || index < 0 || index >= items.length) return;
+    setCheckedItems((prevChecked) => {
+      const newChecked = [...prevChecked];
+      newChecked[index] = !newChecked[index];
+      const allChecked = newChecked.every((checked) => checked);
+      setSelectAll(allChecked);
+      return newChecked;
+    });
+  };
+
+  const handleSelectAll = () => {
+    setSelectAll((prevSelectAll) => {
+      const newCheckedItems = items.map(() => !prevSelectAll);
+      setCheckedItems(newCheckedItems);
+      return !prevSelectAll;
+    });
   };
 
   useEffect(() => {
@@ -164,7 +135,6 @@ const CartItem: React.FC = () => {
       }
       return acc;
     }, 0);
-
     const deliveryFee = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
         if (item.delivery === "무료배송") {
@@ -180,17 +150,17 @@ const CartItem: React.FC = () => {
     setFinalPrice(total + deliveryFee);
   }, [checkedItems, items]);
 
-  const handleDeleteItem = async (id: number) => {
+  const handleDeleteItem = async (productId: number) => {
     try {
-      await axios.delete(`http://drugstoreproject.shop/cart/${id}`);
+      await axios.delete(`httpa://drugstoreproject.shop/cart/empty`);
       // 아이템을 삭제한 후, 상태를 업데이트
       setItems((prevItems) =>
-        prevItems.filter((item) => item.productId !== id)
+        prevItems.filter((item) => item.productId !== productId)
       );
       setCheckedItems((prevChecked) =>
         prevChecked.filter(
           (_, index) =>
-            index !== items.findIndex((item) => item.productId === id)
+            index !== items.findIndex((item) => item.productId === productId)
         )
       );
     } catch (error) {
@@ -202,7 +172,7 @@ const CartItem: React.FC = () => {
     try {
       const selectedItems = items.filter((_, index) => checkedItems[index]);
       const deleteRequests = selectedItems.map((item) =>
-        axios.delete(`http://drugstoreproject.shop/cart/${item.productId}`)
+        axios.delete(`http://drugstoreproject.shop/cart/${item.cartId}`)
       );
       await Promise.all(deleteRequests);
       // 선택된 아이템 삭제 후, 상태 업데이트
@@ -226,104 +196,149 @@ const CartItem: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setCurrentItem(null);
-  };
-
   return (
-    <div className="cart_wrap">
-      <table className="cart_table">
-        <caption>
-          상품정보, 판매가, 수량, 구매가, 배송정보, 선택으로 이루어진 올리브영
-          배송상품 장바구니 목록 표
-        </caption>
-        <thead>
-          <tr className="table_title">
-            <th></th>
-            <th scope="col">상품정보</th>
-            <th scope="col">수량</th>
-            <th scope="col">상품금액</th>
-            <th scope="col">배송정보</th>
-            <th scope="col">선택</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.length > 0 ? (
-            items.map((item, index) => (
-              <tr key={item.productId}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={checkedItems[index] || false}
-                    onChange={() => handleItemChange(index)}
-                  />
-                </td>
-                <td>
-                  <a className="prd_img" href="">
-                    <img src={item.productPhotoUrl} alt={item.productName} />
-                  </a>
-                  <a className="prd_name" href="">
-                    <span id="brandName">{item.brand}</span>
-                    <p id="goodsName">{item.productName}</p>
-                  </a>
-                </td>
-                <td className="prd_quantity">
-                  <span id="prd_quantity">{item.quantity || 1}</span>
-                </td>
-                <td>
-                  <span className="org_price">
-                    <span className="tx_num">
-                      {item.price
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </span>
-                    원
-                  </span>
-                  <span className="pur_price">
-                    <span className="tx_num">
-                      {item.finalPrice
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </span>
-                    원
-                  </span>
-                </td>
-                <td>
-                  <p className="prd_delivery">
-                    <strong id="deliStrongText">
-                      무료배송
-                      <span>도서 · 산간 제외</span>
-                    </strong>
-                  </p>
-                </td>
-                <td>
-                  <div className="btn_group">
-                    <button
-                      type="button"
-                      className="btnSmall"
-                      onClick={() => openModal(item)}
-                    >
-                      옵션변경
-                    </button>
-                    <button
-                      type="button"
-                      className="btnSmall delete"
-                      onClick={() => handleDeleteItem(item.productId)}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={6}>장바구니가 비어 있습니다.</td>
+    <div className="container">
+      <div className="cart_wrap">
+        <h1 className="shopcart_title">장바구니</h1>
+        <h3>배송상품</h3>
+        <div className="cart-check">
+          <div className="checkbox-label-group">
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAll}
+              id="inp_allRe1"
+              title="올리브영 배송상품 전체 선택"
+            />
+            <label htmlFor="inp_allRe1">전체 선택</label>
+          </div>
+          <button type="button" onClick={handleDeleteSelected}>
+            선택상품 삭제
+          </button>
+        </div>
+        <table className="cart_table">
+          <caption>
+            상품정보, 판매가, 수량, 구매가, 배송정보, 선택으로 이루어진 올리브영
+            배송상품 장바구니 목록 표
+          </caption>
+          <thead>
+            <tr className="table_title">
+              <th></th>
+              <th scope="col">상품정보</th>
+              <th scope="col">수량</th>
+              <th scope="col">상품금액</th>
+              <th scope="col">배송정보</th>
+              <th scope="col">선택</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items.length > 0 ? (
+              items.map((item, index) => (
+                <tr key={item.productId}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={checkedItems[index] || false}
+                      onChange={() => handleItemChange(index)}
+                    />
+                  </td>
+                  <td>
+                    <a className="prd_img" href="">
+                      <img src={item.productPhotoUrl} alt={item.productName} />
+                    </a>
+                    <a className="prd_name" href="">
+                      <span id="brandName">{item.brand}</span>
+                      <p id="goodsName">{item.productName}</p>
+                    </a>
+                  </td>
+                  <td className="prd_quantity">
+                    <span id="prd_quantity">{item.quantity || 1}</span>
+                  </td>
+                  <td>
+                    <span className="org_price">
+                      <span className="tx_num">
+                        {item.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </span>
+                      원
+                    </span>
+                    <span className="pur_price">
+                      <span className="tx_num">
+                        {item.finalPrice
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </span>
+                      원
+                    </span>
+                  </td>
+                  <td>
+                    <p className="prd_delivery">
+                      <strong id="deliStrongText">
+                        무료배송
+                        <span>도서 · 산간 제외</span>
+                      </strong>
+                    </p>
+                  </td>
+                  <td>
+                    <div className="btn_group">
+                      <button
+                        type="button"
+                        className="btnSmall"
+                        onClick={() => openModal(item)}
+                      >
+                        옵션변경
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6}>장바구니가 비어 있습니다.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <div className="basket_price_info">
+          <div className="sum_price">
+            총 상품금액
+            <span className="tx_num2">{totalPrice.toLocaleString()}</span>원
+            <span className="tx_sign plus"> +</span> 배송비
+            <span className="tx_num2">{totalDeliveryFee}</span>원
+          </div>
+          <div className="basket_total_price_info">
+            <div className="basket_total_price_alert">
+              <img src={AlertAlram} />
+              <span className="tx_text">
+                결제 시 쿠폰을 적용 받을 경우 금액이 달라질 수 있습니다.
+              </span>
+            </div>
+            <span className="tx_total_price">
+              총 결제예상금액
+              <span className="tx_price">
+                <span className="tx_num3">{finalPrice}</span>원
+              </span>
+            </span>
+          </div>
+        </div>
+        <div className="cart_oreder_btn">
+          <button
+            type="button"
+            className="selectorder_btn"
+            onClick={goToOrderForm}
+          >
+            선택주문
+          </button>
+          <button
+            type="button"
+            className="allorder_btn"
+            onClick={goToOrderForm}
+          >
+            전체주문
+          </button>
+        </div>
+      </div>
       {currentItem && (
         <Modal
           isOpen={isModalOpen}

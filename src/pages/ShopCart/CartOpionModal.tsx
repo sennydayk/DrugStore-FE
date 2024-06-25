@@ -13,19 +13,22 @@ interface CartItem {
   cartId: number;
   name: string;
   quantity: number;
-  option: {
-    name: string;
-    value: string;
-  };
+  option_id: number;
+  option: string;
+  option_price: number;
 }
 
 interface UpdateCartItemRequest {
   cartId: number;
   quantity: number;
-  option: {
-    name: string;
-    value: string;
-  };
+  option_id: number;
+  option: string;
+  option_price: number;
+}
+
+interface Option {
+  value: string;
+  option: string;
 }
 
 const CartOpionModal: React.FC<ModalProps> = ({
@@ -35,15 +38,20 @@ const CartOpionModal: React.FC<ModalProps> = ({
   item,
 }) => {
   const [quantity, setQuantity] = useState(item.quantity);
-  const [option, setOption] = useState(item.option);
+  const [option, setOption] = useState<Option>({
+    value: item.option,
+    option: item.option,
+  });
 
   const updateCartItem = async (
     item: CartItem
   ): Promise<AxiosResponse<CartItem>> => {
     const requestBody: UpdateCartItemRequest = {
       cartId: item.cartId,
-      option: item.option,
-      quantity: item.quantity,
+      option: option.value,
+      option_id: item.option_id,
+      option_price: item.option_price,
+      quantity: quantity,
     };
 
     const response = await axios.put<CartItem>(
@@ -54,7 +62,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
   };
 
   const handleSave = async () => {
-    await updateCartItem({ ...item, quantity, option });
+    await updateCartItem({ ...item, quantity, option: option.value });
     onSave(quantity, option.value);
     onClose();
   };
@@ -74,7 +82,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
             value={option.value}
             onChange={(e) => setOption({ ...option, value: e.target.value })}
           >
-            <option>{option.name}</option>
+            <option>{option.value}</option>
           </select>
         </div>
         <div>

@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import axios from "axios";
 import Modal from "./CartOpionModal";
-import CartSummary from "./CartSummary";
-import CartActions from "./CartActions";
-import CartHeader from "./CartHeader";
 import CartItem from "./CartItem";
 
 // item 객체의 타입을 정의합니다.
@@ -144,10 +141,7 @@ const Cart: React.FC = () => {
   return (
     <div className="container">
       <div className="cart_wrap">
-        <CartHeader />
         <CartItem />
-        <CartSummary />
-        <CartActions />
       </div>
       {currentItem && (
         <Modal
