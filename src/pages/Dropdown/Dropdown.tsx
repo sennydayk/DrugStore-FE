@@ -191,8 +191,12 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
             <div>
                 <div className='dropdown_totalprice'>
                     {
-                        <div className='dropdown_totalpriceright'> 상품금액 합계 : {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
-                        </div>}
+                        <>
+                            <div className='dropdown_total'> 상품금액 합계 :
+                            </div>
+                            <div className='dropdown_totalpriceright'> {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
+                            </div>
+                        </>}
                 </div>
             </div>
             <div>

@@ -10,6 +10,7 @@ import useModal from '../../hook/useModal';
 import axios from 'axios'
 import Like from '../../components/Like/Like';
 import useLikeHandler from '../../hook/useLikehandler'
+import StarRating from '../DetailReview/StarRating';
 
 
 interface ProductdetailType {
@@ -187,8 +188,14 @@ export function ProductInfo(productid: ParamsType) {
                     </div>
                     <div className='productinfo_reviewinfo'>
                         <a className='productinfo_reviewavg'>
-                            고객리뷰 {productdetail.review_avg}점
+                            고객리뷰
                         </a>
+                        <div className='productinfo_reviewstar'>
+                            <StarRating rating={productdetail.review_avg} />
+                            <div>
+                                {productdetail.review_avg}
+                            </div>
+                        </div>
                         <a className='prsoductinfo_reviewcount'>
                             ({productdetail.review_count}건)
                         </a>
