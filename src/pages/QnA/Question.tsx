@@ -42,7 +42,7 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
         }
 
         try {
-            const response = await axios.delete(`http://52.78.248.75:8080/product/question/del?question-id=${encodedquestionId}`, {
+            const response = await axios.delete(`http://52.78.248.75:8080/product/question?question-id=${encodedquestionId}`, {
                 headers: {
                     "Token": token,
                     "Content-Type": 'application/json',
@@ -75,9 +75,9 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
                     {qna.question_status}
                 </div>
                 <div className='qnaitem_question' onClick={qestionclickhandler}>
-                    {qna.question}
+                    {qna.question.length > 10 ? qna.question.substring(0, 10) + '...' : qna.question}
                 </div>
-                <div className='qnaitem_usename'>
+                <div className='qnaitem_username'>
                     {qna.user_name}
                 </div>
                 <div className='qnaitem_createdat'>
@@ -87,7 +87,7 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
                 <button className='qnaitem_deletebutton' onClick={() => deletequestionhandler(qna.question_id)}>삭제</button>
             </div>
             <div>
-                {qnaVisible && <QnAItem question={qna.question} answer={qna.answer}></QnAItem>}
+                {qnaVisible && <QnAItem question={qna.question} questionid={qna.question_id} answer={qna.answer} ></QnAItem>}
             </div>
         </>
     );

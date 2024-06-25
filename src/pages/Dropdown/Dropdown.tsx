@@ -4,6 +4,7 @@ import { isTemplateExpression } from 'typescript';
 import './Dropdown.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useModal from '../../hook/useModal';
 
 interface productOptionType {
     option_id: number;
@@ -34,6 +35,10 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
         setisClicked(true)
     };
 
+
+    const modalMinone = useModal();
+    const modalLimit = useModal();
+
     const handleSelect = (selectOptionID: number) => {
         setSelectedOptions((prevSelectedOptions) => {
             const optionIndex = prevSelectedOptions.findIndex(
@@ -62,9 +67,10 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
                 option.id === prod_id && option.count >= 2 ? { ...option, count: option.count - 1 } : option)
         )
         selectedOptions.map((item) => {
+            console.log('count', item.count)
             /*0개 이하일때 메시지 */
-            if (item.count < 1) {
-                console.log('0개')
+            if (item.count <= 1) {
+                alert("1개 이상부터 선택가능합니다. ");
             }
         })
     }
@@ -74,9 +80,7 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
         setSelectedOptions((prev) => {
             const updatedItems = prev.map((item) => {
                 const selectedproduct = productOptions.find((option) => option.option_id === item.id)
-                console.log('selectedproduct', selectedproduct)
-                console.log('selectedproduct.option_stock', selectedproduct?.option_stock)
-                if (item.id === prod_id && selectedproduct /*&& selectedproduct.option_stock >= item.count*/) {
+                if (item.id === prod_id && selectedproduct && selectedproduct.option_stock >= item.count) {
                     return {
                         ...item, count: item.count + 1
                     }
@@ -93,7 +97,7 @@ export default function Dropdown({ productOptions, originprice }: { productOptio
             const selectedproduct = productOptions.find((option) => option.option_id === item.id)
             if (selectedproduct) {
                 if (item.count > selectedproduct.option_stock) {
-                    console.log('재고넘어')
+                    alert("해당 상품 재고가 부족합니다. ");
                 }
             }
         })

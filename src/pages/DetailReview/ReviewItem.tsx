@@ -9,7 +9,7 @@ interface ReviewType {
     review_content: string
     product_name: string
     create_at: string;
-    userprofile: string;
+    profile_img: string;
     option_name: string
 }
 
@@ -22,7 +22,7 @@ const ReviewItem = (review: ReviewType) => {
             <div className='reviewitem_profile'>
                 <div>
                     <img
-                        src={review.userprofile}
+                        src={review.profile_img}
                         className="reviewitem_userprofile"
                     />
                 </div>
@@ -31,24 +31,26 @@ const ReviewItem = (review: ReviewType) => {
                 </div>
             </div>
             <div className='reviewitem_review'>
-                <div className='reviewitem_star'>
-                    {ARRAY.map((el, index) => (
-                        <FaStar
-                            key={index}
-                            size="20"
-                            style={
-                                index < review.review_score
-                                    ? { color: '#fa722d' }
-                                    : { color: '#dadfe3' }
-                            }
-                        ></FaStar>
-                    ))}
+                <div className='reviewitem_stardate'>
+                    <div className='reviewitem_star'>
+                        {ARRAY.map((el, index) => (
+                            <FaStar
+                                key={index}
+                                size="20"
+                                style={
+                                    index < review.review_score
+                                        ? { color: '#fa722d' }
+                                        : { color: '#dadfe3' }
+                                }
+                            ></FaStar>
+                        ))}
+                    </div>
+                    <div className='reviewitem_date'>
+                        {review.create_at}
+                    </div>
                 </div>
-                <div className='reviewitem_date'>
-                    {review.create_at}
-                </div>
-                <div className='reviewitem_productname'>
-                    {review.option_name}
+                <div className='reviewitem_optionname'>
+                    [옵션]{review.option_name}
                 </div>
                 <div className='reviewitem_content'>
                     {review.review_content}

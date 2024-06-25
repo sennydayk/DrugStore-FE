@@ -8,6 +8,19 @@
     margin :40px auto;
 }
 
+.productinfo_productlike{
+    display: flex;
+}
+
+.productinfo_likeitem{
+    margin-top:4px;
+    margin-left : 5px;
+    border: solid 1px lightgray;
+    padding:3px;
+    width:30px;
+    height:30px;
+}
+
 .productinfo_brand_name{
     margin-bottom: 5px;
 }
