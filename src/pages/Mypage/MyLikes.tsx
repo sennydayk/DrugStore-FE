@@ -42,8 +42,7 @@ function MyLikes() {
         }
       });
 
-      const data = await response.json();
-      setProductarray(data.data.product_list);
+      setProductarray(response.data.data.product_list);
       console.log(productarray);
 
       setProductarray(response.data.data);
@@ -67,7 +66,8 @@ function MyLikes() {
         ) : (
           <div className="mypage-likes-list">
             {productarray.map((product, index) => {
-              return <Product {...product} index={index}></Product>;
+              return <Product {...product} index={index} addLike={() => addLike(product.product_id)}
+                deleteLike={() => deleteLike(product.product_id)} currentPage={0}></Product>;
             })}
           </div>
         )}

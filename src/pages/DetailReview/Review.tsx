@@ -5,6 +5,7 @@ import reviewgood from "../../assets/png/reviewgood.png";
 import reviewbad from "../../assets/png/reviewbad.png";
 import Barchart from '../Barchart/Barchart';
 import axios from 'axios'
+import StarRating from '../DetailReview/StarRating';
 
 interface ReviewType {
     nickname: string
@@ -55,6 +56,9 @@ const Review = (productid: ParamsType) => {
                 <div className='review_reviesinfo'>
                     <div className='review_reviewcount'>
                         총 {reviewCount}건
+                    </div>
+                    <div>
+                        <StarRating rating={Number(reviewAvg)} />
                     </div>
                     <div className='review_reviewavg'>
                         {reviewAvg}점

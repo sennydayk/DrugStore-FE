@@ -28,10 +28,12 @@ const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, q
             alert('50자 이내로 입력하세요.');
         } else {
             setQuestion(e.target.value);
+            console.log('change')
         }
     }
 
     const submitquestionhandler = async () => {
+        console.log('문의등록')
         const token = sessionStorage.getItem('token');
         if (!token) {
             console.log('Token not found');
@@ -48,12 +50,16 @@ const QuestionModal = ({ productid, showquestion, setshowquestion, getQnadata, q
                 },
             });
 
-            if (response.status !== 200) {
-                throw new Error('Error');
-            } else {
+            if (response.status == 400) {
+                alert("이미 답변이 완료되었습니다. 새로운 문의 글을 작성해 주시기 바랍니다.");
+            }
+            else if (response.status == 200) {
                 alert("문의가 등록되었습니다.");
                 setshowquestion(false)
                 getQnadata();
+            }
+            else {
+                throw new Error('Error');
             }
 
         } catch (error) {
