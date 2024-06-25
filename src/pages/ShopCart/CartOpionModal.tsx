@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./CartOpionModal.css";
 import axios, { AxiosResponse } from "axios";
 
@@ -6,11 +6,24 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (quantity: number, option: string) => void;
-  item: {
-    id: number;
-    quantity: number;
-    option: string;
-  };
+  item: CartItem;
+}
+
+interface CartItem {
+  cartId: number;
+  name: string;
+  quantity: number;
+  option_id: number;
+  option: string;
+  option_price: number;
+}
+
+interface UpdateCartItemRequest {
+  cartId: number;
+  quantity: number;
+  option_id: number;
+  option: string;
+  option_price: number;
 }
 
 interface Option {
@@ -30,82 +43,66 @@ const CartOpionModal: React.FC<ModalProps> = ({
     option: item.option,
   });
 
+  const updateCartItem = async (
+    item: CartItem
+  ): Promise<AxiosResponse<CartItem>> => {
+    const requestBody: UpdateCartItemRequest = {
+      cartId: item.cartId,
+      option: option.value,
+      option_id: item.option_id,
+      option_price: item.option_price,
+      quantity: quantity,
+    };
+
+    const response = await axios.put<CartItem>(
+      "https://drugstoreproject.shop/cart",
+      requestBody
+    );
+    return response;
+  };
+
+  const handleSave = async () => {
+    await updateCartItem({ ...item, quantity, option: option.value });
+    onSave(quantity, option.value);
+    onClose();
+  };
+
   const increaseQuantity = () => setQuantity((prev: number) => prev + 1);
   const decreaseQuantity = () =>
     setQuantity((prev: number) => (prev > 1 ? prev - 1 : 1));
-  const [options, setOptions] = useState<Option[]>([]);
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-          throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-        }
-        console.log("사용할 토큰:", token);
-        const config = {
-          method: "get",
-          url: "https://drugstoreproject.shop/cart",
-          headers: {
-            "Content-Type": "application/json",
-            Token: token,
-          },
-        };
-        const response = await axios(config);
-        console.log("서버 응답 데이터:", response.data);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error(
-            "장바구니 데이터를 가져오는 중 오류 발생:",
-            error.message
-          );
-          if (error.response) {
-            console.error("서버 응답 데이터:", error.response.data);
-            console.error("서버 응답 상태 코드:", error.response.status);
-          }
-        } else {
-          console.error("알 수 없는 오류 발생:", error);
-        }
-      }
-    };
-
-    fetchCartItems();
-  }, []);
-
-  const handleSave = async () => {
-    try {
-      const response: AxiosResponse = await axios.put(
-        "https://drugstoreproject.shop/cart",
-        {
-          id: item.id,
-          quantity,
-          option: option.option,
-        }
-      );
-      onSave(quantity, option.option);
-    } catch (error) {
-      console.error("Error updating cart item:", error);
-    }
-  };
+  if (!isOpen) return null;
 
   return (
-    <div className="cart_option">
-      <select
-        value={option.value}
-        onChange={(e) =>
-          setOption({
-            ...option,
-            value: e.target.value,
-            option: e.target.value,
-          })
-        }
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.option}
-          </option>
-        ))}
-      </select>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>옵션 변경</h2>
+        <div className="cart_option">
+          <select
+            value={option.value}
+            onChange={(e) => setOption({ ...option, value: e.target.value })}
+          >
+            <option>{option.value}</option>
+          </select>
+        </div>
+        <div>
+          <div className="quantity-input">
+            <button onClick={decreaseQuantity}>-</button>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              readOnly
+              min={1}
+            />
+            <button onClick={increaseQuantity}>+</button>
+          </div>
+        </div>
+        <div className="check_close_btn">
+          <button onClick={onClose}>취소</button>
+          <button onClick={handleSave}>선택완료</button>
+        </div>
+      </div>
     </div>
   );
 };

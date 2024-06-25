@@ -135,4 +135,12 @@
 .productinfo_reviewinfo{
     font-weight: bold;
     font-size: large;
+    display: flex;
+    margin-left: 25%;
+}
+
+.productinfo_reviewstar{
+    display: flex;
+    margin-right : 10px;
+    margin-left: 10px;
 }

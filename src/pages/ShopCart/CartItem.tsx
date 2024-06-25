@@ -74,7 +74,7 @@ const CartItem: React.FC = () => {
           error.message
         );
         if (error.response) {
-          console.error("서버 응답 데이터:", error.response.data);
+          console.error("cart get서버 응답 데이터:", error.response.data);
           console.error("서버 응답 상태 코드:", error.response.status);
         }
       } else {
@@ -93,13 +93,13 @@ const CartItem: React.FC = () => {
       prevItems.map((item) =>
         item.productId === id
           ? {
-              ...item,
-              quantity,
-              option,
-              name: `${item.productName} (${option})`,
-              purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
-              orgPrice: (item.price / (item.quantity || 1)) * quantity,
-            }
+            ...item,
+            quantity,
+            option,
+            name: `${item.productName} (${option})`,
+            purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
+            orgPrice: (item.price / (item.quantity || 1)) * quantity,
+          }
           : item
       )
     );
@@ -146,6 +146,7 @@ const CartItem: React.FC = () => {
         if (item.delivery === "무료배송") {
           return acc;
         }
+        console.log('item.delivery', item.delivery)
         const itemDeliveryFee = parseInt(item.delivery.replace(/,/g, ""), 10);
         return Math.max(acc, itemDeliveryFee);
       }

@@ -149,10 +149,14 @@ export default function Dropdown({
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
 
-      const cartItems = selectedOptions.map((option) => ({
-        product_id: productId,
+      const cartItems: {
+        productId: number;
+        quantity: number;
+        optionsId: number;
+      }[] = selectedOptions.map((option) => ({
+        productId: productId,
         quantity: option.count,
-        option_id: option.id,
+        optionsId: option.id,
       }));
 
       const config = {
