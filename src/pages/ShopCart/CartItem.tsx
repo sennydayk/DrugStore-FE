@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import axios from "axios";
 import Modal from "./CartOpionModal";
-import AlertAlram from "../../assets/png/alert_alram.png";
 
 // item 객체의 타입을 정의합니다.
 interface Item {
@@ -122,6 +121,28 @@ const CartItem: React.FC = () => {
     }
   };
 
+  const handleSaveOptions = (id: number, quantity: number, option: string) => {
+    setItemOptions((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity, option } : item
+      )
+    );
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.productId === id
+          ? {
+              ...item,
+              quantity,
+              option,
+              name: `${item.productName} (${option})`,
+              purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
+              orgPrice: (item.price / (item.quantity || 1)) * quantity,
+            }
+          : item
+      )
+    );
+  };
+
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -194,28 +215,6 @@ const CartItem: React.FC = () => {
     } catch (error) {
       console.error("Error deleting selected items:", error);
     }
-  };
-
-  const handleSaveOptions = (id: number, quantity: number, option: string) => {
-    setItemOptions((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity, option } : item
-      )
-    );
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.productId === id
-          ? {
-              ...item,
-              quantity,
-              option,
-              name: `${item.productName} (${option})`,
-              purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
-              orgPrice: (item.price / (item.quantity || 1)) * quantity,
-            }
-          : item
-      )
-    );
   };
 
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.

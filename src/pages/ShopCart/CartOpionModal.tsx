@@ -1,14 +1,30 @@
 import React, { useState } from "react";
 import "./CartOpionModal.css";
+import axios, { AxiosResponse } from "axios";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (quantity: number, option: string) => void;
-  item: {
-    id: number;
-    quantity: number;
-    option: string;
+  item: CartItem;
+}
+
+interface CartItem {
+  cartId: number;
+  name: string;
+  quantity: number;
+  option: {
+    name: string;
+    value: string;
+  };
+}
+
+interface UpdateCartItemRequest {
+  cartId: number;
+  quantity: number;
+  option: {
+    name: string;
+    value: string;
   };
 }
 
@@ -21,8 +37,25 @@ const CartOpionModal: React.FC<ModalProps> = ({
   const [quantity, setQuantity] = useState(item.quantity);
   const [option, setOption] = useState(item.option);
 
-  const handleSave = () => {
-    onSave(quantity, option);
+  const updateCartItem = async (
+    item: CartItem
+  ): Promise<AxiosResponse<CartItem>> => {
+    const requestBody: UpdateCartItemRequest = {
+      cartId: item.cartId,
+      option: item.option,
+      quantity: item.quantity,
+    };
+
+    const response = await axios.put<CartItem>(
+      "https://drugstoreproject.shop/cart",
+      requestBody
+    );
+    return response;
+  };
+
+  const handleSave = async () => {
+    await updateCartItem({ ...item, quantity, option });
+    onSave(quantity, option.value);
     onClose();
   };
 
@@ -35,12 +68,13 @@ const CartOpionModal: React.FC<ModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>옵션수정</h2>
+        <h2>옵션 변경</h2>
         <div className="cart_option">
-          <select value={option} onChange={(e) => setOption(e.target.value)}>
-            <option>옵션</option>
-            <option>옵션명1</option>
-            <option>옵션명2</option>
+          <select
+            value={option.value}
+            onChange={(e) => setOption({ ...option, value: e.target.value })}
+          >
+            <option>{option.name}</option>
           </select>
         </div>
         <div>
