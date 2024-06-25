@@ -19,6 +19,12 @@ interface Item {
   option?: string;
 }
 
+interface CartItem {
+  product_id: number;
+  quantity: number;
+  option_id: number;
+}
+
 const CartItem: React.FC = () => {
   let navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
