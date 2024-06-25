@@ -149,7 +149,7 @@
   position: relative;
 }
 
-.header_searchbutton{
+.header_searchbutton {
   position: absolute;
   top: 7px;
   right: 3%; /* 입력 필드 내부의 우측 여백 */
@@ -158,11 +158,11 @@
   height: 20px; /* 아이콘 크기 */
   background-color: transparent;
   border: none;
-  width:30px;
+  width: 30px;
   font-size: large;
 }
 
-.search-form{
+.search-form {
   position: relative;
   display: flex;
   align-items: center;
@@ -173,4 +173,3 @@
   border: none;
   background-color: transparent;
 }
-
