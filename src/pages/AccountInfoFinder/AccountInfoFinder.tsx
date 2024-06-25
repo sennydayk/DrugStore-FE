@@ -107,9 +107,9 @@ function AccountInfoFinder() {
       const { message, isValid, email } = response.data;
 
       if (isValid) {
-        alert(`이메일 찾기 성공: ${email}`);
+        alert(`이메일 찾기 실패\n ${email}`);
       } else {
-        alert(`이메일 찾기 실패: ${message}`);
+        alert(`이메일 찾기 성공\n ${message}`);
       }
     } catch (error: any) {
       console.error(error);
