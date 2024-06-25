@@ -20,11 +20,11 @@ interface SelectedProductCounter {
 }
 
 export default function Dropdown({
-  productId,
+  product_id,
   originprice,
   productOptions,
 }: {
-  productId: number;
+  product_id: number;
   originprice: number;
   productOptions: productOptionType[];
 }) {
@@ -149,14 +149,10 @@ export default function Dropdown({
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
 
-      const cartItems: {
-        productId: number;
-        quantity: number;
-        optionsId: number;
-      }[] = selectedOptions.map((option) => ({
-        productId: productId,
+      const cartItems = selectedOptions.map((option) => ({
+        product_id: product_id,
         quantity: option.count,
-        optionsId: option.id,
+        options_id: option.id,
       }));
 
       const config = {
@@ -166,9 +162,7 @@ export default function Dropdown({
           "Content-Type": "application/json",
           Token: token,
         },
-        data: {
-          items: cartItems,
-        },
+        data: cartItems,
       };
 
       const response: AxiosResponse = await axios(config);

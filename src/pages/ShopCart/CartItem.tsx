@@ -10,10 +10,10 @@ interface Item {
   optionId: number;
   cartId: number;
   brand: string;
-  productName: string;
-  productPhotoUrl: string;
+  product_name: string;
+  product_img: string;
   price: number;
-  finalPrice: number;
+  final_price: number;
   delivery: string;
   quantity?: number;
   option?: string;
@@ -76,6 +76,12 @@ const CartItem: React.FC = () => {
         if (error.response) {
           console.error("cart get서버 응답 데이터:", error.response.data);
           console.error("서버 응답 상태 코드:", error.response.status);
+          if (error.response.status === 404) {
+            // 장바구니가 비어있는 경우
+            setItems([]);
+            setCheckedItems([]);
+            setCartItemCount(0);
+          }
         }
       } else {
         console.error("알 수 없는 오류 발생:", error);
@@ -93,13 +99,13 @@ const CartItem: React.FC = () => {
       prevItems.map((item) =>
         item.productId === id
           ? {
-            ...item,
-            quantity,
-            option,
-            name: `${item.productName} (${option})`,
-            purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
-            orgPrice: (item.price / (item.quantity || 1)) * quantity,
-          }
+              ...item,
+              quantity,
+              option,
+              name: `${item.product_name} (${option})`,
+              final_price: (item.final_price / (item.quantity || 1)) * quantity,
+              price: (item.price / (item.quantity || 1)) * quantity,
+            }
           : item
       )
     );
@@ -137,7 +143,7 @@ const CartItem: React.FC = () => {
   useEffect(() => {
     const total = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
-        return acc + item.finalPrice * (item.quantity || 1);
+        return acc + item.final_price * (item.quantity || 1);
       }
       return acc;
     }, 0);
@@ -146,7 +152,7 @@ const CartItem: React.FC = () => {
         if (item.delivery === "무료배송") {
           return acc;
         }
-        console.log('item.delivery', item.delivery)
+        console.log("item.delivery", item.delivery);
         const itemDeliveryFee = parseInt(item.delivery.replace(/,/g, ""), 10);
         return Math.max(acc, itemDeliveryFee);
       }
@@ -166,7 +172,7 @@ const CartItem: React.FC = () => {
 
       const config = {
         method: "delete",
-        url: `https://drugstoreproject.shop/cart`,
+        url: `https://drugstoreproject.shop/cart/${item.cartId}`, // 삭제할 상품의 cart_id를 URL에 포함
         headers: {
           "Content-Type": "application/json",
           Token: token,
@@ -176,17 +182,23 @@ const CartItem: React.FC = () => {
       await axios(config);
 
       // 아이템을 삭제한 후, 상태를 업데이트
-      setItems((prevItems) =>
-        prevItems.filter((i) => i.productId !== item.productId)
+      setItems(
+        (prevItems) => prevItems.filter((i) => i.cartId !== item.cartId) // cartId로 필터링
       );
       setCheckedItems((prevChecked) =>
         prevChecked.filter(
           (_, index) =>
-            index !== items.findIndex((i) => i.productId === item.productId)
+            index !== items.findIndex((i) => i.cartId === item.cartId) // cartId로 필터링
         )
       );
     } catch (error) {
       console.error("Error deleting item:", error);
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        // 상품을 찾을 수 없는 경우
+        alert("상품을 찾을 수 없습니다.");
+      } else {
+        alert("상품 삭제 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -280,11 +292,11 @@ const CartItem: React.FC = () => {
                   </td>
                   <td>
                     <a className="prd_img" href="">
-                      <img src={item.productPhotoUrl} alt={item.productName} />
+                      <img src={item.product_img} alt={item.product_name} />
                     </a>
                     <a className="prd_name" href="">
                       <span id="brandName">{item.brand}</span>
-                      <p id="goodsName">{item.productName}</p>
+                      <p id="goodsName">{item.product_name}</p>
                     </a>
                   </td>
                   <td className="prd_quantity">
@@ -298,7 +310,7 @@ const CartItem: React.FC = () => {
                       원
                     </span>
                     <span className="pur_price">
-                      {item.finalPrice
+                      {item.final_price
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       원
