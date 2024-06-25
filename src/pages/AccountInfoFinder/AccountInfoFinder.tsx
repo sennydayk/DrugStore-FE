@@ -21,9 +21,9 @@ interface PasswordResetResponse {
 
 interface PasswordResetRequest {
   email: string;
-  newPassword: string;
+  new_password: string;
   verifyNumber: string;
-  newPasswordCheck: string;
+  new_password_check: string;
 }
 
 function AccountInfoFinder() {
@@ -122,9 +122,9 @@ function AccountInfoFinder() {
   };
 
   const handlePasswordReset = async () => {
-    const newPassword = (document.getElementById("u_pwd") as HTMLInputElement)
+    const new_password = (document.getElementById("u_pwd") as HTMLInputElement)
       ?.value;
-    const newPasswordCheck = (
+    const new_password_check = (
       document.getElementById("u_pwd_check") as HTMLInputElement
     )?.value;
     const verifyNumber = (
@@ -133,7 +133,7 @@ function AccountInfoFinder() {
     const email = (document.getElementById("u_email") as HTMLInputElement)
       ?.value;
 
-    if (newPassword !== newPasswordCheck) {
+    if (new_password !== new_password_check) {
       alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
     }
@@ -141,9 +141,9 @@ function AccountInfoFinder() {
     try {
       const request: PasswordResetRequest = {
         email,
-        newPassword,
+        new_password,
         verifyNumber,
-        newPasswordCheck,
+        new_password_check,
       };
       const response: AxiosResponse<PasswordResetResponse> = await axios.put(
         "https://drugstoreproject.shop/auth/password",
@@ -151,7 +151,7 @@ function AccountInfoFinder() {
       );
       console.log(response.data);
       alert("비밀번호가 변경되었습니다. 변경된 비밀번호로 다시 로그인해주세요");
-      window.location.href = "/login";
+      window.location.href = "/auth/login";
     } catch (err) {
       console.error(err);
       if (err instanceof AxiosError) {

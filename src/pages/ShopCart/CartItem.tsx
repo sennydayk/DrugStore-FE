@@ -289,6 +289,13 @@ const CartItem: React.FC = () => {
                       >
                         옵션변경
                       </button>
+                      <button
+                        type="button"
+                        className="btnSmall delete"
+                        onClick={() => handleDeleteItem(item.productId)}
+                      >
+                        삭제
+                      </button>
                     </div>
                   </td>
                 </tr>

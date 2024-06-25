@@ -27,12 +27,12 @@ const App = () => (
         <Route path="/detail/:productid" element={<Detailpage />} />
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/find-email" element={<AccountInfoFinder />} />
-        <Route path="/cart" element={<CartPage />} />ㅁ
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPayPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/mypage/account" element={<Mypage />} />
         <Route path="/mypage/purchase-history" element={<PurchaseHistory />} />
-        <Route path="/mypage/likes" element={<MyLikes />} />
+        {/* <Route path="/mypage/likes" element={<MyLikes />} /> */}
         <Route path="/mypage/reviews" element={<MyReviews />} />
         <Route path="/mypage/questions" element={<Questions />} />
       </Routes>
