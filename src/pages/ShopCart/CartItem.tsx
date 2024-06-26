@@ -22,7 +22,7 @@ interface Item {
 interface CartItem {
   product_id: number;
   quantity: number;
-  option_id: number;
+  option_id: string;
 }
 
 const CartItem: React.FC = () => {
@@ -37,8 +37,17 @@ const CartItem: React.FC = () => {
   const [finalPrice, setFinalPrice] = useState<number>(0);
   const [cartItemCount, setCartItemCount] = useState(0);
   const goToOrderForm = () => {
-    navigate("/order");
+    const selectedCartItems = items.filter((_, index) => checkedItems[index]);
+    const cartItems: CartItem[] = selectedCartItems.map((item) => ({
+      product_id: item.productId,
+      quantity: item.quantity || 1,
+      option_id:
+        itemOptions.find((option) => option.id === item.productId)?.option_id ||
+        "",
+    }));
+    navigate("/order", { state: { cartItems } });
   };
+
   const [itemOptions, setItemOptions] = useState(
     items.map((item) => ({
       id: item.productId,
@@ -129,6 +138,14 @@ const CartItem: React.FC = () => {
       const allChecked = newChecked.every((checked) => checked);
       setSelectAll(allChecked);
       return newChecked;
+    });
+  };
+
+  const handleOptionChange = (index: number, optionId: string) => {
+    setItemOptions((prevOptions) => {
+      const newOptions = [...prevOptions];
+      newOptions[index].option_id = optionId;
+      return newOptions;
     });
   };
 

@@ -10,7 +10,7 @@ interface ModalProps {
 }
 
 interface CartItem {
-  cartId: number;
+  cart_id: number;
   name: string;
   quantity: number;
   option_id: number;
@@ -45,7 +45,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
     item: CartItem
   ): Promise<AxiosResponse<CartItem>> => {
     const requestBody: UpdateCartItemRequest = {
-      cart_id: item.cartId,
+      cart_id: item.cart_id,
       options_id: item.option_id,
       quantity: quantity,
     };
@@ -78,7 +78,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
             value={option.value}
             onChange={(e) => setOption({ ...option, value: e.target.value })}
           >
-            <option>{option.value}</option>
+            <option>{option.option}</option>
           </select>
         </div>
         <div>

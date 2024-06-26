@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./OrderPay.css";
 import axios from "axios";
 
@@ -27,6 +29,7 @@ interface FinalPaymentInfoProps {
 const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
   selectedCoupon,
 }) => {
+  const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
   const [totalProductAmount, setTotalProductAmount] = useState<number>(0);
   const [couponDiscount, setCouponDiscount] = useState<number>(0);
@@ -86,7 +89,7 @@ const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
 
       const paymentData = {
         option_quantity_dto: items.map((item) => ({
-          option_id: item.product_Id,
+          option_id: item.cart_Id,
           quantity: item.quantity,
         })),
         total_price: totalPaymentAmount,
@@ -103,7 +106,8 @@ const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
         }
       );
 
-      // 결제 완료 후 처리 로직 추가
+      alert("결제가 되었습니다.");
+      navigate("/mypage/purchase-history");
     } catch (error) {
       // 에러 처리 로직
     }

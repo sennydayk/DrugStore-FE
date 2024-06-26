@@ -3,8 +3,6 @@ import axios from "axios";
 import "./OrderPay.css";
 
 interface Item {
-  // product_Id: number;
-  // coupon_id: number;
   cartId: number;
   brand: string;
   product_name: string;
