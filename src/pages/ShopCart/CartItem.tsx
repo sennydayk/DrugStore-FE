@@ -30,7 +30,9 @@ const CartItem: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [currentItem, setCurrentItem] = useState<any>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+  const [checkedItems, setCheckedItems] = useState<boolean[]>(
+    new Array(items.length).fill(false)
+  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalDeliveryFee, setTotalDeliveryFee] = useState<number>(0);
@@ -165,6 +167,9 @@ const CartItem: React.FC = () => {
 
   const handleDeleteItem = async (item: Item) => {
     try {
+      if (!items.some((i) => i.cartId === item.cartId)) {
+        throw new Error("상품이 이미 삭제되었습니다.");
+      }
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
@@ -172,7 +177,7 @@ const CartItem: React.FC = () => {
 
       const config = {
         method: "delete",
-        url: `https://drugstoreproject.shop/cart`, // 삭제할 상품의 cart_id를 URL에 포함
+        url: `https://drugstoreproject.shop/cart`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
@@ -183,13 +188,13 @@ const CartItem: React.FC = () => {
       await axios(config);
 
       // 아이템을 삭제한 후, 상태를 업데이트
-      setItems(
-        (prevItems) => prevItems.filter((i) => i.cartId !== item.cartId) // cartId로 필터링
+      setItems((prevItems) =>
+        prevItems.filter((i) => i.cartId !== item.cartId)
       );
       setCheckedItems((prevChecked) =>
         prevChecked.filter(
           (_, index) =>
-            index !== items.findIndex((i) => i.cartId === item.cartId) // cartId로 필터링
+            index !== items.findIndex((i) => i.cartId === item.cartId)
         )
       );
     } catch (error) {
