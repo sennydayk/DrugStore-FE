@@ -19,11 +19,9 @@ interface CartItem {
 }
 
 interface UpdateCartItemRequest {
-  cartId: number;
+  cart_id: number;
+  options_id: number;
   quantity: number;
-  option_id: number;
-  option: string;
-  option_price: number;
 }
 
 interface Option {
@@ -47,10 +45,8 @@ const CartOpionModal: React.FC<ModalProps> = ({
     item: CartItem
   ): Promise<AxiosResponse<CartItem>> => {
     const requestBody: UpdateCartItemRequest = {
-      cartId: item.cartId,
-      option: option.value,
-      option_id: item.option_id,
-      option_price: item.option_price,
+      cart_id: item.cartId,
+      options_id: item.option_id,
       quantity: quantity,
     };
 

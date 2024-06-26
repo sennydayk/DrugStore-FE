@@ -3,20 +3,19 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import "./OrderPay.css";
 
 interface OrderData {
-  id: number;
+  coupon_id: number;
   coupon_name: string;
-  discount_rate: number;
+  coupon_discount: number;
 }
 
 interface OrderFormProps {}
 
-const Coupon: React.FC<OrderFormProps> = () => {
-  const [recipient, setRecipient] = useState<string>("");
-  const [contact, setContact] = useState<string>("");
-  const [selectedCoupon, setSelectedCoupon] = useState<{
-    id: number;
-    discount_rate: number;
-  } | null>(null);
+interface CouponProps {
+  onCouponChange: (coupon: OrderData | null) => void;
+}
+
+const Coupon: React.FC<CouponProps> = ({ onCouponChange }) => {
+  const [selectedCoupon, setSelectedCoupon] = useState<OrderData | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [orderData, setOrderData] = useState<OrderData[]>([]);
 
@@ -36,7 +35,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
             Token: token,
           },
           data: {
-            coupon_id: selectedCoupon?.id || null,
+            coupon_id: selectedCoupon?.coupon_id || null,
           },
         };
 
@@ -64,9 +63,10 @@ const Coupon: React.FC<OrderFormProps> = () => {
   const handleCouponChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedCouponId = parseInt(event.target.value);
     const selectedCoupon = orderData.find(
-      (coupon) => coupon.id === selectedCouponId
+      (coupon) => coupon.coupon_id === selectedCouponId
     );
     setSelectedCoupon(selectedCoupon || null);
+    onCouponChange(selectedCoupon || null);
   };
 
   const applyCoupon = async () => {
@@ -84,7 +84,7 @@ const Coupon: React.FC<OrderFormProps> = () => {
           Token: token,
         },
         data: {
-          coupon_id: selectedCoupon?.id,
+          coupon_id: selectedCoupon?.coupon_id,
         },
       };
 
@@ -113,22 +113,20 @@ const Coupon: React.FC<OrderFormProps> = () => {
         <p>사용 가능한 쿠폰</p>
         <select
           className="coupon_select"
-          value={selectedCoupon?.id || "사용안함"}
+          value={selectedCoupon?.coupon_id || "사용안함"}
           onChange={handleCouponChange}
         >
           <option value="사용안함">사용안함</option>
           {orderData?.map((coupon) => (
-            <option key={coupon.id} value={coupon.id}>
+            <option key={coupon.coupon_id} value={coupon.coupon_id}>
               {coupon.coupon_name}
             </option>
           ))}
         </select>
-
         <button onClick={applyCoupon} className="orderpay_couponbtn">
           쿠폰 적용
         </button>
       </div>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>
   );
 };

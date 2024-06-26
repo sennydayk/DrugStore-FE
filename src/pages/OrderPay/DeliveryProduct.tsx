@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
+import axios from "axios";
 import "./OrderPay.css";
 
 interface Item {
-  // productId: number;
-  // optionId: number;
+  // product_Id: number;
+  // coupon_id: number;
   cartId: number;
   brand: string;
   product_name: string;
-  product_photo: string;
+  product_img: string;
   price: number;
   final_price: number;
-  // delivery: string;
   quantity: number;
   option_name: string;
 }
@@ -60,10 +59,10 @@ const DeliveryProduct: React.FC = () => {
   return (
     <div className="delivery_product_container">
       <h2 className="orderpay_subtitle">배송상품</h2>
-      <table>
+      <table className="orderpay_table">
         <caption>배송상품 주문상품 목록</caption>
         <thead>
-          <tr className="orderpay_table_title">
+          <tr className="orderpay_protable_title">
             <th scope="col">상품정보</th>
             <th scope="col">상품금액</th>
             <th scope="col">수량</th>
@@ -75,7 +74,7 @@ const DeliveryProduct: React.FC = () => {
                 <tr key={item.cartId}>
                   <td>
                     <a className="pay_prd_img" href="">
-                      <img src={item.product_photo} alt={item.product_name} />
+                      <img src={item.product_img} alt={item.product_name} />
                     </a>
                     <a className="prd_name" href="">
                       <span id="brandName">{item.brand}</span>
@@ -84,10 +83,20 @@ const DeliveryProduct: React.FC = () => {
                   </td>
                   <td>
                     <span className="org_price">
-                      <span className="tx_num">{item.price}</span>원
+                      <span className="tx_num">
+                        {item.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </span>
+                      원
                     </span>
                     <span className="pur_price">
-                      <span className="tx_num">{item.final_price}</span>원
+                      <span className="tx_num">
+                        {item.final_price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      </span>
+                      원
                     </span>
                   </td>
                   <td className="prd_quantity">

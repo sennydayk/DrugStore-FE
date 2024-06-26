@@ -61,9 +61,13 @@
   border: 1px solid #ddd;
 }
 
+.orderpay_protable_title th {
+  text-align: center;
+}
+
 /* 상품 이미지 및 이름 스타일 */
 .pay_prd_img img {
-  width: 100px;
+  width: 80px;
   height: auto;
   border-radius: 4px;
 }

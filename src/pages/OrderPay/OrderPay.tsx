@@ -6,16 +6,17 @@ import FinalPaymentInfo from "./FinalPaymentInfo";
 import Coupon from "./Coupon";
 import DeliveryProduct from "./DeliveryProduct";
 
+interface OrderData {
+  coupon_id: number;
+  coupon_name: string;
+  coupon_discount: number;
+}
+
 const OrderForm: React.FC = () => {
-  const [recipient, setRecipient] = useState<string>("");
-  const [contact, setContact] = useState<string>("");
+  const [selectedCoupon, setSelectedCoupon] = useState<OrderData | null>(null);
 
-  const handleRecipientChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setRecipient(e.target.value);
-  };
-
-  const handleContactChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setContact(e.target.value);
+  const handleCouponChange = (coupon: OrderData | null) => {
+    setSelectedCoupon(coupon);
   };
 
   return (
@@ -26,7 +27,7 @@ const OrderForm: React.FC = () => {
             <h1 className="orderpay_title">주문/결제</h1>
             <DeliveryInfo />
             <DeliveryProduct />
-            <Coupon />
+            <Coupon onCouponChange={handleCouponChange} />
             <div className="payment_container">
               <h2 className="orderpay_subtitle">결제</h2>
               <div className="button-container">
@@ -37,7 +38,7 @@ const OrderForm: React.FC = () => {
             <TermsForm />
           </div>
         </div>
-        <FinalPaymentInfo />
+        <FinalPaymentInfo selectedCoupon={selectedCoupon} />
       </div>
     </div>
   );

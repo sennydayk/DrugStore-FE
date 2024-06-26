@@ -10,13 +10,19 @@ interface Item {
   optionId: number;
   cartId: number;
   brand: string;
-  productName: string;
-  productPhotoUrl: string;
+  product_name: string;
+  product_img: string;
   price: number;
-  finalPrice: number;
+  final_price: number;
   delivery: string;
   quantity?: number;
   option?: string;
+}
+
+interface CartItem {
+  product_id: number;
+  quantity: number;
+  option_id: number;
 }
 
 const CartItem: React.FC = () => {
@@ -37,7 +43,7 @@ const CartItem: React.FC = () => {
     items.map((item) => ({
       id: item.productId,
       quantity: 1,
-      option: "",
+      option_id: "",
     }))
   );
 
@@ -70,6 +76,12 @@ const CartItem: React.FC = () => {
         if (error.response) {
           console.error("cart get서버 응답 데이터:", error.response.data);
           console.error("서버 응답 상태 코드:", error.response.status);
+          if (error.response.status === 404) {
+            // 장바구니가 비어있는 경우
+            setItems([]);
+            setCheckedItems([]);
+            setCartItemCount(0);
+          }
         }
       } else {
         console.error("알 수 없는 오류 발생:", error);
@@ -87,13 +99,13 @@ const CartItem: React.FC = () => {
       prevItems.map((item) =>
         item.productId === id
           ? {
-            ...item,
-            quantity,
-            option,
-            name: `${item.productName} (${option})`,
-            purPrice: (item.finalPrice / (item.quantity || 1)) * quantity,
-            orgPrice: (item.price / (item.quantity || 1)) * quantity,
-          }
+              ...item,
+              quantity,
+              option,
+              name: `${item.product_name} (${option})`,
+              final_price: (item.final_price / (item.quantity || 1)) * quantity,
+              price: (item.price / (item.quantity || 1)) * quantity,
+            }
           : item
       )
     );
@@ -105,9 +117,9 @@ const CartItem: React.FC = () => {
 
   useEffect(() => {
     if (items.length > 0) {
-      setCheckedItems(new Array(items.length).fill(false));
+      setCheckedItems(new Array(items.length).fill(selectAll));
     }
-  }, [selectAll]);
+  }, [items, selectAll]);
 
   const handleItemChange = (index: number) => {
     if (!items || index < 0 || index >= items.length) return;
@@ -122,7 +134,7 @@ const CartItem: React.FC = () => {
 
   const handleSelectAll = () => {
     setSelectAll((prevSelectAll) => {
-      const newCheckedItems = items.map(() => !prevSelectAll);
+      const newCheckedItems = items.map((_, index) => !prevSelectAll);
       setCheckedItems(newCheckedItems);
       return !prevSelectAll;
     });
@@ -131,7 +143,7 @@ const CartItem: React.FC = () => {
   useEffect(() => {
     const total = items.reduce((acc, item, index) => {
       if (checkedItems[index]) {
-        return acc + item.finalPrice * (item.quantity || 1);
+        return acc + item.final_price * (item.quantity || 1);
       }
       return acc;
     }, 0);
@@ -140,7 +152,7 @@ const CartItem: React.FC = () => {
         if (item.delivery === "무료배송") {
           return acc;
         }
-        console.log('item.delivery', item.delivery)
+        console.log("item.delivery", item.delivery);
         const itemDeliveryFee = parseInt(item.delivery.replace(/,/g, ""), 10);
         return Math.max(acc, itemDeliveryFee);
       }
@@ -151,38 +163,73 @@ const CartItem: React.FC = () => {
     setFinalPrice(total + deliveryFee);
   }, [checkedItems, items]);
 
-  const handleDeleteItem = async (productId: number) => {
+  const handleDeleteItem = async (item: Item) => {
     try {
-      await axios.delete(`httpa://drugstoreproject.shop/cart/empty`);
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
+      const config = {
+        method: "delete",
+        url: `https://drugstoreproject.shop/cart/${item.cartId}`, // 삭제할 상품의 cart_id를 URL에 포함
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+      };
+
+      await axios(config);
+
       // 아이템을 삭제한 후, 상태를 업데이트
-      setItems((prevItems) =>
-        prevItems.filter((item) => item.productId !== productId)
+      setItems(
+        (prevItems) => prevItems.filter((i) => i.cartId !== item.cartId) // cartId로 필터링
       );
       setCheckedItems((prevChecked) =>
         prevChecked.filter(
           (_, index) =>
-            index !== items.findIndex((item) => item.productId === productId)
+            index !== items.findIndex((i) => i.cartId === item.cartId) // cartId로 필터링
         )
       );
     } catch (error) {
       console.error("Error deleting item:", error);
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        // 상품을 찾을 수 없는 경우
+        alert("상품을 찾을 수 없습니다.");
+      } else {
+        alert("상품 삭제 중 오류가 발생했습니다.");
+      }
     }
   };
 
   const handleDeleteSelected = async () => {
     try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+
       const selectedItems = items.filter((_, index) => checkedItems[index]);
-      const deleteRequests = selectedItems.map((item) =>
-        axios.delete(`http://drugstoreproject.shop/cart/${item.cartId}`)
-      );
-      await Promise.all(deleteRequests);
-      // 선택된 아이템 삭제 후, 상태 업데이트
+      const selectedCartIds = selectedItems.map((item) => item.cartId);
+
+      const config = {
+        method: "delete",
+        url: "https://drugstoreproject.shop/cart/empty",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+        data: JSON.stringify({ cart_ids: selectedCartIds }),
+      };
+
+      await axios(config);
+
+      // 선택된 상품을 state에서 제거
       setItems((prevItems) =>
         prevItems.filter((_, index) => !checkedItems[index])
       );
-      setCheckedItems((prevChecked) =>
-        prevChecked.filter((checked) => !checked)
-      );
+      setCheckedItems((prevChecked) => prevChecked.map((_, index) => false));
+      setSelectAll(false);
     } catch (error) {
       console.error("Error deleting selected items:", error);
     }
@@ -245,11 +292,11 @@ const CartItem: React.FC = () => {
                   </td>
                   <td>
                     <a className="prd_img" href="">
-                      <img src={item.productPhotoUrl} alt={item.productName} />
+                      <img src={item.product_img} alt={item.product_name} />
                     </a>
                     <a className="prd_name" href="">
                       <span id="brandName">{item.brand}</span>
-                      <p id="goodsName">{item.productName}</p>
+                      <p id="goodsName">{item.product_name}</p>
                     </a>
                   </td>
                   <td className="prd_quantity">
@@ -257,19 +304,15 @@ const CartItem: React.FC = () => {
                   </td>
                   <td>
                     <span className="org_price">
-                      <span className="tx_num">
-                        {item.price
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      </span>
+                      {item.price
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       원
                     </span>
                     <span className="pur_price">
-                      <span className="tx_num">
-                        {item.finalPrice
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      </span>
+                      {item.final_price
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                       원
                     </span>
                   </td>
@@ -290,6 +333,13 @@ const CartItem: React.FC = () => {
                       >
                         옵션변경
                       </button>
+                      <button
+                        type="button"
+                        className="btnSmall delete"
+                        onClick={() => handleDeleteItem(item)}
+                      >
+                        삭제
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -304,9 +354,9 @@ const CartItem: React.FC = () => {
         <div className="basket_price_info">
           <div className="sum_price">
             총 상품금액
-            <span className="tx_num2">{totalPrice.toLocaleString()}</span>원
+            <span className="tx_num2">{totalPrice.toLocaleString()}원</span>
             <span className="tx_sign plus"> +</span> 배송비
-            <span className="tx_num2">{totalDeliveryFee}</span>원
+            <span className="tx_num2">{totalDeliveryFee}원</span>
           </div>
           <div className="basket_total_price_info">
             <div className="basket_total_price_alert">
@@ -318,7 +368,7 @@ const CartItem: React.FC = () => {
             <span className="tx_total_price">
               총 결제예상금액
               <span className="tx_price">
-                <span className="tx_num3">{finalPrice}</span>원
+                <span className="tx_num3">{finalPrice}원</span>
               </span>
             </span>
           </div>
