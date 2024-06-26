@@ -10,7 +10,7 @@ interface ModalProps {
 }
 
 interface CartItem {
-  cartId: number;
+  cart_id: number;
   name: string;
   quantity: number;
   option_id: number;
@@ -19,11 +19,9 @@ interface CartItem {
 }
 
 interface UpdateCartItemRequest {
-  cartId: number;
+  cart_id: number;
+  options_id: number;
   quantity: number;
-  option_id: number;
-  option: string;
-  option_price: number;
 }
 
 interface Option {
@@ -43,14 +41,10 @@ const CartOpionModal: React.FC<ModalProps> = ({
     option: item.option,
   });
 
-  const updateCartItem = async (
-    item: CartItem
-  ): Promise<AxiosResponse<CartItem>> => {
+  const updateCartItem = async (item: CartItem): Promise<CartItem> => {
     const requestBody: UpdateCartItemRequest = {
-      cartId: item.cartId,
-      option: option.value,
-      option_id: item.option_id,
-      option_price: item.option_price,
+      cart_id: item.cart_id,
+      options_id: item.option_id,
       quantity: quantity,
     };
 
@@ -58,13 +52,21 @@ const CartOpionModal: React.FC<ModalProps> = ({
       "https://drugstoreproject.shop/cart",
       requestBody
     );
-    return response;
+    return response.data;
   };
 
   const handleSave = async () => {
-    await updateCartItem({ ...item, quantity, option: option.value });
-    onSave(quantity, option.value);
-    onClose();
+    try {
+      const updatedItem = await updateCartItem({
+        ...item,
+        quantity,
+        option: option.value,
+      });
+      onSave(updatedItem.quantity, updatedItem.option);
+      onClose();
+    } catch (error) {
+      console.error("Error updating cart item:", error);
+    }
   };
 
   const increaseQuantity = () => setQuantity((prev: number) => prev + 1);
