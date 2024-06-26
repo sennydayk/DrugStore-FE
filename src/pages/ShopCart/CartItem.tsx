@@ -172,11 +172,12 @@ const CartItem: React.FC = () => {
 
       const config = {
         method: "delete",
-        url: `https://drugstoreproject.shop/cart/${item.cartId}`, // 삭제할 상품의 cart_id를 URL에 포함
+        url: `https://drugstoreproject.shop/cart`, // 삭제할 상품의 cart_id를 URL에 포함
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
+        data: [item.cartId],
       };
 
       await axios(config);
@@ -219,7 +220,7 @@ const CartItem: React.FC = () => {
           "Content-Type": "application/json",
           Token: token,
         },
-        data: JSON.stringify({ cart_ids: selectedCartIds }),
+        data: JSON.stringify(selectedCartIds),
       };
 
       await axios(config);
@@ -261,7 +262,7 @@ const CartItem: React.FC = () => {
             <label htmlFor="inp_allRe1">전체 선택</label>
           </div>
           <button type="button" onClick={handleDeleteSelected}>
-            선택상품 삭제
+            전체상품 삭제
           </button>
         </div>
         <table className="cart_table">
