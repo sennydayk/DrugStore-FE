@@ -4,7 +4,6 @@ import axios from "axios";
 
 interface Item {
   cart_Id: number;
-  option_Id: number;
   product_Id: number;
   brand: string;
   product_name: string;
@@ -73,7 +72,9 @@ const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
 
     setTotalProductAmount(totalProductAmount);
     setCouponDiscount(couponDiscount);
-    setTotalPaymentAmount(totalProductAmount - couponDiscount);
+    setTotalPaymentAmount(
+      totalProductAmount - (selectedCoupon ? couponDiscount : 0)
+    );
   };
 
   const handlePayment = async () => {
@@ -82,9 +83,10 @@ const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
+
       const paymentData = {
-        order_product_list: items.map((item) => ({
-          option_id: item.option_Id,
+        option_quantity_dto: items.map((item) => ({
+          option_id: item.product_Id,
           quantity: item.quantity,
         })),
         total_price: totalPaymentAmount,
