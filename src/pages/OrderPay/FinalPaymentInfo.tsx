@@ -14,6 +14,7 @@ interface Item {
   final_price: number;
   quantity: number;
   option_name: string;
+  option_id: string;
 }
 
 interface OrderData {
@@ -89,7 +90,7 @@ const FinalPaymentInfo: React.FC<FinalPaymentInfoProps> = ({
 
       const paymentData = {
         option_quantity_dto: items.map((item) => ({
-          option_id: item.cart_Id,
+          option_id: item.option_id,
           quantity: item.quantity,
         })),
         total_price: totalPaymentAmount,
