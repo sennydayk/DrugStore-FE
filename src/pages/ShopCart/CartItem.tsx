@@ -6,9 +6,9 @@ import Modal from "./CartOpionModal";
 import AlertAlram from "../../assets/png/alert_alram.png";
 
 interface Item {
-  productId: number;
-  optionId: number;
-  cartId: number;
+  product_id: number;
+  options_id: number;
+  cart_id: number;
   brand: string;
   product_name: string;
   product_img: string;
@@ -30,24 +30,18 @@ const CartItem: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [currentItem, setCurrentItem] = useState<any>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(
-    new Array(items.length).fill(false)
-  );
+  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalDeliveryFee, setTotalDeliveryFee] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>(0);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [itemOptions, setItemOptions] = useState<
+    { id: number; quantity: number; option_id: string }[]
+  >([]);
   const goToOrderForm = () => {
     navigate("/order");
   };
-  const [itemOptions, setItemOptions] = useState(
-    items.map((item) => ({
-      id: item.productId,
-      quantity: 1,
-      option_id: "",
-    }))
-  );
 
   const fetchCartItems = async () => {
     try {
@@ -99,7 +93,7 @@ const CartItem: React.FC = () => {
     );
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.productId === id
+        item.product_id === id
           ? {
               ...item,
               quantity,
@@ -167,7 +161,7 @@ const CartItem: React.FC = () => {
 
   const handleDeleteItem = async (item: Item) => {
     try {
-      if (!items.some((i) => i.cartId === item.cartId)) {
+      if (!items.some((i) => i.cart_id === item.cart_id)) {
         throw new Error("상품이 이미 삭제되었습니다.");
       }
       const token = sessionStorage.getItem("token");
@@ -182,24 +176,29 @@ const CartItem: React.FC = () => {
           "Content-Type": "application/json",
           Token: token,
         },
-        data: [item.cartId],
+        data: {
+          cart_Id: item.cart_id,
+        },
       };
 
       await axios(config);
 
       // 아이템을 삭제한 후, 상태를 업데이트
       setItems((prevItems) =>
-        prevItems.filter((i) => i.cartId !== item.cartId)
+        prevItems.filter((i) => i.cart_id !== item.cart_id)
       );
       setCheckedItems((prevChecked) =>
         prevChecked.filter(
           (_, index) =>
-            index !== items.findIndex((i) => i.cartId === item.cartId)
+            index !== items.findIndex((i) => i.cart_id === item.cart_id)
         )
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting item:", error);
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
+      if (error.message === "상품이 이미 삭제되었습니다.") {
+        // 상품을 찾을 수 없는 경우
+        alert("상품이 이미 삭제되었습니다.");
+      } else if (axios.isAxiosError(error) && error.response?.status === 404) {
         // 상품을 찾을 수 없는 경우
         alert("상품을 찾을 수 없습니다.");
       } else {
@@ -216,7 +215,7 @@ const CartItem: React.FC = () => {
       }
 
       const selectedItems = items.filter((_, index) => checkedItems[index]);
-      const selectedCartIds = selectedItems.map((item) => item.cartId);
+      const selectedCartIds = selectedItems.map((item) => item.cart_id);
 
       const config = {
         method: "delete",
@@ -244,7 +243,7 @@ const CartItem: React.FC = () => {
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
   const openModal = (item: Item) => {
     const currentItemOptions = itemOptions.find(
-      (option) => option.id === item.productId
+      (option) => option.id === item.product_id
     ) || { quantity: 1, option: "" };
     setCurrentItem({ ...item, ...currentItemOptions });
     setIsModalOpen(true);
@@ -288,7 +287,7 @@ const CartItem: React.FC = () => {
           <tbody>
             {items.length > 0 ? (
               items.map((item, index) => (
-                <tr key={item.productId}>
+                <tr key={item.product_id}>
                   <td>
                     <input
                       type="checkbox"
