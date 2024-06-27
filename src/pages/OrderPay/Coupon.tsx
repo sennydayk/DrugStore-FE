@@ -123,9 +123,6 @@ const Coupon: React.FC<CouponProps> = ({ onCouponChange }) => {
             </option>
           ))}
         </select>
-        <button onClick={applyCoupon} className="orderpay_couponbtn">
-          쿠폰 적용
-        </button>
       </div>
     </div>
   );
