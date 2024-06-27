@@ -1,28 +1,31 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Modal from "./CartOpionModal";
 import AlertAlram from "../../assets/png/alert_alram.png";
 
 interface Item {
-  productId: number;
-  optionId: number;
-  cartId: number;
+  product_id: number;
+  options_id: number;
+  cart_id: number;
   brand: string;
   product_name: string;
   product_img: string;
   price: number;
   final_price: number;
-  delivery: string;
   quantity?: number;
   option?: string;
+  options_name: string;
 }
 
 interface CartItem {
   product_id: number;
   quantity: number;
-  option_id: string;
+  option_id: number;
+  cart_id: number;
+  option?: string;
+  options_name: string;
 }
 
 const CartItem: React.FC = () => {
@@ -36,25 +39,12 @@ const CartItem: React.FC = () => {
   const [totalDeliveryFee, setTotalDeliveryFee] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>(0);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [itemOptions, setItemOptions] = useState<
+    { id: number; quantity: number; option_id: string }[]
+  >([]);
   const goToOrderForm = () => {
-    const selectedCartItems = items.filter((_, index) => checkedItems[index]);
-    const cartItems: CartItem[] = selectedCartItems.map((item) => ({
-      product_id: item.productId,
-      quantity: item.quantity || 1,
-      option_id:
-        itemOptions.find((option) => option.id === item.productId)?.option_id ||
-        "",
-    }));
-    navigate("/order", { state: { cartItems } });
+    navigate("/order");
   };
-
-  const [itemOptions, setItemOptions] = useState(
-    items.map((item) => ({
-      id: item.productId,
-      quantity: 1,
-      option_id: "",
-    }))
-  );
 
   const fetchCartItems = async () => {
     try {
@@ -98,25 +88,25 @@ const CartItem: React.FC = () => {
     }
   };
 
-  const handleSaveOptions = (id: number, quantity: number, option: string) => {
-    setItemOptions((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity, option } : item
-      )
-    );
+  const handleSaveOptions = (
+    quantity: number,
+    option: string,
+    updatedItem: CartItem | undefined
+  ) => {
     setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.productId === id
-          ? {
-              ...item,
-              quantity,
-              option,
-              name: `${item.product_name} (${option})`,
-              final_price: (item.final_price / (item.quantity || 1)) * quantity,
-              price: (item.price / (item.quantity || 1)) * quantity,
-            }
-          : item
-      )
+      prevItems.map((item) => {
+        if (updatedItem && item.cart_id === updatedItem.cart_id) {
+          return {
+            ...item,
+            quantity: quantity,
+            option: option,
+            name: `${item.product_name} (${option})`,
+            final_price: (item.final_price / (item.quantity || 1)) * quantity,
+            price: (item.price / (item.quantity || 1)) * quantity,
+          };
+        }
+        return item;
+      })
     );
   };
 
@@ -135,23 +125,17 @@ const CartItem: React.FC = () => {
     setCheckedItems((prevChecked) => {
       const newChecked = [...prevChecked];
       newChecked[index] = !newChecked[index];
-      const allChecked = newChecked.every((checked) => checked);
-      setSelectAll(allChecked);
       return newChecked;
     });
-  };
 
-  const handleOptionChange = (index: number, optionId: string) => {
-    setItemOptions((prevOptions) => {
-      const newOptions = [...prevOptions];
-      newOptions[index].option_id = optionId;
-      return newOptions;
-    });
+    // 모든 항목이 선택되었는지 확인하고 selectAll 상태 업데이트
+    const allChecked = checkedItems.every((checked) => checked);
+    setSelectAll(allChecked);
   };
 
   const handleSelectAll = () => {
     setSelectAll((prevSelectAll) => {
-      const newCheckedItems = items.map((_, index) => !prevSelectAll);
+      const newCheckedItems = items.map(() => !prevSelectAll);
       setCheckedItems(newCheckedItems);
       return !prevSelectAll;
     });
@@ -164,70 +148,45 @@ const CartItem: React.FC = () => {
       }
       return acc;
     }, 0);
-    const deliveryFee = items.reduce((acc, item, index) => {
-      if (checkedItems[index]) {
-        if (item.delivery === "무료배송") {
-          return acc;
-        }
-        console.log("item.delivery", item.delivery);
-        const itemDeliveryFee = parseInt(item.delivery.replace(/,/g, ""), 10);
-        return Math.max(acc, itemDeliveryFee);
-      }
-      return acc;
-    }, 0);
     setTotalPrice(total);
-    setTotalDeliveryFee(deliveryFee);
-    setFinalPrice(total + deliveryFee);
+    setFinalPrice(total);
   }, [checkedItems, items]);
 
   const handleDeleteItem = async (item: Item) => {
     try {
       const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-      }
-
-      const config = {
-        method: "delete",
-        url: `https://drugstoreproject.shop/cart/${item.cartId}`, // 삭제할 상품의 cart_id를 URL에 포함
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-      };
-
-      await axios(config);
-
-      // 아이템을 삭제한 후, 상태를 업데이트
-      setItems(
-        (prevItems) => prevItems.filter((i) => i.cartId !== item.cartId) // cartId로 필터링
+      const response: AxiosResponse<any> = await axios.delete(
+        `https://drugstoreproject.shop/cart`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Token: token,
+          },
+          data: {
+            data: [item.cart_id],
+          },
+        }
       );
-      setCheckedItems((prevChecked) =>
-        prevChecked.filter(
-          (_, index) =>
-            index !== items.findIndex((i) => i.cartId === item.cartId) // cartId로 필터링
-        )
-      );
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        // 상품을 찾을 수 없는 경우
-        alert("상품을 찾을 수 없습니다.");
+
+      if (response.status === 200) {
+        // 장바구니에서 상품 삭제 성공
+        // 장바구니 목록 업데이트
+        setItems(items.filter((i) => i.product_id !== item.product_id));
       } else {
-        alert("상품 삭제 중 오류가 발생했습니다.");
+        // 장바구니에서 상품 삭제 실패
+        console.error("장바구니 상품 삭제 실패:", response.data);
       }
+    } catch (error) {
+      console.error("장바구니 상품 삭제 중 오류 발생:", error);
     }
   };
 
-  const handleDeleteSelected = async () => {
+  const handleAllDelete = async () => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
-
-      const selectedItems = items.filter((_, index) => checkedItems[index]);
-      const selectedCartIds = selectedItems.map((item) => item.cartId);
 
       const config = {
         method: "delete",
@@ -236,26 +195,23 @@ const CartItem: React.FC = () => {
           "Content-Type": "application/json",
           Token: token,
         },
-        data: JSON.stringify({ cart_ids: selectedCartIds }),
       };
 
       await axios(config);
 
-      // 선택된 상품을 state에서 제거
-      setItems((prevItems) =>
-        prevItems.filter((_, index) => !checkedItems[index])
-      );
-      setCheckedItems((prevChecked) => prevChecked.map((_, index) => false));
+      // 장바구니의 모든 상품을 state에서 제거
+      setItems([]);
+      setCheckedItems([]);
       setSelectAll(false);
     } catch (error) {
-      console.error("Error deleting selected items:", error);
+      console.error("Error deleting all items:", error);
     }
   };
 
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
   const openModal = (item: Item) => {
     const currentItemOptions = itemOptions.find(
-      (option) => option.id === item.productId
+      (option) => option.id === item.product_id
     ) || { quantity: 1, option: "" };
     setCurrentItem({ ...item, ...currentItemOptions });
     setIsModalOpen(true);
@@ -277,9 +233,9 @@ const CartItem: React.FC = () => {
             />
             <label htmlFor="inp_allRe1">전체 선택</label>
           </div>
-          <button type="button" onClick={handleDeleteSelected}>
+          {/* <button type="button" onClick={handleDeleteSelected}>
             선택상품 삭제
-          </button>
+          </button> */}
         </div>
         <table className="cart_table">
           <caption>
@@ -299,7 +255,7 @@ const CartItem: React.FC = () => {
           <tbody>
             {items.length > 0 ? (
               items.map((item, index) => (
-                <tr key={item.productId}>
+                <tr key={item.product_id}>
                   <td>
                     <input
                       type="checkbox"
@@ -308,28 +264,35 @@ const CartItem: React.FC = () => {
                     />
                   </td>
                   <td>
-                    <a className="prd_img" href="">
-                      <img src={item.product_img} alt={item.product_name} />
-                    </a>
-                    <a className="prd_name" href="">
-                      <span id="brandName">{item.brand}</span>
-                      <p id="goodsName">{item.product_name}</p>
-                    </a>
+                    <div className="cart_productinfo">
+                      <a className="prd_img" href="">
+                        <img src={item.product_img} alt={item.product_name} />
+                      </a>
+                      <a className="prd_name" href="">
+                        <span id="brandName">{item.brand}</span>
+                        <p id="goodsName">{item.product_name}</p>
+                        <span id="optionName">{item.options_name}</span>
+                      </a>
+                    </div>
                   </td>
                   <td className="prd_quantity">
                     <span id="prd_quantity">{item.quantity || 1}</span>
                   </td>
                   <td>
                     <span className="org_price">
-                      {item.price
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      {item.quantity !== undefined
+                        ? (item.price * item.quantity)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        : ""}
                       원
                     </span>
                     <span className="pur_price">
-                      {item.final_price
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      {item.quantity !== undefined
+                        ? (item.final_price * item.quantity)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        : ""}
                       원
                     </span>
                   </td>
@@ -385,7 +348,10 @@ const CartItem: React.FC = () => {
             <span className="tx_total_price">
               총 결제예상금액
               <span className="tx_price">
-                <span className="tx_num3">{finalPrice}원</span>
+                <span className="tx_num3">
+                  {finalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  원
+                </span>
               </span>
             </span>
           </div>
@@ -394,9 +360,9 @@ const CartItem: React.FC = () => {
           <button
             type="button"
             className="selectorder_btn"
-            onClick={goToOrderForm}
+            onClick={handleAllDelete}
           >
-            선택주문
+            전체삭제
           </button>
           <button
             type="button"
@@ -411,10 +377,11 @@ const CartItem: React.FC = () => {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSave={(quantity: number, option: string) =>
-            handleSaveOptions(currentItem.id, quantity, option)
+          onSave={(quantity, option) =>
+            handleSaveOptions(quantity, option, currentItem.item)
           }
           item={currentItem} // 현재 선택된 아이템의 정보를 전달합니다.
+          product_id={currentItem.id}
         />
       )}
     </div>

@@ -10,6 +10,21 @@ import { type } from "os";
 import { isDisabled } from "@testing-library/user-event/dist/utils";
 import axios, { AxiosResponse } from "axios";
 
+interface EmailAuthResponse {
+  message: string;
+  emailSent: boolean;
+  email: string;
+  auth_num: string;
+  isValid: [];
+}
+
+interface VerifyEmailResponse {
+  success: boolean;
+  message: string;
+  email: string;
+  isValid: boolean;
+}
+
 // 회원가입 페이지
 
 function Signup() {
@@ -242,10 +257,11 @@ function Signup() {
   const [isVerifyNumberValid, setIsVerifyNumberValid] = useState(false);
   const [isPasswordResetEnabled, setIsPasswordResetEnabled] = useState(false);
 
+  // 이메일 인증 버튼 클릭 핸들러
   const handleVerifyEmailClick = async () => {
     if (emailAuth) {
       try {
-        const response: AxiosResponse = await axios.post(
+        const response: AxiosResponse<EmailAuthResponse> = await axios.post(
           "https://drugstoreproject.shop/email/send",
           { email }
         );
@@ -254,8 +270,10 @@ function Signup() {
           alert(`이메일 전송에 실패했습니다: ${message}`);
         } else {
           setShowVerifyInput(true);
+          setVerifyNumber(message.substring(7));
           console.log(verifyNumber);
           alert(`인증 번호가 ${email}로 전송되었습니다.`);
+          console.log(response);
         }
       } catch (error) {
         console.error(error);
@@ -264,12 +282,22 @@ function Signup() {
     }
   };
 
-  const handleVerifyNumberConfirm = () => {
-    if (isVerifyNumberValid) {
-      alert("인증되었습니다.");
-      setIsPasswordResetEnabled(true);
-    } else {
-      alert("인증번호가 일치하지 않습니다.");
+  const handleVerifyNumberConfirm = async () => {
+    try {
+      const response: AxiosResponse<EmailAuthResponse> = await axios.post(
+        "https://drugstoreproject.shop/email/auth-num",
+        { email, auth_num: verifyNumber }
+      );
+      const success = response.data.message;
+      if (success === "인증에 성공하셨습니다.") {
+        alert("인증되었습니다.");
+        setIsPasswordResetEnabled(true);
+      } else {
+        alert("인증번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("인증번호 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -402,7 +430,6 @@ function Signup() {
                 ) : null}
               </td>
             </tr>
-
             {showVerifyInput && (
               <tr>
                 <th>인증번호 입력</th>
@@ -418,7 +445,7 @@ function Signup() {
                   <button
                     className="signup-btn"
                     type="button"
-                    onClick={() => handleVerifyNumberConfirm}
+                    onClick={handleVerifyNumberConfirm}
                   >
                     확인
                   </button>

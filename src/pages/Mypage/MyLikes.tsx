@@ -47,11 +47,8 @@ function MyLikes() {
         },
       });
 
-
-
       setProductarray(response.data.data.product_list);
       console.log(productarray);
-
 
       const products = response.data.data || [];
       if (products.length === 0) {
@@ -78,7 +75,6 @@ function MyLikes() {
           </div>
         ) : (
           <div className="mypage-likes-list">
-
             {productarray.map((product, index) => (
               <Product
                 key={product.product_id}
@@ -91,10 +87,16 @@ function MyLikes() {
             ))}
 
             {productarray.map((product, index) => {
-              return <Product {...product} index={index} addLike={() => addLike(product.product_id)}
-                deleteLike={() => deleteLike(product.product_id)} currentPage={0}></Product>;
+              return (
+                <Product
+                  {...product}
+                  index={index}
+                  addLike={() => addLike(product.product_id)}
+                  deleteLike={() => deleteLike(product.product_id)}
+                  currentPage={0}
+                ></Product>
+              );
             })}
-
           </div>
         )}
       </div>
