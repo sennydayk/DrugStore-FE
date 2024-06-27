@@ -16,6 +16,7 @@ interface Item {
   final_price: number;
   quantity?: number;
   option?: string;
+  options_name: string;
 }
 
 interface CartItem {
@@ -24,6 +25,7 @@ interface CartItem {
   option_id: number;
   cart_id: number;
   option?: string;
+  options_name: string;
 }
 
 const CartItem: React.FC = () => {
@@ -262,13 +264,16 @@ const CartItem: React.FC = () => {
                     />
                   </td>
                   <td>
-                    <a className="prd_img" href="">
-                      <img src={item.product_img} alt={item.product_name} />
-                    </a>
-                    <a className="prd_name" href="">
-                      <span id="brandName">{item.brand}</span>
-                      <p id="goodsName">{item.product_name}</p>
-                    </a>
+                    <div className="cart_productinfo">
+                      <a className="prd_img" href="">
+                        <img src={item.product_img} alt={item.product_name} />
+                      </a>
+                      <a className="prd_name" href="">
+                        <span id="brandName">{item.brand}</span>
+                        <p id="goodsName">{item.product_name}</p>
+                        <span id="optionName">{item.options_name}</span>
+                      </a>
+                    </div>
                   </td>
                   <td className="prd_quantity">
                     <span id="prd_quantity">{item.quantity || 1}</span>
@@ -291,7 +296,6 @@ const CartItem: React.FC = () => {
                       원
                     </span>
                   </td>
-
                   <td>
                     <p className="prd_delivery">
                       <strong id="deliStrongText">

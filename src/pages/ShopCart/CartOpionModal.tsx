@@ -18,6 +18,7 @@ interface CartItem {
   option: string;
   option_price: number;
   options_name: string;
+  all_option_names: string;
 }
 
 interface UpdateCartItemRequest {
@@ -138,11 +139,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
               )
             }
           >
-            {options.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.options_name}
-              </option>
-            ))}
+            <option>{item.options_name}</option>
           </select>
         </div>
         <div>
