@@ -12,13 +12,18 @@ interface ModalProps {
 
 interface CartItem {
   cart_id: number;
-  name: string;
-  quantity: number;
+  product_id: number;
+  product_name: string;
+  brand: string;
   options_id: number;
-  option: string;
-  option_price: number;
   options_name: string;
-  all_option_names: string;
+  all_options_names: string[];
+  options_price: number;
+  quantity: number;
+  price: number;
+  product_img: string;
+  product_discount: number;
+  final_price: number;
 }
 
 interface UpdateCartItemRequest {
@@ -32,6 +37,7 @@ interface Option {
   option: string;
   options_id: number;
   options_name: string;
+  all_options_names: string[];
 }
 
 const CartOpionModal: React.FC<ModalProps> = ({
@@ -43,11 +49,13 @@ const CartOpionModal: React.FC<ModalProps> = ({
 }) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [option, setOption] = useState<Option>({
-    value: item.option,
-    option: item.option,
+    value: item.options_id.toString(),
+    option: item.options_name,
     options_name: item.options_name,
     options_id: item.options_id,
+    all_options_names: item.all_options_names,
   });
+
   const [options, setOptions] = useState<Option[]>([]);
 
   useEffect(() => {
@@ -67,16 +75,22 @@ const CartOpionModal: React.FC<ModalProps> = ({
       }
       const config = {
         method: "get",
-        url: `https://drugstoreproject.shop/cart/options/${product_id}`,
+        url: `https://drugstoreproject.shop/cart/${product_id}`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
       };
-      const response: AxiosResponse<{ options: Option[] }> = await axios(
-        config
+      const response: AxiosResponse<{ data: CartItem[] }> = await axios(config);
+      setOptions(
+        response.data.data.map((item) => ({
+          value: item.options_id.toString(),
+          option: item.options_name,
+          options_id: item.options_id,
+          options_name: item.options_name,
+          all_options_names: item.all_options_names,
+        }))
       );
-      setOptions(response.data.options);
     } catch (error) {
       console.error("Error fetching options:", error);
       throw error;
@@ -91,12 +105,15 @@ const CartOpionModal: React.FC<ModalProps> = ({
       }
       const config = {
         method: "put",
-        url: "https://drugstoreproject.shop/cart",
+        url: `https://drugstoreproject.shop/cart/${updatedItem.cart_id}`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
-        data: updatedItem,
+        data: {
+          options_id: updatedItem.options_id,
+          quantity: updatedItem.quantity,
+        },
       };
       const response: AxiosResponse<CartItem> = await axios(config);
       return response.data;
@@ -113,7 +130,7 @@ const CartOpionModal: React.FC<ModalProps> = ({
         options_id: option.options_id,
         quantity,
       });
-      onSave(updatedItem.quantity, updatedItem.option);
+      onSave(updatedItem.quantity, option.option);
       onClose();
     } catch (error) {
       console.error("Error updating cart item:", error);
@@ -139,7 +156,9 @@ const CartOpionModal: React.FC<ModalProps> = ({
               )
             }
           >
-            <option>{item.options_name}</option>
+            {option.all_options_names.map((name) => (
+              <option key={name}>{name}</option>
+            ))}
           </select>
         </div>
         <div>
