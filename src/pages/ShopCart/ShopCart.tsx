@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import axios from "axios";
 import Modal from "./CartOpionModal";
@@ -42,12 +41,6 @@ const Cart: React.FC = () => {
     setCheckedItems(new Array(items.length).fill(selectAll));
   }, [selectAll, items.length]);
 
-  const handleItemChange = (index: number) => {
-    setCheckedItems((prev) =>
-      prev.map((item, i) => (i === index ? !item : item))
-    );
-  };
-
   const fetchCartItems = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -85,7 +78,7 @@ const Cart: React.FC = () => {
 
   const updateCartItem = async (item: Item) => {
     try {
-      await axios.post("https://drugstoreproject.shop/cart/update", item);
+      await axios.post("https://drugstoreproject.shop/cart", item);
     } catch (error) {
       console.error("Failed to update cart item:", error);
     }
@@ -129,15 +122,6 @@ const Cart: React.FC = () => {
     }
   };
 
-  // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
-  const openModal = (item: Item) => {
-    const currentItemOptions = itemOptions.find(
-      (option) => option.id === item.productId
-    ) || { quantity: 1, option: "" };
-    setCurrentItem({ ...item, ...currentItemOptions });
-    setIsModalOpen(true);
-  };
-
   return (
     <div className="container">
       <div className="cart_wrap">
@@ -151,6 +135,7 @@ const Cart: React.FC = () => {
             handleSaveOptions(currentItem.id, quantity, option)
           }
           item={currentItem} // 현재 선택된 아이템의 정보를 전달합니다.
+          product_id={currentItem.id}
         />
       )}
     </div>
