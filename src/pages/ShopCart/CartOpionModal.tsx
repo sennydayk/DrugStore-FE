@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./CartOpionModal.css";
 import axios, { AxiosResponse } from "axios";
-import handleSaveOptions from "./CartItem";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (quantity: number, option: string) => void;
+  onSave: (quantity: number, option_name: string) => void;
   item: CartItem;
-  product_id: number;
 }
 
 interface CartItem {
@@ -27,90 +25,64 @@ interface CartItem {
   final_price: number;
 }
 
-interface UpdateCartItemRequest {
-  cart_id: number;
-  options_id: number;
-  quantity: number;
-  options_name: string;
-}
-
 interface Option {
-  value: string;
-  option: string;
   options_id: number;
   options_name: string;
-  all_options_names: string[];
 }
 
-const CartOpionModal: React.FC<ModalProps> = ({
+const CartOptionModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSave,
   item,
-  product_id,
 }) => {
   const [quantity, setQuantity] = useState(item.quantity);
-  const [option, setOption] = useState<Option>({
-    value: item.options_id.toString(),
-    option: item.options_name,
-    options_name: item.options_name,
-    options_id: item.options_id,
-    all_options_names: item.all_options_names,
-  });
-
+  const [selectedOption, setSelectedOption] = useState<string>(
+    item.options_name
+  );
   const [options, setOptions] = useState<Option[]>([]);
 
-  useEffect(() => {
-    if (product_id) {
-      fetchOptions(product_id);
-    }
-  }, [product_id]);
+  const handleQuantityChange = (change: number) => {
+    setQuantity((prev) => Math.max(1, prev + change));
+  };
 
-  useEffect(() => {
-    setOption({
-      value: item.options_id.toString(),
-      option: item.options_name,
-      options_name: item.options_name,
-      options_id: item.options_id,
-      all_options_names: item.all_options_names,
-    });
-    setQuantity(item.quantity);
-  }, [item]);
-
-  const fetchOptions = async (product_id: number) => {
+  const fetchOptions = async () => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
-      if (!product_id) {
-        throw new Error("product_id가 정의되지 않았습니다.");
-      }
       const config = {
         method: "get",
-        url: `https://drugstoreproject.shop/cart/${product_id}`,
+        url: `https://drugstoreproject.shop/cart`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
       };
       const response: AxiosResponse<{ data: CartItem[] }> = await axios(config);
-      setOptions(
-        response.data.data.map((item) => ({
-          value: item.options_id.toString(),
-          option: item.options_name,
-          options_id: item.options_id,
-          options_name: item.options_name,
-          all_options_names: item.all_options_names,
-        }))
+      const currentItem = response.data.data.find(
+        (cartItem) => cartItem.product_id === item.product_id
       );
+      if (currentItem) {
+        const allOptions = currentItem.all_options_names.map((optionName) => ({
+          options_id: currentItem.options_id,
+          options_name: optionName,
+        }));
+        setOptions(allOptions);
+      }
     } catch (error) {
       console.error("Error fetching options:", error);
       throw error;
     }
   };
 
-  const updateCartItem = async (updatedItem: UpdateCartItemRequest) => {
+  const updateCartOption = async (
+    cart_id: number,
+    options_id: number,
+    quantity: number,
+    options_name: string
+  ) => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) {
@@ -124,50 +96,40 @@ const CartOpionModal: React.FC<ModalProps> = ({
           Token: token,
         },
         data: {
-          cart_id: item.cart_id,
-          options_id: updatedItem.options_id,
-          quantity: updatedItem.quantity,
+          cart_id: cart_id,
+          options_id: options_id,
+          quantity: quantity,
+          options_name: options_name,
         },
       };
-      const response: AxiosResponse<CartItem> = await axios(config);
-      return response.data;
+      const response = await axios(config);
+      console.log("Update response:", response.data);
     } catch (error) {
-      console.error("Error updating cart item:", error);
+      console.error("Error updating cart option:", error);
       throw error;
     }
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      fetchOptions();
+    }
+  }, [isOpen]);
+
   const handleSave = async () => {
-    try {
-      const updatedItem = await updateCartItem({
-        cart_id: item.cart_id,
-        options_id: option.options_id,
-        options_name: option.options_name,
+    const selectedOptionObj = options.find(
+      (option) => option.options_name === selectedOption
+    );
+    if (selectedOptionObj) {
+      await updateCartOption(
+        item.cart_id,
+        selectedOptionObj.options_id,
         quantity,
-      });
-      onSave(updatedItem.quantity, option.options_name);
-      onClose();
-    } catch (error) {
-      console.error("Error updating cart item:", error);
+        selectedOptionObj.options_name
+      );
+      onSave(quantity, selectedOptionObj.options_name);
     }
   };
-
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = options.find((o) => o.value === e.target.value);
-    setOption((prevOption) => ({
-      ...prevOption,
-      value: e.target.value,
-      option: selectedOption?.option || prevOption.option,
-      options_name: selectedOption?.options_name || prevOption.options_name,
-      options_id: selectedOption?.options_id || prevOption.options_id,
-      all_options_names:
-        selectedOption?.all_options_names || prevOption.all_options_names,
-    }));
-  };
-
-  const increaseQuantity = () => setQuantity((prev: number) => prev + 1);
-  const decreaseQuantity = () =>
-    setQuantity((prev: number) => (prev > 1 ? prev - 1 : 1));
 
   if (!isOpen) return null;
 
@@ -176,24 +138,27 @@ const CartOpionModal: React.FC<ModalProps> = ({
       <div className="modal-content">
         <h2>옵션 변경</h2>
         <div className="cart_option">
-          <select value={option.value} onChange={handleOptionChange}>
-            {option.all_options_names.map((options_name) => (
-              <option key={options_name}>{options_name}</option>
+          <select
+            value={selectedOption}
+            onChange={(e) => setSelectedOption(e.target.value)}
+          >
+            {options.map((option) => (
+              <option key={option.options_id} value={option.options_name}>
+                {option.options_name}
+              </option>
             ))}
           </select>
         </div>
-        <div>
-          <div className="quantity-input">
-            <button onClick={decreaseQuantity}>-</button>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              readOnly
-              min={1}
-            />
-            <button onClick={increaseQuantity}>+</button>
-          </div>
+        <div className="quantity-input">
+          <button onClick={() => handleQuantityChange(-1)}>-</button>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            readOnly
+            min={1}
+          />
+          <button onClick={() => handleQuantityChange(1)}>+</button>
         </div>
         <div className="check_close_btn">
           <button onClick={onClose}>취소</button>
@@ -204,4 +169,4 @@ const CartOpionModal: React.FC<ModalProps> = ({
   );
 };
 
-export default CartOpionModal;
+export default CartOptionModal;

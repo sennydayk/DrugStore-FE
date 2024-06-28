@@ -13,7 +13,6 @@
     "@types/react-dom": "^18.3.0",
     "@types/react-paginate": "^7.1.4",
     "@types/react-star-ratings": "^2.3.3",
-    "@types/websocket": "^1.0.10",
     "antd": "^5.18.0",
     "axios": "^1.7.2",
     "base-64": "^1.0.0",
@@ -34,7 +33,7 @@
     "styled-components": "^6.1.11",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "websocket": "^1.0.35"
+    "zustand": "^4.5.4"
   },
   "proxy": "https://drugstoreproject.shop/",
   "scripts": {

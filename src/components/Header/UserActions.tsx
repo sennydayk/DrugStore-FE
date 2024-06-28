@@ -6,13 +6,15 @@ import HeaderMyPage from "../../assets/png/mypage.png";
 import HeaderCart from "../../assets/png/cart.png";
 import "./Header.css";
 import { useAuth } from "../../contexts/AuthContext";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface UserActionsProps {
   isLoggedIn: boolean;
 }
 
 function UserActions({ isLoggedIn }: UserActionsProps) {
+  let navigate = useNavigate();
   const { logout } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
 
@@ -20,50 +22,53 @@ function UserActions({ isLoggedIn }: UserActionsProps) {
     const userConfirmed = window.confirm("로그아웃하시겠습니까?");
     if (userConfirmed) {
       logout();
+      setCartItemCount(0); // 로그아웃 시 cartItemCount를 0으로 설정
+      navigate("/");
     }
   };
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-          throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-        }
-        console.log("사용할 토큰:", token);
-        const config = {
-          method: "get", // HTTP 메서드
-          url: "https://drugstoreproject.shop/cart",
-          headers: {
-            "Content-Type": "application/json",
-            Token: token,
-          },
-        };
-        const response = await axios(config);
-        console.log("서버 응답 데이터:", response.data);
-        setCartItemCount(response.data.data.length);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
+  const fetchCartItems = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      }
+      const config = {
+        method: "get",
+        url: "https://drugstoreproject.shop/cart",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+      };
+      const response = await axios(config);
+      setCartItemCount(response.data.data.length);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 404) {
+          // 장바구니가 비어있는 경우
+          setCartItemCount(0);
+        } else {
           console.error(
             "장바구니 데이터를 가져오는 중 오류 발생:",
             error.message
           );
-          if (error.response) {
-            console.error("cart get서버 응답 데이터:", error.response.data);
-            console.error("서버 응답 상태 코드:", error.response.status);
-            if (error.response.status === 404) {
-              // 장바구니가 비어있는 경우
-              setCartItemCount(0);
-            }
-          }
-        } else {
-          console.error("알 수 없는 오류 발생:", error);
         }
+      } else {
+        console.error("알 수 없는 오류 발생:", error);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     if (isLoggedIn) {
       fetchCartItems();
+
+      const interval = setInterval(() => {
+        fetchCartItems();
+      }, 3000); // 3초마다 장바구니 상태를 갱신
+
+      return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
     }
   }, [isLoggedIn, logout]);
 
@@ -83,7 +88,7 @@ function UserActions({ isLoggedIn }: UserActionsProps) {
       </a>
       <a href="/cart">
         <img src={HeaderCart} alt="장바구니" className="useractiocart" />
-        {cartItemCount > 0 && (
+        {isLoggedIn && cartItemCount > 0 && (
           <span className="cart-item-count">{cartItemCount}</span>
         )}
       </a>
