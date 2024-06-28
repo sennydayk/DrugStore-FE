@@ -150,6 +150,10 @@ const MyReviews: React.FC = () => {
     getPageData();
   }, [page]);
 
+  // 수정된 리뷰를 업데이트하는 콜백함수
+  const handleReviewUpdated = () => {
+    getPageData();
+  };
   const selectedReview = reviewList.find(
     (review) => review.ordersId === selectedOrderId
   );
@@ -232,6 +236,7 @@ const MyReviews: React.FC = () => {
             ordersId={selectedOrderId}
             reviewContent={selectedReview.reviewContent}
             reviewScore={selectedReview.reviewScore}
+            onReviewUpdated={handleReviewUpdated}
           />
         )}
         {reviewList.length === 0 ? null : (

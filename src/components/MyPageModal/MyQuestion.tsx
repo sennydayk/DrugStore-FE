@@ -40,7 +40,13 @@ const MyQuestion: React.FC<MyQuestionProps> = ({
           <p className="mypage-modal-info-date">작성일 : {createdAt}</p>
         </div>
         <div className="mypage-modal-question">Q. {question}</div>
-        <div className="mypage-modal-answer">A. {answer}</div>
+        {answer === "" ? (
+          <div className="mypage-modal-answer" style={{ color: "blue" }}>
+            아직 답변이 등록되지 않았습니다.
+          </div>
+        ) : (
+          <div className="mypage-modal-answer">A. {answer}</div>
+        )}
         <div className="mypage-modal-footer">
           <button onClick={closeModal}>닫기</button>
         </div>
