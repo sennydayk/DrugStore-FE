@@ -46,7 +46,7 @@ function Header() {
             🔍
           </button>
         </form>
-        <UserActions cartItemCount={cartItemCount} isLoggedIn={isLoggedIn} />
+        <UserActions isLoggedIn={isLoggedIn} />
       </div>
       <div className="navigation-search">
         <Navigation />

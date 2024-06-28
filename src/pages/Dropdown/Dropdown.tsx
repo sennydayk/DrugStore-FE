@@ -168,6 +168,7 @@ export default function Dropdown({
       const response: AxiosResponse = await axios(config);
       console.log("장바구니 추가 응답 데이터:", response.data.data);
       console.log(JSON.stringify(cartItems));
+      alert("장바구니에 상품이 추가되었습니다.");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("장바구니 추가 중 오류 발생:", error.message);

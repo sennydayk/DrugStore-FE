@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CartOpionModal.css";
 import axios, { AxiosResponse } from "axios";
+import handleSaveOptions from "./CartItem";
 
 interface ModalProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ interface UpdateCartItemRequest {
   cart_id: number;
   options_id: number;
   quantity: number;
+  options_name: string;
 }
 
 interface Option {
@@ -63,6 +65,17 @@ const CartOpionModal: React.FC<ModalProps> = ({
       fetchOptions(product_id);
     }
   }, [product_id]);
+
+  useEffect(() => {
+    setOption({
+      value: item.options_id.toString(),
+      option: item.options_name,
+      options_name: item.options_name,
+      options_id: item.options_id,
+      all_options_names: item.all_options_names,
+    });
+    setQuantity(item.quantity);
+  }, [item]);
 
   const fetchOptions = async (product_id: number) => {
     try {
@@ -105,12 +118,13 @@ const CartOpionModal: React.FC<ModalProps> = ({
       }
       const config = {
         method: "put",
-        url: `https://drugstoreproject.shop/cart/${updatedItem.cart_id}`,
+        url: `https://drugstoreproject.shop/cart`,
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
         data: {
+          cart_id: item.cart_id,
           options_id: updatedItem.options_id,
           quantity: updatedItem.quantity,
         },
@@ -128,13 +142,27 @@ const CartOpionModal: React.FC<ModalProps> = ({
       const updatedItem = await updateCartItem({
         cart_id: item.cart_id,
         options_id: option.options_id,
+        options_name: option.options_name,
         quantity,
       });
-      onSave(updatedItem.quantity, option.option);
+      onSave(updatedItem.quantity, option.options_name);
       onClose();
     } catch (error) {
       console.error("Error updating cart item:", error);
     }
+  };
+
+  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOption = options.find((o) => o.value === e.target.value);
+    setOption((prevOption) => ({
+      ...prevOption,
+      value: e.target.value,
+      option: selectedOption?.option || prevOption.option,
+      options_name: selectedOption?.options_name || prevOption.options_name,
+      options_id: selectedOption?.options_id || prevOption.options_id,
+      all_options_names:
+        selectedOption?.all_options_names || prevOption.all_options_names,
+    }));
   };
 
   const increaseQuantity = () => setQuantity((prev: number) => prev + 1);
@@ -148,16 +176,9 @@ const CartOpionModal: React.FC<ModalProps> = ({
       <div className="modal-content">
         <h2>옵션 변경</h2>
         <div className="cart_option">
-          <select
-            value={option.value}
-            onChange={(e) =>
-              setOption(
-                options.find((o) => o.value === e.target.value) || option
-              )
-            }
-          >
-            {option.all_options_names.map((name) => (
-              <option key={name}>{name}</option>
+          <select value={option.value} onChange={handleOptionChange}>
+            {option.all_options_names.map((options_name) => (
+              <option key={options_name}>{options_name}</option>
             ))}
           </select>
         </div>
