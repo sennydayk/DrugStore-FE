@@ -9,6 +9,7 @@ interface ShowReviewProps {
   ordersId: number;
   reviewContent: string;
   reviewScore: number;
+  onReviewUpdated: () => void; // 수정된 리뷰를 업데이트하는 콜백함수
 }
 
 const ShowReview: React.FC<ShowReviewProps> = ({
@@ -17,6 +18,7 @@ const ShowReview: React.FC<ShowReviewProps> = ({
   ordersId,
   reviewContent,
   reviewScore,
+  onReviewUpdated,
 }) => {
   const [rating, setRating] = useState<number>(reviewScore);
   const [content, setContent] = useState<string>(reviewContent);
@@ -42,7 +44,6 @@ const ShowReview: React.FC<ShowReviewProps> = ({
     setRating(newRating);
   };
 
-  // 리뷰 수정(PUT) 로직 처리
   const updateReview = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -70,6 +71,7 @@ const ShowReview: React.FC<ShowReviewProps> = ({
       if (response.status === 200) {
         console.log("Review updated successfully:", response.data);
         alert("리뷰가 수정되었습니다.");
+        onReviewUpdated(); // 콜백함수 호출
         closeModal();
       } else {
         console.error("Failed to update review:", response);

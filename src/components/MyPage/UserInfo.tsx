@@ -121,9 +121,9 @@ const UserInfo: React.FC = () => {
             <LeftText>{nickName}님 반갑습니다</LeftText>
           </Left>
           <div>
-            <RightText>내 포인트 : {userInfoHeader.money}</RightText>
+            <RightText>내 포인트 : {userInfoHeader.money}점</RightText>
             <RightText>
-              내 쿠폰 : {userInfoHeader.couponResponseList.length}
+              내 쿠폰 : {userInfoHeader.couponResponseList.length}장
             </RightText>
           </div>
         </Container>
