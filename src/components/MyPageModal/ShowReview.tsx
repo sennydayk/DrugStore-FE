@@ -115,7 +115,7 @@ const ShowReview: React.FC<ShowReviewProps> = ({
         <div className="mypage-modal-footer">
           <button onClick={closeModal}>닫기</button>
           <button onClick={updateReview} style={{ marginLeft: "100px" }}>
-            리뷰 수정
+            리뷰  수정
           </button>
         </div>
       </dialog>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Question.css'
 import QnAItem from '../QnA/QnAItem'
 import axios from 'axios'
-import QuestionModal from './QuestionModal';
+import QuestioneditModal from './QuestioneditModal';
 
 interface QnaType {
     question: string;
@@ -33,6 +33,10 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
         setqnaVisible(!qnaVisible)
     }
 
+    const [showeditquestion, seteditshowquestion] = useState(false)
+    const [currentquestion, setCurrentquestion] = useState("");
+    const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+
     const deletequestionhandler = async (questionid: number) => {
         const encodedquestionId = encodeURIComponent(questionid);
         const token = sessionStorage.getItem('token');
@@ -62,11 +66,15 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
     }
 
     const updatequestionhandler = async (questionid: number) => {
-        setshowquestion(true)
+        seteditshowquestion(true)
         setquestionmode('edit')
-        console.log('questionid', questionid)
-        // setQuestionid(questionid)
+        setSelectedQuestionId(questionid)
     }
+
+    console.log(questionmode)
+    const selectedQuestion = qnaArray.find(
+        (qna) => qna.question_id === selectedQuestionId
+    );
 
     return (
         <>
@@ -87,8 +95,17 @@ const Question = ({ qna, getQnadata, showquestion, setshowquestion, qnaArray, qu
                 <button className='qnaitem_deletebutton' onClick={() => deletequestionhandler(qna.question_id)}>삭제</button>
             </div>
             <div>
-                {qnaVisible && <QnAItem question={qna.question} questionid={qna.question_id} answer={qna.answer} ></QnAItem>}
+                {qnaVisible && <QnAItem question={qna.question} questionid={qna.question_id} answer={qna.answer} getQnadata={getQnadata}></QnAItem>}
             </div>
+            {showeditquestion && selectedQuestionId !== null && selectedQuestion && (
+                <QuestioneditModal
+                    currentquestion={selectedQuestion.question}
+                    questionid={selectedQuestion.question_id}
+                    showeditquestion={showeditquestion}
+                    seteditshowquestion={seteditshowquestion}
+                    getQnadata={getQnadata}
+                />
+            )}
         </>
     );
 };
