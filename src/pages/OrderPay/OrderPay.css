@@ -1,0 +1,245 @@
+.order_payment_wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lefe_area {
+  flex-basis: 50%;
+  flex: 0.5;
+  max-width: 1000px;
+}
+
+.right_area {
+  position: fixed;
+  top: 21.25rem;
+  right: 6rem;
+  width: 300px;
+}
+
+/* 주문/결제 페이지 전체 스타일 */
+.order_payment_container,
+.delivery_product_container,
+.coupon_container,
+.payment_container,
+.terms_agreement_container {
+  margin: 20px;
+  padding: 15px;
+}
+
+.button-container {
+  display: flex;
+}
+
+.orderpay_title,
+.orderpay_subtitle {
+  width: 1050px;
+}
+
+.orderpay_subtitle {
+  text-align: left;
+}
+
+.orderpay_title {
+  text-align: center;
+}
+
+/* 테이블 스타일 */
+.orderpay_table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.orderpay_table th {
+  background-color: #f5f5f5;
+}
+
+.orderpay_table th,
+.orderpay_table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.orderpay_protable_title th {
+  text-align: center;
+}
+
+/* 상품 이미지 및 이름 스타일 */
+.pay_prd_img img {
+  width: 80px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.prd_name {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+}
+
+#brandName,
+#goodsName {
+  display: block;
+}
+
+/* 가격 스타일 */
+.org_price,
+.pur_price {
+  color: #999;
+  font-size: 14px;
+}
+
+.pur_price {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.tx_num {
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* 쿠폰 및 결제 버튼 스타일 */
+.payment_container button {
+  background-color: #6ad4dd;
+  color: white;
+  padding: 10px 24px;
+  margin: 4px 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.payment_container button:hover {
+  background-color: #97e7e1;
+}
+
+.coupon_wrap {
+  display: flex;
+  justify-content: space-between;
+  border: none;
+  padding: 1rem 0;
+}
+
+.delivery_select,
+.coupon_select {
+  appearance: none; /* 기본 화살표 숨기기 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
+  width: 500px;
+  border: 1px solid #ddd;
+  padding-left: 10px;
+  height: 58px;
+}
+
+/* 약관 동의 체크박스 스타일 */
+.terms_agreement_container h3 {
+  text-align: left;
+}
+
+.terms_agreement_container {
+  text-align: left;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
+
+.agreement-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.agreement-row div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.agreement-row input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* 최종 결제정보 */
+.right_area {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.orderpay_subtitle2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.total_payment_box {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.total_payment_box li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.total_payment_box .total {
+  font-weight: bold;
+}
+
+.tx_tit {
+  font-size: 16px;
+  color: #666;
+}
+
+.tx_cont {
+  font-size: 16px;
+}
+
+.tx_num {
+  font-weight: bold;
+}
+
+.btnPayment {
+  width: 100%;
+  padding: 10px 0;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btnPayment:hover {
+  background-color: #97e7e1;
+}
+
+.orderpay_couponbtn {
+  width: 97px;
+  height: 58px;
+  padding: 10px 0;
+  background-color: #6ad4dd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.orderpay_couponbtn:hover {
+  background-color: #97e7e1;
+}

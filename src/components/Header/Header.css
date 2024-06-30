@@ -62,6 +62,7 @@
 .user-actions img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
 
 /* 카테고리 */
@@ -102,7 +103,6 @@
   text-decoration: none;
   font-weight: bold;
 }
-
 /* 검색 */
 .search input {
   padding: 5px 5px 5px 15px;
@@ -121,4 +121,56 @@
 
 .search input:focus {
   outline: none;
+}
+
+/* 장바구니 아이콘 */
+.cart-item-count {
+  position: absolute;
+  top: 2.9rem;
+  right: 16.2rem;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.header_searchinput {
+  padding: 5px 5px 5px 35px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  float: right;
+  width: 300px;
+  height: 30px;
+  background-size: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+}
+
+.header_searchbutton {
+  position: absolute;
+  top: 7px;
+  right: 3%; /* 입력 필드 내부의 우측 여백 */
+  cursor: pointer;
+  width: 20px; /* 아이콘 크기 */
+  height: 20px; /* 아이콘 크기 */
+  background-color: transparent;
+  border: none;
+  width: 30px;
+  font-size: large;
+}
+
+.search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.logout_btn {
+  border: none;
+  background-color: transparent;
 }

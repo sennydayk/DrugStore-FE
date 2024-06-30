@@ -1,0 +1,93 @@
+.mainpage_product_img {
+  width: 200px;
+  height: 200px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.index_wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  padding-left: 0%;
+  top: 7%;
+}
+
+.mainpage_product_index {
+  background-color: white;
+  width: 25px;
+  height: 25px;
+  font-weight: bold;
+  color: red;
+  border: 2px solid red;
+  border-radius: 100%;
+  padding: 5px;
+  z-index: 2;
+}
+
+.mainpage_product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  padding: 10px;
+  flex-basis: 20%;
+  /* position: relative; */
+}
+
+.mainpage_mainimage {
+  position: relative;
+}
+
+.mainpage_productinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.mainpage_brand_name {
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(187, 187, 187);
+  /* white-space: nowrap; /
+  / 강제로 한줄에 다쓰게 */
+}
+
+.mainpage_product_name {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.mainpage_priceinfo {
+  margin-top: 5px;
+}
+
+.mainpage_price {
+  text-decoration: line-through;
+  color: gray;
+  margin-right: 0.6rem;
+  font-size: small;
+}
+
+.mainpage_final_price {
+  color: red;
+  font-weight: bold;
+  font-size: large;
+}
+
+.mainpage_like {
+  position: absolute;
+  /*상위에 있는 부모값을 relative로 가짐.like는 mainpage_mainimage안에 들어갈거니까 mainpage_mainimage가 부모로 가져야하므로 div mainpage_mainimage 밑에 들어감 */
+  width: 30px;
+  height: 30px;
+  z-index: 2;
+  top: 170px;
+  left: 86%;
+  cursor: pointer;
+  background-color: white;
+}

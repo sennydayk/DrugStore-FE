@@ -1,0 +1,32 @@
+.ProductImage_select{
+    width: 100px;
+    height:100px;
+    /* display: flex; */
+    gap: 20px;
+    margin-right: 10px;
+}
+
+.ProductImage_select.main {
+    width:450px;
+    height:450px;
+}
+
+.ProductImage_imglist{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; 
+    justify-content: center; 
+    cursor: pointer;
+}
+
+.ProductImage_main{
+    position:relative;
+}
+
+.ProductImage_best{
+    position: absolute;
+    left:2%;
+    top:0%;
+}

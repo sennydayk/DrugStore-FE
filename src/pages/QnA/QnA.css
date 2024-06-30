@@ -1,0 +1,14 @@
+.qna_button{
+    width: 120px;
+    height: 40px;
+    background-color: #6ad4dd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;  
+}
+
+.qna_qnalist{
+    max-width: 1000px;
+    margin :40px auto;
+}

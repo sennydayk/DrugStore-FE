@@ -1,0 +1,46 @@
+.reviewitem_wrapper{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    border-bottom: 2px solid #dadfe3;
+    padding-bottom: 20px;
+    max-width: 1000px;
+    margin :40px auto;
+}
+
+.reviewitem_nickname{
+  font-weight: bold;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.reviewitem_profile{
+    width: 40%;
+    float: left;
+    display: flex;
+}
+.reviewitem_review{
+    width: 60%;
+    float: right;
+    text-align: left;
+}
+
+.reviewitem_userprofile{
+    width:50px;
+    height:50px;
+    border-radius: 100%;
+    margin-left: 100px;
+}
+
+.reviewitem_stardate{
+    display: flex;
+}
+
+.reviewitem_date{
+    margin-left: 10px;
+}
+
+.reviewitem_optionname{
+    color: gray;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,35 @@
+.categorypage_wrapper {
+  z-index: 2;
+  position: relative;
+  margin-top: 60px;
+}
+
+.category_filter_wrapper {
+  position: absolute;
+  top: 25%;
+  right: 17%;
+  text-align: left;
+  width: 90px;
+  z-index: 3;
+  max-width: 100px;
+  margin: 20px auto;
+  font-size: 14px;
+}
+
+.category_filter_selectdropdown {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  background: white;
+  border: 0.5px solid#ccc;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.category_filter_dropdown {
+  cursor: pointer;
+  background: white;
+  border: 0.5px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
+}
