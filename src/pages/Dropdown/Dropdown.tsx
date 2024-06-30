@@ -144,6 +144,15 @@ export default function Dropdown({
 
   const handleCartButtonClick = async () => {
     try {
+      // 선택된 옵션이 있는지 확인하는 로직 추가
+      if (
+        selectedOptions.length === 0 ||
+        selectedOptions.some((option) => !option.id || !option.count)
+      ) {
+        alert("옵션을 선택해주세요.");
+        return;
+      }
+
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
@@ -165,7 +174,7 @@ export default function Dropdown({
         data: cartItems,
       };
 
-      const response: AxiosResponse = await axios(config);
+      const response = await axios(config);
       console.log("장바구니 추가 응답 데이터:", response.data.data);
       console.log(JSON.stringify(cartItems));
       alert("장바구니에 상품이 추가되었습니다.");

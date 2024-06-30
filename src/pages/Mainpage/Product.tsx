@@ -63,9 +63,9 @@ export function Product({
         </div>
       </div>
       <div className="mainpage_productinfo">
-        <div className="masinpage_brand_name">{brand_name}</div>
+        <div className="mainpage_brand_name">{brand_name}</div>
         <div className="mainpage_product_name">{product_name}</div>
-        <div>
+        <div className="mainpage_priceinfo">
           <a className="mainpage_price">
             {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}원
           </a>

@@ -1,7 +1,7 @@
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 50px;
   list-style-type: none;
   padding: 0;
 }
@@ -19,7 +19,7 @@
 
 .pagination li.active a {
   font-weight: bold;
-  color: #007bff;
+  color: black;
 }
 
 .pagination li.disabled a {
