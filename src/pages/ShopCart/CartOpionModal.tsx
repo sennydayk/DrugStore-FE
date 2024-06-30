@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from "axios";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (quantity: number, option_name: string) => void;
+  onSave: (options_id: number, quantity: number, options_name: string) => void;
   item: CartItem;
 }
 
@@ -42,11 +42,17 @@ const CartOptionModal: React.FC<ModalProps> = ({
   );
   const [options, setOptions] = useState<Option[]>([]);
 
+  useEffect(() => {
+    if (isOpen) {
+      fetchOptions(item.product_id);
+    }
+  }, [isOpen, item.product_id]);
+
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
   };
 
-  const fetchOptions = async () => {
+  const fetchOptions = async (product_id: number) => {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) {
@@ -61,33 +67,35 @@ const CartOptionModal: React.FC<ModalProps> = ({
         },
       };
       const response: AxiosResponse<{ data: CartItem[] }> = await axios(config);
-      const currentItem = response.data.data.find(
-        (cartItem) => cartItem.product_id === item.product_id
-      );
-      if (currentItem) {
-        const allOptions = currentItem.all_options_names.map((optionName) => ({
-          options_id: currentItem.options_id,
-          options_name: optionName,
-        }));
-        setOptions(allOptions);
-      }
+      const productOptions = response.data.data
+        .filter((item) => item.product_id === product_id)
+        .flatMap((item) =>
+          item.all_options_names.map((optionName) => ({
+            options_id: item.options_id,
+            options_name: optionName,
+          }))
+        );
+      setOptions(productOptions);
     } catch (error) {
       console.error("Error fetching options:", error);
       throw error;
     }
   };
 
-  const updateCartOption = async (
-    cart_id: number,
-    options_id: number,
-    quantity: number,
-    options_name: string
-  ) => {
+  const handleSave = async () => {
     try {
+      const selectedOptionId = options.find(
+        (option) => option.options_name === selectedOption
+      )?.options_id;
+      if (selectedOptionId === undefined) {
+        throw new Error("선택된 옵션의 ID를 찾을 수 없습니다.");
+      }
+
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
+
       const config = {
         method: "put",
         url: `https://drugstoreproject.shop/cart`,
@@ -96,38 +104,17 @@ const CartOptionModal: React.FC<ModalProps> = ({
           Token: token,
         },
         data: {
-          cart_id: cart_id,
-          options_id: options_id,
+          cart_id: item.cart_id,
+          options_id: selectedOptionId,
           quantity: quantity,
-          options_name: options_name,
+          options_name: selectedOption,
         },
       };
-      const response = await axios(config);
-      console.log("Update response:", response.data);
+
+      await axios(config);
+      onSave(selectedOptionId, quantity, selectedOption);
     } catch (error) {
-      console.error("Error updating cart option:", error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchOptions();
-    }
-  }, [isOpen]);
-
-  const handleSave = async () => {
-    const selectedOptionObj = options.find(
-      (option) => option.options_name === selectedOption
-    );
-    if (selectedOptionObj) {
-      await updateCartOption(
-        item.cart_id,
-        selectedOptionObj.options_id,
-        quantity,
-        selectedOptionObj.options_name
-      );
-      onSave(quantity, selectedOptionObj.options_name);
+      console.error("Error saving changes:", error);
     }
   };
 

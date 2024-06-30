@@ -153,6 +153,7 @@ export default function Dropdown({
         product_id: product_id,
         quantity: option.count,
         options_id: option.id,
+        totalPrice: totalPrice,
       }));
 
       const config = {
