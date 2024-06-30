@@ -85,18 +85,6 @@ function MyLikes() {
                 currentPage={0}
               />
             ))}
-
-            {productarray.map((product, index) => {
-              return (
-                <Product
-                  {...product}
-                  index={index}
-                  addLike={() => addLike(product.product_id)}
-                  deleteLike={() => deleteLike(product.product_id)}
-                  currentPage={0}
-                ></Product>
-              );
-            })}
           </div>
         )}
       </div>

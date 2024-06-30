@@ -12,7 +12,7 @@ import { RootState } from "../../store/store";
 import "./Header.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { setSearchKeyword } from "../../store/searchSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
   const { isLoggedIn } = useAuth();
@@ -20,15 +20,19 @@ function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
+  useEffect(() => {
+    setSearchTerm("");
+  }, [location]);
+
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setSearchKeyword(searchTerm));
-    // navigate("/");
   };
 
   return (

@@ -6,7 +6,8 @@ import axios from 'axios'
 interface QnAItemProps {
     question: string;
     answer: string | null;
-    questionid: number
+    questionid: number;
+    getQnadata: () => void
 }
 
 interface DecodedToken {
@@ -14,7 +15,7 @@ interface DecodedToken {
 }
 
 
-const QnaItem = ({ question, answer, questionid }: QnAItemProps) => {
+const QnaItem = ({ question, answer, questionid, getQnadata }: QnAItemProps) => {
 
     const token = sessionStorage.getItem('token');
     let roles = null;
@@ -27,7 +28,6 @@ const QnaItem = ({ question, answer, questionid }: QnAItemProps) => {
             console.error('cannot decode', error);
         }
     }
-
 
     const [adminanswer, setadminAnswer] = useState(answer || "");
     const handleanswerchange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -57,7 +57,8 @@ const QnaItem = ({ question, answer, questionid }: QnAItemProps) => {
                 throw new Error('Error');
             } else {
                 alert("답변이 등록되었습니다.");
-                // getQnadata();
+                setadminAnswer(adminanswer);
+                getQnadata();
             }
 
         } catch (error) {
