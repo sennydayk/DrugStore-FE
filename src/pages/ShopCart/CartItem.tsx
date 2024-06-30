@@ -147,13 +147,13 @@ const CartItem: React.FC = () => {
           prevItems.map((item) =>
             item.cart_id === updatedItem.cart_id
               ? {
-                  ...item,
-                  quantity,
-                  option,
-                  name: `${item.product_name} (${option})`,
-                  final_price: (item.price / (item.quantity || 1)) * quantity,
-                  price: (item.price / (item.quantity || 1)) * quantity,
-                }
+                ...item,
+                quantity,
+                option,
+                name: `${item.product_name} (${option})`,
+                final_price: (item.price / (item.quantity || 1)) * quantity,
+                price: (item.price / (item.quantity || 1)) * quantity,
+              }
               : item
           )
         );
@@ -259,6 +259,8 @@ const CartItem: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  console.log('currentItem', currentItem)
+
   return (
     <div className="container">
       <div className="cart_wrap">
@@ -321,16 +323,16 @@ const CartItem: React.FC = () => {
                     <span className="org_price">
                       {item.quantity !== undefined
                         ? (item.price * item.quantity)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         : ""}
                       원
                     </span>
                     <span className="pur_price">
                       {item.quantity !== undefined
                         ? (item.final_price * item.quantity)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         : ""}
                       원
                     </span>
