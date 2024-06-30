@@ -110,7 +110,7 @@ export function ProductInfo(productid: ParamsType) {
       >
         배송비안내
       </h2>
-      <p>올리브영 배송 : 2500원</p>
+      <p>기본 배송 : 2500원</p>
       <div style={{ fontWeight: "bold" }}>추가배송비</div>
       <div>
         도서산간 : 2500원
@@ -133,7 +133,7 @@ export function ProductInfo(productid: ParamsType) {
 
   const modalPointContent = (
     <div>
-      <h2>등급별 CJ ONE 포인트 적립</h2>
+      <h2>등급별 포인트 적립 안내</h2>
       <table
         style={{
           border: "1px solid black",
@@ -172,7 +172,7 @@ export function ProductInfo(productid: ParamsType) {
                 textAlign: "center",
               }}
             >
-              GOLD OLIVE
+              GOLD LEVEL
             </td>
             <td
               style={{
@@ -192,7 +192,7 @@ export function ProductInfo(productid: ParamsType) {
                 textAlign: "center",
               }}
             >
-              BLACK OLIVE
+              BLACK LEVEL
             </td>
             <td
               style={{
@@ -212,7 +212,7 @@ export function ProductInfo(productid: ParamsType) {
                 textAlign: "center",
               }}
             >
-              GREEN OLIVE
+              GREEN LEVEL
             </td>
             <td
               style={{
@@ -232,7 +232,7 @@ export function ProductInfo(productid: ParamsType) {
                 textAlign: "center",
               }}
             >
-              PINK OLIVE
+              PINK LEVEL
             </td>
             <td
               style={{
@@ -252,7 +252,7 @@ export function ProductInfo(productid: ParamsType) {
                 textAlign: "center",
               }}
             >
-              BABY OLIVE
+              BABY LEVEL
             </td>
             <td
               style={{
@@ -277,7 +277,8 @@ export function ProductInfo(productid: ParamsType) {
       <p>
         배송 및 픽업 가능 지역
         <br />
-        전국 (정확한 서비스 가능여부는 배송지 등록을 통해서 확인가능)
+        전국  <br />
+        (정확한 서비스 가능여부는 배송지 등록을 통해서 확인가능)
       </p>
     </div>
   );

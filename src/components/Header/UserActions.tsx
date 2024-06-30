@@ -63,17 +63,17 @@ function UserActions({ isLoggedIn }: UserActionsProps) {
     }
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchCartItems();
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     fetchCartItems();
 
-      const interval = setInterval(() => {
-        fetchCartItems();
-      }, 3000); // 3초마다 장바구니 상태를 갱신
+  //     const interval = setInterval(() => {
+  //       fetchCartItems();
+  //     }, 3000); // 3초마다 장바구니 상태를 갱신
 
-      return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
-    }
-  }, [isLoggedIn, logout]);
+  //     return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
+  //   }
+  // }, [isLoggedIn, logout]);
 
   return (
     <div className="user-actions">

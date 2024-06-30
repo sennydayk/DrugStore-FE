@@ -42,8 +42,8 @@ const CartOptionModal: React.FC<ModalProps> = ({
   const [selectedOption, setSelectedOption] = useState<string>(
     item.options_name
   );
-  const [options, setOptions] = useState<Option[]>([]);
 
+  const [options, setOptions] = useState<Option[]>([]);
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
   };
@@ -68,10 +68,11 @@ const CartOptionModal: React.FC<ModalProps> = ({
       );
       if (currentItem) {
         const allOptions = currentItem.all_options_names.map((optionName) => ({
-          options_id: currentItem.options_id,
+          options_id: currentItem.options_id,  /*id 받아오면 여기서 currentitem이 아니라 all_options_names에 해당하는 id로 변경 */
           options_name: optionName,
         }));
         setOptions(allOptions);
+        console.log(options)
       }
     } catch (error) {
       console.error("Error fetching options:", error);
@@ -120,7 +121,7 @@ const CartOptionModal: React.FC<ModalProps> = ({
 
   const handleSave = async () => {
     const selectedOptionObj = options.find(
-      (option) => option.options_name === selectedOption
+      (option) => option.options_name.trim() === selectedOption
     );
     if (selectedOptionObj) {
       await updateCartOption(
@@ -144,9 +145,9 @@ const CartOptionModal: React.FC<ModalProps> = ({
             value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
           >
-            {options.map((option) => (
-              <option key={option.options_id} value={option.options_name}>
-                {option.options_name}
+            {item.all_options_names.map((option) => (
+              <option >
+                {option}
               </option>
             ))}
           </select>

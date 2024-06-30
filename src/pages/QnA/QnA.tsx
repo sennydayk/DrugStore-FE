@@ -82,6 +82,7 @@ const QnA = ({ productid }: ParamsType) => {
                                     productid={productid}
                                     showquestion={showquestion}
                                     setshowquestion={setshowquestion}
+                                    qnaArray={qnaArray}
                                 />
                             )}
                         </>
@@ -89,9 +90,9 @@ const QnA = ({ productid }: ParamsType) => {
                 ) : (
                     <div className='qna_noqna'>아직 작성된 문의가 없습니다!</div>
                 )}
-                {showquestion && !qnaArray && (
+                {showquestion && questionmode === 'create' && !qnaArray && (
                     <QuestionModal
-                        currentquestion={currentquestion}
+                        currentquestion={""}
                         questionid={questionid}
                         questionmode={questionmode}
                         setquestionmode={setquestionmode}
@@ -99,6 +100,7 @@ const QnA = ({ productid }: ParamsType) => {
                         productid={productid}
                         showquestion={showquestion}
                         setshowquestion={setshowquestion}
+                        qnaArray={qnaArray}
                     />
                 )}
             </div>
