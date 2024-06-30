@@ -16,6 +16,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Categorypage from "./pages/Categorypage/Categorypage";
 import { Detailpage } from "./pages/Detailpage/Detailpage";
 import { AuthProvider } from "./contexts/AuthContext";
+import Footer from "./components/Footer/Footer";
 
 const App = () => (
   <AuthProvider>
@@ -36,6 +37,7 @@ const App = () => (
         <Route path="/mypage/reviews" element={<MyReviews />} />
         <Route path="/mypage/questions" element={<Questions />} />
       </Routes>
+      <Footer />
     </div>
   </AuthProvider>
 );

@@ -62,6 +62,7 @@
 .user-actions img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
 
 /* 카테고리 */

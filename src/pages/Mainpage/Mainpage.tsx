@@ -161,28 +161,28 @@ const Mainpage = () => {
   console.log("main currentPage", currentPage);
 
   return (
-    <div>
+    <div className="mainpage-wrapper">
       <div className="mainpage_imageslider">
         <ImageSlider adphotos={adphotos}></ImageSlider>
       </div>
-      <div className="mainpage_productlist">
-        <div className="filter_wrapper">
-          <div onClick={handleClick} className="filter_selectdropdown">
-            {selectedFilter} 🔽
-          </div>
-          {isOpen &&
-            filterArray.map((filters) => {
-              return (
-                <div
-                  className="filter_dropdown"
-                  onClick={() => handleSelect(filters.sortBy)}
-                  key={filters.filterId}
-                >
-                  {filters.sortBy}
-                </div>
-              );
-            })}
+      <div className="filter_wrapper">
+        <div onClick={handleClick} className="filter_selectdropdown">
+          {selectedFilter} <span className="filter_icon">🔽</span>
         </div>
+        {isOpen &&
+          filterArray.map((filters) => {
+            return (
+              <div
+                className="filter_dropdown"
+                onClick={() => handleSelect(filters.sortBy)}
+                key={filters.filterId}
+              >
+                {filters.sortBy}
+              </div>
+            );
+          })}
+      </div>
+      <div className="mainpage_productlist">
         {productarray.map((product, index) => {
           return (
             <Product
