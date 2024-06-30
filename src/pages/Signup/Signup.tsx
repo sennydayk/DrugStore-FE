@@ -89,25 +89,60 @@ function Signup() {
   // 회원가입 로직 처리
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Validate form inputs
+    const {
+      userName,
+      userNickname,
+      userEmail,
+      userPassword,
+      userPasswordCheck,
+      userBirthday,
+      userPhonenum,
+      userAddress,
+    } = signupForm;
+
+    if (
+      !userName ||
+      !userNickname ||
+      !userEmail ||
+      !userPassword ||
+      !userPasswordCheck ||
+      !userBirthday ||
+      !userPhonenum ||
+      !userAddress
+    ) {
+      alert("모든 입력값을 작성해주세요.");
+      if (nameFocus.current) {
+        nameFocus.current.focus();
+      }
+      return;
+    }
+
+    if (userPassword !== userPasswordCheck) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     if (!image) {
-      alert("프로필 이미지를 설정해주세요"); // 이미지를 선택하지 않았을 경우 경고창
+      alert("프로필 이미지를 설정해주세요");
       return;
     }
 
     const payload = {
-      name: signupForm.userName,
-      nickname: signupForm.userNickname,
-      email: signupForm.userEmail,
-      password: signupForm.userPassword,
-      password_check: signupForm.userPasswordCheck,
-      birthday: signupForm.userBirthday,
-      phone_number: signupForm.userPhonenum,
-      address: signupForm.userAddress,
+      name: userName,
+      nickname: userNickname,
+      email: userEmail,
+      password: userPassword,
+      password_check: userPasswordCheck,
+      birthday: userBirthday,
+      phone_number: userPhonenum,
+      address: userAddress,
     };
 
     const formData = new FormData();
     if (imgInput.current?.files) {
-      formData.append("uploadFiles", imgInput.current.files[0]); // 폼 데이터에 이미지 파일 추가
+      formData.append("uploadFiles", imgInput.current.files[0]);
       formData.append(
         "sign",
         new Blob([JSON.stringify(payload)], { type: "application/json" })
@@ -120,46 +155,23 @@ function Signup() {
         "https://drugstoreproject.shop/auth/sign-up",
         {
           method: "POST",
-          // 헤더에 Content-Type': 'multipart/form-data'를 설정할 필요 없음(브라우저가 자동으로 설정)
           body: formData,
         }
       );
-      if (
-        signupForm.userName != "" &&
-        signupForm.userNickname != "" &&
-        signupForm.userEmail != "" &&
-        signupForm.userPassword != "" &&
-        signupForm.userPasswordCheck != "" &&
-        signupForm.userBirthday != "" &&
-        signupForm.userPhonenum != "" &&
-        signupForm.userAddress != "" &&
-        signupForm.userPassword === signupForm.userPasswordCheck
-      ) {
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Response data:", data);
-          if (response.status === 200) {
-            alert(
-              signupForm.userName +
-                "님, 회원가입이 완료되었습니다. 로그인 페이지로 이동합니다."
-            );
-            navigate("/auth/login");
-          } else if (response.status === 400) {
-            alert("회원가입에 실패했습니다.");
-          }
-        } else {
-          throw new Error("서버 요청 실패: " + response.status);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response data:", data);
+        if (response.status === 200) {
+          alert(
+            `${userName}님, 회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.`
+          );
+          navigate("/auth/login");
+        } else if (response.status === 400) {
+          alert("회원가입에 실패했습니다.");
         }
-      } else if (
-        Object.values(payload).some((value) => value === "") &&
-        signupForm.userPassword != signupForm.userPasswordCheck
-      ) {
-        alert("모든 입력값을 작성해주세요.");
-        if (nameFocus.current) {
-          nameFocus.current.focus();
-        }
-      } else if (signupForm.userPassword != signupForm.userPasswordCheck) {
-        alert("비밀번호가 일치하지 않습니다.");
+      } else {
+        throw new Error("서버 요청 실패: " + response.status);
       }
     } catch (error) {
       console.error("오류가 발생했습니다. 오류명: ", error);
