@@ -36,7 +36,7 @@ export const filterArray: FilterType[] = [
   { filterId: 1, filter: "likes", sortBy: "좋아요순" },
   { filterId: 2, filter: "sales", sortBy: "판매량순" },
   { filterId: 3, filter: "price", sortBy: "저가순" },
-  { filterId: 4, filter: "reviews", sortBy: "리뷰많은순" },
+  { filterId: 4, filter: "reviews", sortBy: "리뷰평점순" },
   { filterId: 5, filter: "new", sortBy: "신상품순" },
 ];
 

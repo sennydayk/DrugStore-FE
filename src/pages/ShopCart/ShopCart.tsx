@@ -163,19 +163,30 @@ const CartItem: React.FC = () => {
     }
   };
 
-  const handleSave = (quantity: number, option: string) => {
+  const handleSave = (
+    options_id: number,
+    quantity: number,
+    options_name: string,
+    optionPrice: number
+  ) => {
     setCurrentItem((prevItem: Item | null) => ({
       ...prevItem,
       quantity,
-      options_name: option,
+      options_name,
+      final_price: prevItem?.final_price
+        ? prevItem.final_price + optionPrice
+        : optionPrice,
     }));
     setIsModalOpen(false);
-
-    // items 상태 업데이트
     setItems((prevItems) =>
       prevItems.map((item) =>
         item.product_id === currentItem?.product_id
-          ? { ...item, quantity, options_name: option }
+          ? {
+              ...item,
+              quantity,
+              options_name,
+              final_price: item.final_price + optionPrice,
+            }
           : item
       )
     );
@@ -267,6 +278,7 @@ const CartItem: React.FC = () => {
                       원
                     </span>
                   </td>
+
                   <td>
                     <p className="prd_delivery">
                       <strong id="deliStrongText">

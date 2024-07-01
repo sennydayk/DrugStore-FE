@@ -5,7 +5,12 @@ import axios, { AxiosResponse } from "axios";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (quantity: number, option_name: string) => void;
+  onSave: (
+    options_id: number,
+    quantity: number,
+    options_name: string,
+    options_price: number
+  ) => void;
   item: CartItem;
 }
 
@@ -14,15 +19,17 @@ interface CartItem {
   product_id: number;
   product_name: string;
   brand: string;
-  options_id: number;
-  options_name: string;
-  all_options_names: string[];
-  options_price: number;
+  all_options: {
+    options_id: number;
+    options_name: string;
+    options_price: number;
+  }[];
   quantity: number;
   price: number;
   product_img: string;
   product_discount: number;
   final_price: number;
+  options_id: number;
 }
 
 interface Option {
@@ -37,21 +44,30 @@ const CartOptionModal: React.FC<ModalProps> = ({
   item,
 }) => {
   const [quantity, setQuantity] = useState(item.quantity);
-  const [selectedOption, setSelectedOption] = useState<string>(
-    item.options_name
+  const [selectedOption, setSelectedOption] = useState<Option | null>(
+    item.all_options?.[0]
+      ? {
+          options_id: item.all_options[0].options_id,
+          options_name: item.all_options[0].options_name,
+        }
+      : null
   );
   const [options, setOptions] = useState<Option[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchOptions(item.product_id);
+    }
+  }, [isOpen, item.product_id]);
 
   const handleQuantityChange = (change: number) => {
     setQuantity((prev) => Math.max(1, prev + change));
   };
 
-  const fetchOptions = async () => {
+  const fetchOptions = async (product_id: number) => {
     try {
       const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
-      }
+
       const config = {
         method: "get",
         url: `https://drugstoreproject.shop/cart`,
@@ -61,73 +77,64 @@ const CartOptionModal: React.FC<ModalProps> = ({
         },
       };
       const response: AxiosResponse<{ data: CartItem[] }> = await axios(config);
-      const currentItem = response.data.data.find(
-        (cartItem) => cartItem.product_id === item.product_id
-      );
-      if (currentItem) {
-        const allOptions = currentItem.all_options_names.map((optionName) => ({
-          options_id: currentItem.options_id,
-          options_name: optionName,
-        }));
-        setOptions(allOptions);
-      }
+      const productOptions: Option[] = response.data.data
+        .filter((item) => item.product_id === product_id)
+        .flatMap((item) =>
+          item.all_options.map((option) => ({
+            options_id: option.options_id,
+            options_name: option.options_name,
+          }))
+        );
+      setOptions(productOptions);
     } catch (error) {
       console.error("Error fetching options:", error);
       throw error;
     }
   };
 
-  const updateCartOption = async (
-    cart_id: number,
-    options_id: number,
-    quantity: number,
-    options_name: string
-  ) => {
+  const handleSave = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      if (!token) {
-        throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
+      if (selectedOption) {
+        const selectedOptionDetail = item.all_options.find(
+          (option) => option.options_id === selectedOption.options_id
+        );
+        const config = {
+          method: "put",
+          url: `https://drugstoreproject.shop/cart`,
+          headers: {
+            "Content-Type": "application/json",
+            Token: token,
+          },
+          data: {
+            cart_id: item.cart_id,
+            product_id: item.product_id,
+            product_name: item.product_name,
+            brand: item.brand,
+            options_id: selectedOption.options_id,
+            options_name: selectedOption.options_name,
+            all_options: [
+              {
+                options_id: selectedOption.options_id,
+                options_name: selectedOption.options_name,
+                options_price: selectedOptionDetail?.options_price || 0,
+              },
+            ],
+            quantity: quantity,
+            final_price:
+              item.price + (selectedOptionDetail?.options_price || 0),
+          },
+        };
+        await axios(config);
+        onSave(
+          selectedOption.options_id,
+          quantity,
+          selectedOption.options_name,
+          selectedOptionDetail?.options_price || 0
+        );
       }
-      const config = {
-        method: "put",
-        url: `https://drugstoreproject.shop/cart`,
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-        data: {
-          cart_id: cart_id,
-          options_id: options_id,
-          quantity: quantity,
-          options_name: options_name,
-        },
-      };
-      const response = await axios(config);
-      console.log("Update response:", response.data);
     } catch (error) {
-      console.error("Error updating cart option:", error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchOptions();
-    }
-  }, [isOpen]);
-
-  const handleSave = async () => {
-    const selectedOptionObj = options.find(
-      (option) => option.options_name === selectedOption
-    );
-    if (selectedOptionObj) {
-      await updateCartOption(
-        item.cart_id,
-        selectedOptionObj.options_id,
-        quantity,
-        selectedOptionObj.options_name
-      );
-      onSave(quantity, selectedOptionObj.options_name);
+      console.error("Error saving changes:", error);
     }
   };
 
@@ -139,8 +146,13 @@ const CartOptionModal: React.FC<ModalProps> = ({
         <h2>옵션 변경</h2>
         <div className="cart_option">
           <select
-            value={selectedOption}
-            onChange={(e) => setSelectedOption(e.target.value)}
+            value={selectedOption?.options_name || ""}
+            onChange={(e) => {
+              const selectedOption = options.find(
+                (option) => option.options_name === e.target.value
+              );
+              setSelectedOption(selectedOption || null);
+            }}
           >
             {options.map((option) => (
               <option key={option.options_id} value={option.options_name}>
