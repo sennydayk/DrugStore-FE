@@ -165,15 +165,15 @@ const Mainpage = () => {
       <div className="mainpage_imageslider">
         <ImageSlider adphotos={adphotos}></ImageSlider>
       </div>
-      <div className="filter_wrapper">
-        <div onClick={handleClick} className="filter_selectdropdown">
-          {selectedFilter} <span className="filter_icon">🔽</span>
+      <div className="main_filter_wrapper">
+        <div onClick={handleClick} className="main_filter_selectdropdown">
+          {selectedFilter} <span className="main_filter_icon">🔽</span>
         </div>
         {isOpen &&
           filterArray.map((filters) => {
             return (
               <div
-                className="filter_dropdown"
+                className="main_filter_dropdown"
                 onClick={() => handleSelect(filters.sortBy)}
                 key={filters.filterId}
               >

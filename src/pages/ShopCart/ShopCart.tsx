@@ -4,7 +4,6 @@ import "./ShopCart.css";
 import axios, { AxiosResponse } from "axios";
 import CartOptionModal from "./CartOpionModal";
 import AlertAlram from "../../assets/png/alert_alram.png";
-import Item from "antd/es/list/Item";
 
 interface Item {
   product_id: number;
@@ -363,7 +362,6 @@ const CartItem: React.FC = () => {
           onClose={() => setIsModalOpen(false)}
           item={currentItem}
           onSave={handleSave}
-          product_id={currentItem.product_id}
         />
       )}
     </div>
