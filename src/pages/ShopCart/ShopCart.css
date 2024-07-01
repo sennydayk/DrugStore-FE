@@ -89,8 +89,8 @@ caption {
 
 /* 상품 이미지 스타일 */
 .prd_img img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border: 1px solid #ddd;
   vertical-align: middle;
@@ -100,10 +100,6 @@ caption {
 /* 상품명 스타일 */
 .prd_name {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
 }
 
 #brandName {
@@ -117,6 +113,11 @@ caption {
   margin-top: 5px;
   color: #555;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  -webkit-line-clamp: 2;
+  max-width: 400px;
 }
 
 #optionName {
@@ -124,6 +125,7 @@ caption {
   text-align: left;
   display: block;
   font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .prd_quantity {
