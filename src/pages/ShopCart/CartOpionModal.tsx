@@ -12,6 +12,7 @@ interface ModalProps {
     options_price: number
   ) => void;
   item: CartItem;
+  product_id: number;
 }
 
 interface CartItem {
@@ -42,6 +43,7 @@ const CartOptionModal: React.FC<ModalProps> = ({
   onClose,
   onSave,
   item,
+  product_id,
 }) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [selectedOption, setSelectedOption] = useState<Option | null>(

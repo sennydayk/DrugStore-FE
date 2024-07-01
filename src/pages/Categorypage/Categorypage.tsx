@@ -136,24 +136,24 @@ const Categorypage = () => {
   console.log("currentPage", currentPage);
   return (
     <div>
-      <div className="categorypage_wrapper">
-        <div className="filter_wrapper">
-          <div onClick={handleClick} className="filter_selectdropdown">
-            {selectedFilter} 🔽
-          </div>
-          {isOpen &&
-            filterArray.map((filters) => {
-              return (
-                <div
-                  className="filter_dropdown"
-                  onClick={() => handleSelect(filters.sortBy)}
-                  key={filters.filterId}
-                >
-                  {filters.sortBy}
-                </div>
-              );
-            })}
+      <div className="category_filter_wrapper">
+        <div onClick={handleClick} className="category_filter_selectdropdown">
+          {selectedFilter} 🔽
         </div>
+        {isOpen &&
+          filterArray.map((filters) => {
+            return (
+              <div
+                className="category_filter_dropdown"
+                onClick={() => handleSelect(filters.sortBy)}
+                key={filters.filterId}
+              >
+                {filters.sortBy}
+              </div>
+            );
+          })}
+      </div>
+      <div className="categorypage_wrapper">
         <div className="mainpage_productlist">
           {categoryArray.map((categoryproduct, index) => {
             return (

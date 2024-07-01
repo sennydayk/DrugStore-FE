@@ -1,126 +1,131 @@
 .dropdown_wrapper {
-    margin-top:20px;
-    /* border: 1px solid #97E7E1; */
-    border-radius: 5px;
-    padding: 10px;
-    max-width: 600px;
-    margin: 0 auto;
+  margin-top: 20px;
+  /* border: 1px solid #97E7E1; */
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .dropdown_select {
-    padding: 10px;
-    border: 1px solid grey;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    color: black;
-    text-align: center;
-    transition: background-color 0.3s;
+  padding: 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
 .dropdown_select.clicked {
-    border: 1px solid #6ad4dd;
-    color: black; 
+  border: 1px solid #6ad4dd;
+  color: black;
 }
 
 .dropdown_options_list {
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 
 .dropdown_option {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
 }
 
 .dropdown_selectoption {
-    margin-top: 20px;
-    /* border-top: 1px solid #e0e0e0; */
-    padding-top: 10px;
+  margin-top: 20px;
+  /* border-top: 1px solid #e0e0e0; */
+  padding-top: 10px;
 }
 
-.dropdown_counter{
-    display: flex;
-    align-items: flex-start;
-    padding-left: 10px;
+.dropdown_counter {
+  display: flex;
+  align-items: flex-start;
+  padding-left: 10px;
 }
 
-.dropdown_item{
-    display: flex;
-    justify-content: space-between;
-    padding-left: 10px;
+.dropdown_item {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
 }
 
-.dropdown_optionname{
-   font-weight: bold;
-   text-align: left;
+.dropdown_optionname {
+  font-weight: bold;
+  text-align: left;
 }
 
-.dropdown_oneitem{
-    border: 1px solid grey;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+.dropdown_oneitem {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.dropdown_optioncount{
-    padding-left: 20px;
-    padding-right: 20px;
-    border-top: 1px solid gray;
-    border-bottom: 1px solid gray;
+.dropdown_optioncount {
+  padding-left: 20px;
+  padding-right: 20px;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
 
-.dropdown_cartbutton{
-    border: 2px solid #6ad4dd;
-    background-color: transparent;
-    padding: 5px;
-    cursor:pointer;
-    width:100px;
-    height:50px;
-    font-weight: bold;
-    font-size: large;
-    margin-left: 300px;
+.dropdown_cartbutton {
+  border: 2px solid #6ad4dd;
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 5px;
+  cursor: pointer;
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  font-size: 17px;
+  margin-left: 300px;
 }
 
-.dropdown_itemoption{
-    display: flex;
-    align-items: center; 
-    width: 100%;
+.dropdown_cartbutton :hover {
+  background-color: #6ad4dd;
 }
 
-.dropdown_itemoptionprice{
-    margin-left: auto;
+.dropdown_itemoption {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.dropdown_optionprice{
-    margin-left: auto;
+.dropdown_itemoptionprice {
+  margin-left: auto;
 }
 
-.dropdown_totalprice{
-   color: #6ad4dd;
-   font-weight: bold;
-   font-size: larger;
-   border-bottom: 2px solid #6ad4dd;
-   margin-top: 10px;
-   margin-bottom: 20px;
-   text-align: left;
-   padding-bottom: 10px;
+.dropdown_optionprice {
+  margin-left: auto;
 }
 
-.cntdelete{
-    margin-left: 4px;
+.dropdown_totalprice {
+  color: #6ad4dd;
+  font-weight: bold;
+  font-size: larger;
+  border-bottom: 2px solid #6ad4dd;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+  padding-bottom: 10px;
 }
 
-.dropdown_totalprice{
-    display: flex;
-    width: 100%;
+.cntdelete {
+  margin-left: 4px;
 }
 
-.dropdown_totalpriceright{
-    margin-left: auto;
+.dropdown_totalprice {
+  display: flex;
+  width: 100%;
+}
+
+.dropdown_totalpriceright {
+  margin-left: auto;
 }

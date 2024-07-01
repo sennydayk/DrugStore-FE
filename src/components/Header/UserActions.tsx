@@ -18,12 +18,15 @@ function UserActions({ isLoggedIn }: UserActionsProps) {
   const { logout } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
 
+  // 로그아웃 버튼 핸들러
   const handleLogout = () => {
-    const userConfirmed = window.confirm("로그아웃하시겠습니까?");
-    if (userConfirmed) {
-      logout();
-      setCartItemCount(0); // 로그아웃 시 cartItemCount를 0으로 설정
-      navigate("/");
+    if (isLoggedIn) {
+      if (window.confirm("로그아웃하시겠습니까?")) {
+        window.alert("로그아웃되었습니다. 홈으로 이동합니다.");
+        logout();
+        setCartItemCount(0); // 로그아웃 시 cartItemCount를 0으로 설정
+        navigate("/");
+      }
     }
   };
 
@@ -75,23 +78,34 @@ function UserActions({ isLoggedIn }: UserActionsProps) {
   return (
     <div className="user-actions">
       {isLoggedIn ? (
-        <button className="logout_btn" onClick={handleLogout}>
-          <img src={HeaderLogout} alt="로그아웃" />
-        </button>
+        <img src={HeaderLogout} alt="로그아웃" onClick={handleLogout} />
       ) : (
         <Link to="/auth/login">
           <img src={HeaderLogin} alt="로그인" />
         </Link>
       )}
-      <a href="/mypage/account">
-        <img src={HeaderMyPage} alt="마이페이지" />
-      </a>
-      <a href="/cart">
+      {isLoggedIn ? (
+        <Link to={"/mypage/account"}>
+          <img src={HeaderMyPage} alt="마이페이지" />
+        </Link>
+      ) : (
+        <Link to={"/auth/login"}>
+          <img
+            src={HeaderMyPage}
+            alt="마이페이지"
+            onClick={() => {
+              alert("로그인이 필요한 서비스입니다.");
+              navigate("/auth/login");
+            }}
+          />
+        </Link>
+      )}
+      <Link to={"/cart"}>
         <img src={HeaderCart} alt="장바구니" className="useractiocart" />
         {isLoggedIn && cartItemCount > 0 && (
           <span className="cart-item-count">{cartItemCount}</span>
         )}
-      </a>
+      </Link>
     </div>
   );
 }

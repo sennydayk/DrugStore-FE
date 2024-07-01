@@ -345,19 +345,21 @@ export function ProductInfo(productid: ParamsType) {
             )}
           </div>
           <div className="productinfo_deliveryinfo">
-            배송정보
-            <img
-              className="infobutton_delivery"
-              src={info}
-              onClick={modalShippinginfo.openModal}
-            ></img>
+            <div className="productinfo_btntxt">
+              배송정보
+              <img
+                className="infobutton_delivery"
+                src={info}
+                onClick={modalShippinginfo.openModal}
+              ></img>
+            </div>
             <div>
               일반배송 | 2,500원 ( 20,000 원 이상 무료배송 )<br />
               <div style={{ marginLeft: "70px" }}>
-                올리브영 배송 | 평균 3일 이내 배송
+                업체 배송 | 평균 3일 이내 배송
               </div>
             </div>
-            <div>
+            <div className="productinfo_btntxt">
               오늘드림 | 2,500원 또는 5,000원
               <img
                 className="infobutton_delivery"
@@ -380,8 +382,8 @@ export function ProductInfo(productid: ParamsType) {
           </Modal>
           <div className="productinfo_paymentinfo">
             결제혜택
-            <div className="">
-              THE CJ 카드 추가 10%할인
+            <div className="productinfo_btntxt">
+              제휴 카드 추가 10%할인
               <img
                 className="infobutton_payment"
                 src={info}
@@ -391,8 +393,8 @@ export function ProductInfo(productid: ParamsType) {
             <Modal isOpen={modalCard.isOpen} closeModal={modalCard.closeModal}>
               {modalCardContent}
             </Modal>
-            <div className="">
-              CJ ONE 포인트 최대 1% 적립 예상
+            <div className="productinfo_btntxt">
+              제휴 포인트 최대 1% 적립 예상
               <img
                 className="infobutton_payment"
                 src={info}

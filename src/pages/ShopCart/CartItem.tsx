@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ShopCart.css";
 import axios, { AxiosResponse } from "axios";
-import CartOptionModal from "./CartOpionModal";
+import Modal from "./CartOpionModal";
 import AlertAlram from "../../assets/png/alert_alram.png";
 import Item from "antd/es/list/Item";
 
-interface Item {
+// interface Item {
+//   product_id: number;
+//   options_id: number;
+//   cart_id: number;
+//   brand: string;
+//   product_name: string;
+//   product_img: string;
+//   price: number;
+//   final_price: number;
+//   quantity?: number;
+//   option?: string;
+//   options_name: string;
+// }
+
+interface CartItem {
   product_id: number;
   options_id: number;
   cart_id: number;
@@ -20,9 +34,14 @@ interface Item {
   options_name: string;
 }
 
+interface CartData {
+  data: CartItem[];
+}
+
 const CartItem: React.FC = () => {
   let navigate = useNavigate();
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<CartItem[]>([]);
+
   const [currentItem, setCurrentItem] = useState<any>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
@@ -32,62 +51,129 @@ const CartItem: React.FC = () => {
   const [finalPrice, setFinalPrice] = useState<number>(0);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [itemOptions, setItemOptions] = useState<
-    { option_id: number; quantity: number; option_name: string }[]
+    { id: number; quantity: number; option_id: string }[]
   >([]);
-  const [currentItemOptions, setCurrentItemOptions] = useState<{
-    quantity: number;
-    option_name: string;
-  }>({ quantity: 1, option_name: "" });
-
   const goToOrderForm = () => {
     navigate("/order");
   };
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = async (): Promise<CartData | null> => {
+    const baseUrl = "https://drugstoreproject.shop/cart";
     try {
       const token = sessionStorage.getItem("token");
       if (!token) {
         throw new Error("토큰이 없습니다. 로그인이 필요합니다.");
       }
       console.log("사용할 토큰:", token);
-      const config = {
-        method: "get",
-        url: "https://drugstoreproject.shop/cart",
+      const response = await axios.get(baseUrl, {
         headers: {
           "Content-Type": "application/json",
           Token: token,
         },
-      };
-      const response = await axios(config);
+      });
       console.log("서버 응답 데이터:", response.data);
-      setItems(response.data.data);
-      setCheckedItems(new Array(response.data.data.length).fill(false));
-      setCartItemCount(response.data.data.length);
+      return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(
-          "장바구니 데이터를 가져오는 중 오류 발생:",
-          error.message
-        );
+        console.error("Error fetching cart data: ", error.message);
         if (error.response) {
-          console.error("cart get서버 응답 데이터:", error.response.data);
+          console.error("cart get 서버 응답 데이터:", error.response.data);
           console.error("서버 응답 상태 코드:", error.response.status);
           if (error.response.status === 404) {
             // 장바구니가 비어있는 경우
-            setItems([]);
-            setCheckedItems([]);
-            setCartItemCount(0);
+            return { data: [] };
           }
         }
       } else {
-        console.error("알 수 없는 오류 발생:", error);
+        console.error("Unexpected error: ", error);
+      }
+      return null;
+    }
+  };
+  const getCartData = async () => {
+    try {
+      const result = await fetchCartItems();
+      if (result) {
+        setItems(result.data);
+        setCheckedItems(new Array(result.data.length).fill(false));
+        setCartItemCount(result.data.length);
+      } else {
+        setItems([]);
+        setCheckedItems([]);
+        setCartItemCount(0);
+      }
+    } catch (error) {
+      console.error("Error in getCartData:", error);
+      setItems([]);
+      setCheckedItems([]);
+      setCartItemCount(0);
+    }
+  };
+  useEffect(() => {
+    getCartData();
+  }, []);
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  const handleSaveOptions = async (
+    quantity: number,
+    option: string,
+    updatedItem: CartItem | undefined
+  ) => {
+    if (updatedItem) {
+      try {
+        const token = sessionStorage.getItem("token");
+        const config = {
+          method: "put",
+          url: `https://drugstoreproject.shop/cart`,
+          headers: {
+            "Content-Type": "application/json",
+            Token: token,
+          },
+          data: {
+            quantity,
+            option,
+            name: `${updatedItem.product_name} (${option})`,
+            final_price:
+              (updatedItem.price / (updatedItem.quantity || 1)) * quantity,
+            price: (updatedItem.price / (updatedItem.quantity || 1)) * quantity,
+          },
+        };
+        const response = await axios(config);
+
+        // 상태 업데이트
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item.cart_id === updatedItem.cart_id
+              ? {
+                  ...item,
+                  quantity,
+                  option,
+                  name: `${item.product_name} (${option})`,
+                  final_price: (item.price / (item.quantity || 1)) * quantity,
+                  price: (item.price / (item.quantity || 1)) * quantity,
+                }
+              : item
+          )
+        );
+        getCartData();
+      } catch (error) {
+        console.error("장바구니 항목 수정 중 오류 발생:", error);
       }
     }
   };
 
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
+  const handleItemChange = (index: number) => {
+    if (!items || index < 0 || index >= items.length) return;
+    setCheckedItems((prevChecked) => {
+      const newChecked = [...prevChecked];
+      newChecked[index] = !newChecked[index];
+      return newChecked;
+    });
+    const allChecked = checkedItems.every((checked) => checked);
+    setSelectAll(allChecked);
+  };
 
   const handleSelectAll = () => {
     setSelectAll((prevSelectAll) => {
@@ -108,7 +194,7 @@ const CartItem: React.FC = () => {
     setFinalPrice(total);
   }, [checkedItems, items]);
 
-  const handleDeleteItem = async (item: Item) => {
+  const handleDeleteItem = async (item: CartItem) => {
     try {
       const token = sessionStorage.getItem("token");
       const response: AxiosResponse<any> = await axios.delete(
@@ -164,39 +250,10 @@ const CartItem: React.FC = () => {
     }
   };
 
-  const handleSave = (
-    options_id: number,
-    quantity: number,
-    options_name: string,
-    optionPrice: number
-  ) => {
-    setCurrentItem((prevItem: Item | null) => ({
-      ...prevItem,
-      quantity,
-      options_name,
-      final_price: prevItem?.final_price
-        ? prevItem.final_price + optionPrice
-        : optionPrice,
-    }));
-    setIsModalOpen(false);
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.product_id === currentItem?.product_id
-          ? {
-              ...item,
-              quantity,
-              options_name,
-              final_price: item.final_price + optionPrice,
-            }
-          : item
-      )
-    );
-  };
-
   // openModal 함수의 매개변수 item에 Item 타입을 지정합니다.
-  const openModal = (item: Item) => {
+  const openModal = (item: CartItem) => {
     const currentItemOptions = itemOptions.find(
-      (option) => option.option_id === item.product_id
+      (option) => option.id === item.product_id
     ) || { quantity: 1, option: "" };
     setCurrentItem({ ...item, ...currentItemOptions });
     setIsModalOpen(true);
@@ -242,19 +299,18 @@ const CartItem: React.FC = () => {
                     <input
                       type="checkbox"
                       checked={checkedItems[index] || false}
+                      onChange={() => handleItemChange(index)}
                     />
                   </td>
                   <td>
                     <div className="cart_productinfo">
-                      <a className="prd_img" href={``}>
+                      <a className="prd_img" href="/detail/:productid">
                         <img src={item.product_img} alt={item.product_name} />
                       </a>
-                      <a className="prd_name" href={``}>
+                      <a className="prd_name" href="/detail/:productid">
                         <span id="brandName">{item.brand}</span>
                         <p id="goodsName">{item.product_name}</p>
-                        <span id="optionName">
-                          {item.options_name || currentItemOptions.option_name}
-                        </span>
+                        <span id="optionName">{item.options_name}</span>
                       </a>
                     </div>
                   </td>
@@ -279,7 +335,6 @@ const CartItem: React.FC = () => {
                       원
                     </span>
                   </td>
-
                   <td>
                     <p className="prd_delivery">
                       <strong id="deliStrongText">
@@ -358,12 +413,14 @@ const CartItem: React.FC = () => {
         </div>
       </div>
       {currentItem && (
-        <CartOptionModal
+        <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          item={currentItem}
-          onSave={handleSave}
-          product_id={currentItem.product_id}
+          onSave={(quantity, option) =>
+            handleSaveOptions(quantity, option, currentItem.item)
+          }
+          item={currentItem} // 현재 선택된 아이템의 정보를 전달합니다.
+          product_id={currentItem.id}
         />
       )}
     </div>
