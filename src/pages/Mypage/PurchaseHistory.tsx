@@ -69,15 +69,15 @@ const getData = async (
 const PurchaseHistory: React.FC = () => {
   const [reviewAdd, setReviewAdd] = useState<boolean>(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [orderList, setOrderList] = useState<Order[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [totalElements, setTotalElements] = useState<number>(0);
 
   const handleReviewAdd = (ordersId: number) => {
     setSelectedOrderId(ordersId);
     setReviewAdd(!reviewAdd);
   };
 
-  const [orderList, setOrderList] = useState<Order[]>([]);
-  const [page, setPage] = useState<number>(0);
-  const [totalElements, setTotalElements] = useState<number>(0);
   const handlePageClick = (selectedItem: { selected: number }) => {
     setPage(selectedItem.selected);
   };
@@ -88,9 +88,20 @@ const PurchaseHistory: React.FC = () => {
         const result = await getData(page);
         if (result) {
           console.log("결과 :", result.data.content);
-          setOrderList(result.data.content);
+
+          // 중복 제거 로직 추가
+          const seenProducts = new Set<string>();
+          const uniqueOrders = result.data.content.filter((order) => {
+            if (seenProducts.has(order.productName)) {
+              return false;
+            } else {
+              seenProducts.add(order.productName);
+              return true;
+            }
+          });
+
+          setOrderList(uniqueOrders);
           setTotalElements(result.data.totalElements);
-          console.log("주문정보 :", orderList);
         } else {
           setOrderList([]);
         }
@@ -108,7 +119,7 @@ const PurchaseHistory: React.FC = () => {
       <div className="mypage-wrapper">
         <UserInfo />
         <div>
-          {orderList && orderList.length === 0 ? (
+          {orderList.length === 0 ? (
             <div className="mypage-error">
               <img src={result} className="mypage-errorimg" />
               <p className="mypage-errormsg">구매내역이 없습니다.</p>
@@ -141,59 +152,52 @@ const PurchaseHistory: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {orderList &&
-                  orderList.map((order) => (
-                    <tr
-                      className="purchase-history-eachitem"
-                      key={order.ordersId}
+                {orderList.map((order) => (
+                  <tr
+                    className="purchase-history-eachitem"
+                    key={order.ordersId}
+                  >
+                    <td
+                      style={{
+                        borderRight: "1px solid #dddddd",
+                        fontSize: "13px",
+                      }}
                     >
-                      <td
-                        style={{
-                          borderRight: "1px solid #dddddd",
-                          fontSize: "13px",
-                        }}
-                      >
-                        {order.ordersId}
-                      </td>
-                      <td>
-                        <img
-                          src={order.productImg}
-                          alt="Product"
-                          className="mypage-productimg"
-                        />
-                      </td>
-                      <td style={{ borderRight: "1px solid #dddddd" }}>
-                        <p className="mypage-brand">{order.brand}</p>
-                        <p className="mypage-product">{order.productName}</p>
-                        <p className="mypage-option">
-                          옵션 : {order.optionName}
-                        </p>
-                      </td>
-                      <td
-                        style={{
-                          borderRight: "1px solid #dddddd",
-                          fontSize: "13px",
-                        }}
-                      >
-                        ~ {order.reviewDeadline}
-                      </td>
-                      <td>
-                        {order.review_status ? (
-                          <button
-                            onClick={() => handleReviewAdd(order.ordersId)}
-                          >
-                            작성한 리뷰
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleReviewAdd(order.ordersId)}
-                          >
-                            리뷰 작성
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                      {order.ordersId}
+                    </td>
+                    <td>
+                      <img
+                        src={order.productImg}
+                        alt="Product"
+                        className="mypage-productimg"
+                      />
+                    </td>
+                    <td style={{ borderRight: "1px solid #dddddd" }}>
+                      <p className="mypage-brand">{order.brand}</p>
+                      <p className="mypage-product">{order.productName}</p>
+                      <p className="mypage-option">옵션 : {order.optionName}</p>
+                    </td>
+                    <td
+                      style={{
+                        borderRight: "1px solid #dddddd",
+                        fontSize: "13px",
+                      }}
+                    >
+                      ~ {order.reviewDeadline}
+                    </td>
+                    <td>
+                      {order.review_status ? (
+                        <button onClick={() => handleReviewAdd(order.ordersId)}>
+                          작성한 리뷰
+                        </button>
+                      ) : (
+                        <button onClick={() => handleReviewAdd(order.ordersId)}>
+                          리뷰 작성
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}
@@ -206,7 +210,7 @@ const PurchaseHistory: React.FC = () => {
           />
         )}
       </div>
-      {orderList && orderList.length === 0 ? null : (
+      {orderList.length === 0 ? null : (
         <ReactPaginate
           previousLabel={"이전"}
           nextLabel={"다음"}
