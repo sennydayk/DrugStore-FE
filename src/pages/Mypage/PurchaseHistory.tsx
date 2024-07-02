@@ -15,7 +15,7 @@ interface Order {
   productName: string;
   optionName: string;
   brand: string;
-  review_status: boolean;
+  review_status: string;
   reviewDeadline: string;
 }
 
@@ -188,7 +188,7 @@ const PurchaseHistory: React.FC = () => {
                     <td>
                       {order.review_status ? (
                         <button onClick={() => handleReviewAdd(order.ordersId)}>
-                          작성 완료
+                          리뷰 보기
                         </button>
                       ) : (
                         <button onClick={() => handleReviewAdd(order.ordersId)}>
