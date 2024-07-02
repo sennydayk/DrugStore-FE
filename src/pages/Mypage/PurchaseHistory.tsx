@@ -15,7 +15,7 @@ interface Order {
   productName: string;
   optionName: string;
   brand: string;
-  review_status: string;
+  review_status: boolean;
   reviewDeadline: string;
 }
 
@@ -90,17 +90,17 @@ const PurchaseHistory: React.FC = () => {
           console.log("결과 :", result.data.content);
 
           // 중복 제거 로직 추가
-          const seenProducts = new Set<string>();
-          const uniqueOrders = result.data.content.filter((order) => {
-            if (seenProducts.has(order.productName)) {
-              return false;
-            } else {
-              seenProducts.add(order.productName);
-              return true;
-            }
-          });
+          // const seenProducts = new Set<string>();
+          // const uniqueOrders = result.data.content.filter((order) => {
+          //   if (seenProducts.has(order.productName)) {
+          //     return false;
+          //   } else {
+          //     seenProducts.add(order.productName);
+          //     return true;
+          //   }
+          // });
 
-          setOrderList(uniqueOrders);
+          setOrderList(result.data.content);
           setTotalElements(result.data.totalElements);
         } else {
           setOrderList([]);
@@ -188,7 +188,7 @@ const PurchaseHistory: React.FC = () => {
                     <td>
                       {order.review_status ? (
                         <button onClick={() => handleReviewAdd(order.ordersId)}>
-                          작성한 리뷰
+                          작성 완료
                         </button>
                       ) : (
                         <button onClick={() => handleReviewAdd(order.ordersId)}>
