@@ -7,12 +7,14 @@ interface ReviewAddProps {
   reviewAdd: boolean;
   setReviewAdd: React.Dispatch<React.SetStateAction<boolean>>;
   ordersId: number;
+  onReviewSubmitted: () => void; // New prop
 }
 
 const ReviewAdd: React.FC<ReviewAddProps> = ({
   reviewAdd,
   setReviewAdd,
   ordersId,
+  onReviewSubmitted, // Destructure new prop
 }) => {
   const [reviewScore, setReviewScore] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
@@ -59,6 +61,7 @@ const ReviewAdd: React.FC<ReviewAddProps> = ({
       if (response.status === 200) {
         alert("리뷰가 등록되었습니다.");
         closeModal();
+        onReviewSubmitted(); // Call the callback function to update the parent component
       } else {
         console.error("Unexpected response status:", response.status);
         alert("리뷰 등록에 실패했습니다.");

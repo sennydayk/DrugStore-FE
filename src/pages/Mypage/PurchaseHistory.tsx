@@ -15,7 +15,7 @@ interface Order {
   productName: string;
   optionName: string;
   brand: string;
-  review_status: string;
+  reviewStatus: string;
   reviewDeadline: string;
 }
 
@@ -82,36 +82,29 @@ const PurchaseHistory: React.FC = () => {
     setPage(selectedItem.selected);
   };
 
-  useEffect(() => {
-    const getPageData = async () => {
-      try {
-        const result = await getData(page);
-        if (result) {
-          console.log("결과 :", result.data.content);
-
-          // 중복 제거 로직 추가
-          // const seenProducts = new Set<string>();
-          // const uniqueOrders = result.data.content.filter((order) => {
-          //   if (seenProducts.has(order.productName)) {
-          //     return false;
-          //   } else {
-          //     seenProducts.add(order.productName);
-          //     return true;
-          //   }
-          // });
-
-          setOrderList(result.data.content);
-          setTotalElements(result.data.totalElements);
-        } else {
-          setOrderList([]);
-        }
-      } catch (error) {
-        console.error("Error in useEffect:", error);
+  const fetchPageData = async () => {
+    try {
+      const result = await getData(page);
+      if (result) {
+        console.log("결과 :", result.data.content);
+        setOrderList(result.data.content);
+        setTotalElements(result.data.totalElements);
+      } else {
         setOrderList([]);
       }
-    };
-    getPageData();
+    } catch (error) {
+      console.error("Error in fetchPageData:", error);
+      setOrderList([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchPageData();
   }, [page]);
+
+  const handleReviewSubmitted = () => {
+    fetchPageData(); // Fetch updated data after a review is submitted
+  };
 
   return (
     <>
@@ -186,12 +179,19 @@ const PurchaseHistory: React.FC = () => {
                       ~ {order.reviewDeadline}
                     </td>
                     <td>
-                      {order.review_status ? (
-                        <button onClick={() => handleReviewAdd(order.ordersId)}>
-                          리뷰 보기
+                      {order.reviewStatus ? (
+                        <button
+                          onClick={() => handleReviewAdd(order.ordersId)}
+                          className="purchase-history-btn-disabled"
+                          disabled
+                        >
+                          작성한 리뷰
                         </button>
                       ) : (
-                        <button onClick={() => handleReviewAdd(order.ordersId)}>
+                        <button
+                          onClick={() => handleReviewAdd(order.ordersId)}
+                          className="purchase-history-btn"
+                        >
                           리뷰 작성
                         </button>
                       )}
@@ -207,6 +207,7 @@ const PurchaseHistory: React.FC = () => {
             reviewAdd={reviewAdd}
             setReviewAdd={setReviewAdd}
             ordersId={selectedOrderId}
+            onReviewSubmitted={handleReviewSubmitted} // Pass the callback function
           />
         )}
       </div>

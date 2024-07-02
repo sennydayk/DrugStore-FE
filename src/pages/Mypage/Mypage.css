@@ -90,7 +90,7 @@
   font-weight: bold;
 }
 
-.purchase-history-table button {
+.purchase-history-btn {
   text-align: center;
   vertical-align: middle;
   width: 80px;
@@ -104,10 +104,24 @@
   cursor: pointer;
 }
 
-.purchase-history-table button:hover {
+.purchase-history-btn:hover {
   background-color: #6ad4dd;
   color: white;
   font-weight: bold;
+}
+
+.purchase-history-btn-disabled {
+  text-align: center;
+  vertical-align: middle;
+  width: 80px;
+  height: 35px;
+  background-color: #efefef;
+  color: grat;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: not-allowed;
 }
 
 /* 내가 쓴 리뷰 디자인 */
