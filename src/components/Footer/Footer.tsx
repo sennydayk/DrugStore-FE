@@ -9,13 +9,13 @@ function Footer() {
         <img src={logo} className="footer-logo" />
         <div className="footer-right">
           <div className="footer-info">
-            <p>대표이사 : 이선정 | 사업자등록번호 : 809-81-01574</p>
+            <p>대표이사 : 슈퍼코딩 | 사업자등록번호 : 123-45-67890</p>
             <p>
-              주소 : (04323) 서울특별시 용산구 한강대로 372, 24층 (동자동,
-              KDB타워)
+              주소 : (01234) 서울특별시 융산구 한강대로 333, 22층 (둥자동,
+              ABC타워)
             </p>
-            <p>통신판매업신고번호 : 2019-서울용산-1428</p>
-            <p>이메일 : oliveweb@cj.net</p>
+            <p>통신판매업신고번호 : 2019-서울융산-1234</p>
+            <p>이메일 : scproject@drugstore.net</p>
           </div>
           <div className="footer-btn">
             <p>
@@ -36,7 +36,7 @@ function Footer() {
             </p>
             <p>
               <button
-                onClick={() => alert("고객센터 영업 시간 : 평일 09시 ~ 17시")}
+                onClick={() => alert("고객센터 영업시간 : 평일 09시 ~ 17시")}
               >
                 고객센터
               </button>

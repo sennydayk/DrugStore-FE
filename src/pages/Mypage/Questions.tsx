@@ -140,7 +140,7 @@ const Questions: React.FC = () => {
                         key={question.questionAnswerId}
                       >
                         <td>상품문의</td>
-                        <td>
+                        <td className="questions-question">
                           <button
                             onClick={() =>
                               handleMyQuestion(question.questionAnswerId)

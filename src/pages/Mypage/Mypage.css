@@ -204,6 +204,10 @@
   height: 60px;
 }
 
+.questions-question {
+  width: 70%;
+}
+
 .questions-table button {
   border: none;
   background-color: transparent;

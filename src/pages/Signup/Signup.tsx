@@ -86,6 +86,14 @@ function Signup() {
     setShowPwd(!showPwd);
   };
 
+  const [email, setEmail] = useState("");
+  const [emailAuth, setEmailAuth] = useState<boolean>(false);
+  const [validEmail, setValidEmail] = useState<boolean>(false);
+  const [showVerifyInput, setShowVerifyInput] = useState(false);
+  const [verifyNumber, setVerifyNumber] = useState("");
+  const [isVerifyNumberValid, setIsVerifyNumberValid] = useState(false);
+  const [isPasswordResetEnabled, setIsPasswordResetEnabled] = useState(false);
+
   // 회원가입 로직 처리
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -237,6 +245,7 @@ function Signup() {
           if (data.data.check === false) {
             setValidMessageEmail(data.data.message);
             setEmailModal(!emailModal);
+            setValidEmail(true);
             setEmailAuth(true);
           } else {
             setValidMessageEmail("이미 사용중인 이메일입니다.");
@@ -261,13 +270,6 @@ function Signup() {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
     return re.test(String(email).toLowerCase());
   };
-
-  const [email, setEmail] = useState("");
-  const [emailAuth, setEmailAuth] = useState<boolean>(false);
-  const [showVerifyInput, setShowVerifyInput] = useState(false);
-  const [verifyNumber, setVerifyNumber] = useState("");
-  const [isVerifyNumberValid, setIsVerifyNumberValid] = useState(false);
-  const [isPasswordResetEnabled, setIsPasswordResetEnabled] = useState(false);
 
   // 이메일 인증 버튼 클릭 핸들러
   const handleVerifyEmailClick = async () => {
@@ -317,6 +319,7 @@ function Signup() {
     const verifyNumberInput = e.target.value;
     setVerifyNumber(verifyNumberInput);
     setIsVerifyNumberValid(verifyNumberInput.length === 6);
+    console.log(isVerifyNumberValid);
   };
 
   return (
@@ -412,7 +415,7 @@ function Signup() {
                 />
               </td>
               <td>
-                {emailAuth ? (
+                {validEmail ? (
                   <button
                     className="signup-btn-disabled"
                     type="button"
@@ -431,7 +434,7 @@ function Signup() {
                 )}
               </td>
               <td>
-                {emailAuth ? (
+                {validEmail ? (
                   <button
                     className="signup-btn"
                     type="button"
@@ -449,22 +452,30 @@ function Signup() {
                   <input
                     type="text"
                     placeholder="인증번호 입력"
-                    value={verifyNumber}
                     onChange={handleVerifyNumberChange}
                   />
                 </td>
                 <td>
-                  <button
-                    className="signup-btn"
-                    type="button"
-                    onClick={handleVerifyNumberConfirm}
-                  >
-                    확인
-                  </button>
+                  {isPasswordResetEnabled ? (
+                    <button
+                      className="signup-btn"
+                      type="button"
+                      onClick={handleVerifyNumberConfirm}
+                    >
+                      확인
+                    </button>
+                  ) : (
+                    <button
+                      className="signup-btn-disabled"
+                      type="button"
+                      onClick={handleVerifyNumberConfirm}
+                    >
+                      확인
+                    </button>
+                  )}
                 </td>
               </tr>
             )}
-
             <tr>
               <th>비밀번호</th>
               <td>
@@ -472,7 +483,7 @@ function Signup() {
                   // type={showPwd ? "text" : "password"}
                   type="password"
                   name="password"
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="8~12자리의 비밀번호를 입력해주세요"
                   value={signupForm.userPassword}
                   onChange={(e) => {
                     setSignupForm({
@@ -480,20 +491,10 @@ function Signup() {
                       userPassword: e.target.value,
                     });
                   }}
+                  minLength={8}
+                  maxLength={12}
                 />
               </td>
-              {/* <td>
-                <button
-                  className="signup-pwd-btn"
-                  onClick={(e) => handleShowPwd}
-                >
-                  {showPwd ? (
-                    <img src={Hide} className="signup-pwd-icon" />
-                  ) : (
-                    <img src={View} className="signup-pwd-icon" />
-                  )}
-                </button>
-              </td> */}
             </tr>
             <tr>
               <th>비밀번호 확인</th>

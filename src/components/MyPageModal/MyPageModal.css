@@ -69,8 +69,8 @@
 .mypage-modal-info {
   width: 350px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  text-align: left;
 }
 
 .mypage-modal-info-brand {
@@ -92,7 +92,6 @@
 
 .mypage-modal-question {
   width: 350px;
-  height: 30px;
   margin-top: 20px;
   padding: 15px;
   font-size: 15px;

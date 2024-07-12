@@ -54,35 +54,6 @@
   font-size: 14px;
 }
 
-/* 회원가입 input focus 되었을 때 스타일 */
-/* .signup-input-default {
-  width: 300px;
-  height: 30px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 10px;
-  font-size: 14px;
-}
-
-.signup-input-focus {
-  width: 300px;
-  height: 30px;
-  border: 1px solid #6ad4dd;
-  border-radius: 3px;
-  padding: 10px;
-  font-size: 14px;
-} */
-
-/* @keyframes round {
-  from {
-    border-radius: 0;
-  }
-  to {
-    border-radius: 30px;
-    outline: 1px solid #6ad4dd;
-  }
-} */
-
 .signup-btn {
   width: 120px;
   height: 40px;
