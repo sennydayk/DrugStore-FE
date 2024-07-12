@@ -458,15 +458,15 @@ function Signup() {
                 <td>
                   {isPasswordResetEnabled ? (
                     <button
-                      className="signup-btn"
+                      className="signup-btn-disabled"
                       type="button"
-                      onClick={handleVerifyNumberConfirm}
+                      disabled
                     >
                       확인
                     </button>
                   ) : (
                     <button
-                      className="signup-btn-disabled"
+                      className="signup-btn"
                       type="button"
                       onClick={handleVerifyNumberConfirm}
                     >
