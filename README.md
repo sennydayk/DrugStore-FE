@@ -252,6 +252,9 @@ $ npm run master
 - 판매량, 좋아요, 낮은가격, 리뷰평점, 신상품순으로 상품을 정렬하여 조회할 수 있습니다.
 - 상품 하단의 아이콘을 클릭하여 좋아요 등록 및 취소를 할 수 있습니다.
 - 화면 상단의 검색창에 원하는 검색어를 입력하여 상품을 빠르게 조회할 수 있습니다.
+- 화면 상단의 아이콘을 통해 로그인, 마이페이지, 장바구니 페이지로 이동이 가능합니다. (로그아웃 상태일 시, 마이페이지는 로그인 페이지로 이동합니다.)
+
+<br>
 
 ![메인페이지](https://github.com/user-attachments/assets/d855ea78-5705-41d4-a4fd-9d7e879168de)
 
@@ -268,6 +271,8 @@ $ npm run master
 - 12가지의 상품 카테고리를 조회할 수 있습니다.
 - 메인페이지와 동일한 정렬 기준을 카테고리 페이지에서 정렬하여 조회할 수 있습니다.
 
+<br>
+
 ![카테고리 정렬](https://github.com/user-attachments/assets/fd883b7d-5129-42f9-9a44-cad774bcdd1c)
 
 <br>
@@ -280,6 +285,8 @@ $ npm run master
 - 비밀번호는 8~!2자로 설정 가능하며, 비밀번호 확인을 통해 보안성을 높입니다.
 - 모든 입력값을 작성해야 회원가입이 가능합니다.
 - 이미 회원인 경우, 로그인 페이지로 이동할 수 있습니다.
+
+<br>
 
 <img width="1464" alt="회원가입 UI" src="https://github.com/user-attachments/assets/077e320f-29af-46bd-9ac3-8c9b8a5b771b">
 
@@ -300,6 +307,8 @@ $ npm run master
 - 가입한 이메일로 인증함으로써 비밀번호 재설정을 할 수 있습니다.
 - 회원이 아닌 경우, 회원가입 페이지로 이동할 수 있습니다.
 
+<br>
+
 <img width="1468" alt="로그인 UI" src="https://github.com/user-attachments/assets/3e454465-ac76-45f3-abaf-5c9b326780c2">
 
 <img width="1464" alt="이메일 찾기" src="https://github.com/user-attachments/assets/43d3d156-21fe-4c51-b9f9-56ded316cde5">
@@ -313,6 +322,8 @@ $ npm run master
 - 상품 상세설명과 해당 상품에 등록된 모든 리뷰, 문의내역을 조회할 수 있습니다.
 - 배송정보와 결제 혜택에 관한 상세 내용은 모달창으로 확인할 수 있습니다.
 - 상품의 옵션을 선택하고 예상 가격을 확인한 후 장바구니에 추가할 수 있습니다.
+
+<br>
 
 <img width="1463" alt="상세페이지 UI" src="https://github.com/user-attachments/assets/d1a784b6-2861-4869-b858-11b4f90db15c">
 
@@ -330,6 +341,8 @@ $ npm run master
 - 상품의 옵션과 수량을 변경할 수 있습니다.
 - 상품 선택삭제와 전체삭제, 선택주문과 전체주문이 가능합니다.
 
+<br>
+
 ![장바구니 옵션변경](https://github.com/user-attachments/assets/ad63a27c-e106-4ca0-96b8-90c3befced01)
 
 <br>
@@ -339,6 +352,8 @@ $ npm run master
 - 유저의 정보(연락처, 주소)를 확인하고 배송 메시지를 입력할 수 있습니다.
 - 유저가 보유한 쿠폰의 종류와 개수를 확인하고 쿠폰을 적용할 수 있습니다.
 - 유저가 결제수단을 선택하고 약관 동의를 한 뒤 결제가 가능합니다.
+
+<br>
 
 <img width="1461" alt="결제페이지 UI" src="https://github.com/user-attachments/assets/ac48452f-71be-4e8d-bcc2-a9b234def9b0">
 
@@ -350,7 +365,9 @@ $ npm run master
 
 - 회원가입 시 입력한 모든 정보를 조회할 수 있습니다.
 - 유저가 보유한 포인트와 쿠폰을 조회할 수 있습니다.
-  
+
+<br>
+
 <img width="1467" alt="마이페이지 회원정보 UI" src="https://github.com/user-attachments/assets/875dcff1-3ea1-409d-8d11-60b4cfa1b689">
 
 <br>
@@ -359,6 +376,8 @@ $ npm run master
 
 - 유저가 좋아요를 등록한 상품을 모아볼 수 있습니다.
 - 좋아요 취소가 가능합니다.
+
+<br>
 
 <img width="1458" alt="마이페이지 찜 목록 UI" src="https://github.com/user-attachments/assets/6982340e-8b5b-4775-8c48-964dd0468aaf">
 
@@ -371,7 +390,9 @@ $ npm run master
 - 리뷰 작성 기간(구매 날짜로부터 1개월)을 확인할 수 있습니다.
 - 구매한 상품에 대한 리뷰를 별점과 텍스트를 사용해서 작성할 수 있습니다.
 - 이미 리뷰를 작성한 내역은 리뷰 작성 버튼이 비활성화됩니다.
-  
+
+<br>
+
 <img width="1463" alt="마이페이지 구매내역 UI" src="https://github.com/user-attachments/assets/930e9ee4-f722-4885-a2f5-5b93a319c219">
 
 ![마이페이지 리뷰작성](https://github.com/user-attachments/assets/7ba1715c-23f6-46bb-a576-5b95d519a2ee)
@@ -382,6 +403,8 @@ $ npm run master
 
 - 구매내역에서 작성한 모든 리뷰를 조회할 수 있습니다.
 - 작성한 리뷰 수정 및 삭제가 가능합니다.
+
+<br>
   
 <img width="1461" alt="마이페이지 리뷰내역 UI" src="https://github.com/user-attachments/assets/1af34459-a187-4d77-ac69-a5c15b86abfb">
 
@@ -395,6 +418,9 @@ $ npm run master
 - 답변 상태 여부를 답변완료, 답변대기로 확인할 수 있습니다.
 - 문의 내용을 클릭하면 나타나는 모달창에서 제품 상세내역과 문의 작성일자, 답변 내용을 조회할 수 있습니다.
 - 답변대기 상태인 경우, 모달창에 아직 답변이 작성되지 않았다는 메시지가 표시됩니다.
+- 1:1 문의하기 버튼을 클릭하면 상품 상세페이지에서 문의가 가능하다는 메시지가 표시됩니다.
+
+<br>
   
 ![마이페이지 문의](https://github.com/user-attachments/assets/b978436a-591e-4422-b437-bca7f4645db8)
 
